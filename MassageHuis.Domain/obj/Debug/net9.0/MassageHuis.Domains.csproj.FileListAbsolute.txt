@@ -1,0 +1,14 @@
+C:\Users\brian\Desktop\IT-project 1\MassageHuis\MassageHuis.Domain\bin\Debug\net9.0\MassageHuis.Domains.deps.json
+C:\Users\brian\Desktop\IT-project 1\MassageHuis\MassageHuis.Domain\bin\Debug\net9.0\MassageHuis.Domains.runtimeconfig.json
+C:\Users\brian\Desktop\IT-project 1\MassageHuis\MassageHuis.Domain\bin\Debug\net9.0\MassageHuis.Domains.dll
+C:\Users\brian\Desktop\IT-project 1\MassageHuis\MassageHuis.Domain\bin\Debug\net9.0\MassageHuis.Domains.pdb
+C:\Users\brian\Desktop\IT-project 1\MassageHuis\MassageHuis.Domain\obj\Debug\net9.0\MassageHuis.Domains.csproj.AssemblyReference.cache
+C:\Users\brian\Desktop\IT-project 1\MassageHuis\MassageHuis.Domain\obj\Debug\net9.0\MassageHuis.Domains.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\brian\Desktop\IT-project 1\MassageHuis\MassageHuis.Domain\obj\Debug\net9.0\MassageHuis.Domains.AssemblyInfoInputs.cache
+C:\Users\brian\Desktop\IT-project 1\MassageHuis\MassageHuis.Domain\obj\Debug\net9.0\MassageHuis.Domains.AssemblyInfo.cs
+C:\Users\brian\Desktop\IT-project 1\MassageHuis\MassageHuis.Domain\obj\Debug\net9.0\MassageHuis.Domains.csproj.CoreCompileInputs.cache
+C:\Users\brian\Desktop\IT-project 1\MassageHuis\MassageHuis.Domain\obj\Debug\net9.0\MassageHuis.Domains.dll
+C:\Users\brian\Desktop\IT-project 1\MassageHuis\MassageHuis.Domain\obj\Debug\net9.0\refint\MassageHuis.Domains.dll
+C:\Users\brian\Desktop\IT-project 1\MassageHuis\MassageHuis.Domain\obj\Debug\net9.0\MassageHuis.Domains.pdb
+C:\Users\brian\Desktop\IT-project 1\MassageHuis\MassageHuis.Domain\obj\Debug\net9.0\MassageHuis.Domains.genruntimeconfig.cache
+C:\Users\brian\Desktop\IT-project 1\MassageHuis\MassageHuis.Domain\obj\Debug\net9.0\ref\MassageHuis.Domains.dll
