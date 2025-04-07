@@ -30,13 +30,11 @@ public partial class MassageHuisDbContext : DbContext
 
     public virtual DbSet<Betaling> Betalingen { get; set; }
 
-    public virtual DbSet<Gebruiker> Gebruikers { get; set; }
+    public virtual DbSet<KostPrijs> KostPrijs { get; set; }
 
     public virtual DbSet<Masseur> Masseurs { get; set; }
 
     public virtual DbSet<MasseurTypeMassage> MasseurTypeMassages { get; set; }
-
-    public virtual DbSet<Prijs> Prijzen { get; set; }
 
     public virtual DbSet<PromotieCode> PromotieCodes { get; set; }
 
@@ -48,15 +46,13 @@ public partial class MassageHuisDbContext : DbContext
 
     public virtual DbSet<Schema> Schemas { get; set; }
 
-    public virtual DbSet<TypeGebruiker> TypeGebruikers { get; set; }
-
     public virtual DbSet<TypeMassage> TypeMassages { get; set; }
 
     public virtual DbSet<UitzonderingTijdslot> UitzonderingTijdslots { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 //warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Server=.\\SQL24_VIVES;Database=MassageHuis;Trusted_Connection=True;TrustServerCertificate=True;");
+        => optionsBuilder.UseSqlServer("Server=.\\SQL24_VIVES; Database=MassageHuis;Trusted_Connection=True; TrustServerCertificate=True;MultipleActiveResultSets=true;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -86,9 +82,12 @@ public partial class MassageHuisDbContext : DbContext
                 .HasFilter("([NormalizedUserName] IS NOT NULL)");
 
             entity.Property(e => e.Email).HasMaxLength(256);
+            entity.Property(e => e.Geslacht).HasMaxLength(50);
+            entity.Property(e => e.Naam).HasMaxLength(100);
             entity.Property(e => e.NormalizedEmail).HasMaxLength(256);
             entity.Property(e => e.NormalizedUserName).HasMaxLength(256);
             entity.Property(e => e.UserName).HasMaxLength(256);
+            entity.Property(e => e.Voornaam).HasMaxLength(100);
 
             entity.HasMany(d => d.Roles).WithMany(p => p.Users)
                 .UsingEntity<Dictionary<string, object>>(
@@ -159,33 +158,16 @@ public partial class MassageHuisDbContext : DbContext
                 .HasConstraintName("FKBetaling230728");
         });
 
-        modelBuilder.Entity<Gebruiker>(entity =>
+        modelBuilder.Entity<KostPrijs>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Gebruike__3214EC0709B16FD8");
+            entity.HasKey(e => e.Id).HasName("PK__Prijs__3214EC07411AC5FA");
 
-            entity.ToTable("Gebruiker");
+            entity.Property(e => e.IdTypeMassage).HasColumnName("Id_TypeMassage");
 
-            entity.Property(e => e.Id)
-                .HasMaxLength(255)
-                .IsUnicode(false);
-            entity.Property(e => e.Email)
-                .HasMaxLength(255)
-                .IsUnicode(false);
-            entity.Property(e => e.IdTypeGebruiker)
-                .HasMaxLength(255)
-                .IsUnicode(false)
-                .HasColumnName("Id_TypeGebruiker");
-            entity.Property(e => e.Naam)
-                .HasMaxLength(15)
-                .IsUnicode(false);
-            entity.Property(e => e.Voornaam)
-                .HasMaxLength(30)
-                .IsUnicode(false);
-
-            entity.HasOne(d => d.IdTypeGebruikerNavigation).WithMany(p => p.Gebruikers)
-                .HasForeignKey(d => d.IdTypeGebruiker)
+            entity.HasOne(d => d.IdTypeMassageNavigation).WithMany(p => p.KostPrijs)
+                .HasForeignKey(d => d.IdTypeMassage)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FKGebruiker573319");
+                .HasConstraintName("FKPrijs356693");
         });
 
         modelBuilder.Entity<Masseur>(entity =>
@@ -197,14 +179,13 @@ public partial class MassageHuisDbContext : DbContext
             entity.Property(e => e.Beschrijving)
                 .HasMaxLength(255)
                 .IsUnicode(false);
-            entity.Property(e => e.GebruikerId)
-                .HasMaxLength(255)
-                .IsUnicode(false);
+            entity.Property(e => e.IdAspNetUsers)
+                .HasMaxLength(450)
+                .HasColumnName("Id_AspNetUsers");
 
-            entity.HasOne(d => d.Gebruiker).WithMany(p => p.Masseurs)
-                .HasForeignKey(d => d.GebruikerId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FKMasseur291867");
+            entity.HasOne(d => d.IdAspNetUsersNavigation).WithMany(p => p.Masseurs)
+                .HasForeignKey(d => d.IdAspNetUsers)
+                .HasConstraintName("FK_Masseur_AspNetUsers");
         });
 
         modelBuilder.Entity<MasseurTypeMassage>(entity =>
@@ -227,18 +208,6 @@ public partial class MassageHuisDbContext : DbContext
                 .HasConstraintName("FKMasseur_Ty870180");
         });
 
-        modelBuilder.Entity<Prijs>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("PK__Prijs__3214EC07411AC5FA");
-
-            entity.Property(e => e.IdTypeMassage).HasColumnName("Id_TypeMassage");
-
-            entity.HasOne(d => d.IdTypeMassageNavigation).WithMany(p => p.Prijs)
-                .HasForeignKey(d => d.IdTypeMassage)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FKPrijs356693");
-        });
-
         modelBuilder.Entity<PromotieCode>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PK__Promotie__3214EC074E2CCBFC");
@@ -253,10 +222,9 @@ public partial class MassageHuisDbContext : DbContext
             entity.Property(e => e.Code)
                 .HasMaxLength(255)
                 .IsUnicode(false);
-            entity.Property(e => e.IdGebruiker)
-                .HasMaxLength(255)
-                .IsUnicode(false)
-                .HasColumnName("Id_Gebruiker");
+            entity.Property(e => e.IdAspNetUsers)
+                .HasMaxLength(450)
+                .HasColumnName("Id_AspNetUsers");
             entity.Property(e => e.Status)
                 .HasMaxLength(255)
                 .IsUnicode(false);
@@ -264,10 +232,9 @@ public partial class MassageHuisDbContext : DbContext
                 .HasMaxLength(255)
                 .IsUnicode(false);
 
-            entity.HasOne(d => d.IdGebruikerNavigation).WithMany(p => p.PromotieCodes)
-                .HasForeignKey(d => d.IdGebruiker)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FKPromotieCo737583");
+            entity.HasOne(d => d.IdAspNetUsersNavigation).WithMany(p => p.PromotieCodes)
+                .HasForeignKey(d => d.IdAspNetUsers)
+                .HasConstraintName("FK_PromotieCode_AspNetUsers");
         });
 
         modelBuilder.Entity<RegulierTijdslot>(entity =>
@@ -300,21 +267,15 @@ public partial class MassageHuisDbContext : DbContext
                 .HasForeignKey(d => d.IdPromotieCode)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FKReservatie795620");
-
-            entity.HasOne(d => d.IdReservatiesNavigation).WithMany(p => p.ReservatiePromotieCodes)
-                .HasForeignKey(d => d.IdReservaties)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FKReservatie205420");
         });
 
         modelBuilder.Entity<Reservatie>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PK__Reservat__3214EC070AE0EE6F");
 
-            entity.Property(e => e.IdGebruiker)
-                .HasMaxLength(255)
-                .IsUnicode(false)
-                .HasColumnName("Id_Gebruiker");
+            entity.Property(e => e.IdAspNetUsers)
+                .HasMaxLength(450)
+                .HasColumnName("Id_AspNetUsers");
             entity.Property(e => e.IdPrijs).HasColumnName("Id_Prijs");
             entity.Property(e => e.IdPromotieCode)
                 .HasMaxLength(255)
@@ -326,10 +287,9 @@ public partial class MassageHuisDbContext : DbContext
                 .HasMaxLength(255)
                 .IsUnicode(false);
 
-            entity.HasOne(d => d.IdGebruikerNavigation).WithMany(p => p.Reservaties)
-                .HasForeignKey(d => d.IdGebruiker)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FKReservatie457960");
+            entity.HasOne(d => d.IdAspNetUsersNavigation).WithMany(p => p.Reservaties)
+                .HasForeignKey(d => d.IdAspNetUsers)
+                .HasConstraintName("FK_Reservaties_AspNetUsers");
 
             entity.HasOne(d => d.IdPrijsNavigation).WithMany(p => p.Reservaties)
                 .HasForeignKey(d => d.IdPrijs)
@@ -369,20 +329,6 @@ public partial class MassageHuisDbContext : DbContext
                 .HasForeignKey(d => d.IdMasseur)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FKSchema133092");
-        });
-
-        modelBuilder.Entity<TypeGebruiker>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("PK__TypeGebr__3214EC073DD72A42");
-
-            entity.ToTable("TypeGebruiker");
-
-            entity.Property(e => e.Id)
-                .HasMaxLength(255)
-                .IsUnicode(false);
-            entity.Property(e => e.Type)
-                .HasMaxLength(50)
-                .IsUnicode(false);
         });
 
         modelBuilder.Entity<TypeMassage>(entity =>

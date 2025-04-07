@@ -11,9 +11,9 @@ public partial class TypeMassage
 
     public bool Actief { get; set; }
 
-    public virtual ICollection<MasseurTypeMassage> MasseurTypeMassages { get; set; } = new List<MasseurTypeMassage>();
+    public virtual ICollection<KostPrijs> KostPrijs { get; set; } = new List<KostPrijs>();
 
-    public virtual ICollection<Prijs> Prijs { get; set; } = new List<Prijs>();
+    public virtual ICollection<MasseurTypeMassage> MasseurTypeMassages { get; set; } = new List<MasseurTypeMassage>();
 
     public virtual ICollection<Reservatie> Reservaties { get; set; } = new List<Reservatie>();
 }
