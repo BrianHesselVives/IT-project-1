@@ -29,7 +29,7 @@ builder.Services.AddAutoMapper(typeof(Program));
 builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
 /*Configuration.GetSection("EmailSettings")) zal de instellingen opvragen uit de
 AppSettings.json file en vervolgens wordt er een emailsettings - object
-aangemaakt en de waarden worden geïnjecteerd in het object*/
+aangemaakt en de waarden worden geï¿½njecteerd in het object*/
 builder.Services.AddSingleton<IEmailSend, EmailSend>();
 /*Als in een Constructor een IEmailSender-parameter wordt gevonden, zal een
 emailSender - object worden aangemaakt.*/

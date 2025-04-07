@@ -71,32 +71,35 @@ namespace MassageHuis.Areas.Identity.Pages.Account
         /// </summary>
         public class InputModel
         {
-            /// <summary>
-            ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-            ///     directly from your code. This API may change or be removed in future releases.
-            /// </summary>
-            [Required]
+            
+            [Required(ErrorMessage = "De achternaam is verplicht.")] // Maakt het veld verplicht
+            [Display(Name = "Achternaam")] // Geeft een vriendelijke naam weer in de UI
+            public string Naam { get; set; }
+
+            [Required(ErrorMessage = "De voornaam is verplicht.")]
+            [Display(Name = "Voornaam")]
+            public string Voornaam { get; set; }
+            [Display(Name = "Geslacht")]
+            public string Geslacht { get; set; }
+
+            [Display(Name = "Geboortedatum")]
+            [DataType(DataType.Date)] // Optioneel, maar kan helpen bij de weergave
+            public DateTime? GeboorteDatum { get; set; }
+
+            [Required(ErrorMessage = "Een email is verplicht.")]
             [EmailAddress]
             [Display(Name = "Email")]
             public string Email { get; set; }
 
-            /// <summary>
-            ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-            ///     directly from your code. This API may change or be removed in future releases.
-            /// </summary>
-            [Required]
-            [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
+            [Required(ErrorMessage = "Het wachtwoord is verplicht.")]
+            [StringLength(100, ErrorMessage = "Het {0} moet minstens {2} en maximum {1} characters lang zijn.", MinimumLength = 6)]
             [DataType(DataType.Password)]
-            [Display(Name = "Password")]
+            [Display(Name = "Wachtwoord")]
             public string Password { get; set; }
 
-            /// <summary>
-            ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-            ///     directly from your code. This API may change or be removed in future releases.
-            /// </summary>
             [DataType(DataType.Password)]
-            [Display(Name = "Confirm password")]
-            [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
+            [Display(Name = "Bevestig wachtwoord")]
+            [Compare("Password", ErrorMessage = "Het wachtwoord komt niet overeen")]
             public string ConfirmPassword { get; set; }
         }
 
