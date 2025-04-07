@@ -12,6 +12,4 @@ public partial class ReservatiePromotieCode
     public DateOnly DatumToepassing { get; set; }
 
     public virtual PromotieCode IdPromotieCodeNavigation { get; set; } = null!;
-
-    public virtual Reservatie IdReservatiesNavigation { get; set; } = null!;
 }

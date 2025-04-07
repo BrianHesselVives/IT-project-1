@@ -7,15 +7,15 @@ public partial class Masseur
 {
     public int Id { get; set; }
 
-    public string GebruikerId { get; set; } = null!;
-
     public bool Actief { get; set; }
 
     public DateOnly? Einddienstverband { get; set; }
 
     public string? Beschrijving { get; set; }
 
-    public virtual Gebruiker Gebruiker { get; set; } = null!;
+    public string? IdAspNetUsers { get; set; }
+
+    public virtual AspNetUser? IdAspNetUsersNavigation { get; set; }
 
     public virtual ICollection<MasseurTypeMassage> MasseurTypeMassages { get; set; } = new List<MasseurTypeMassage>();
 

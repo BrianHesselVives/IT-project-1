@@ -17,3 +17,4 @@ C:\Users\brian\Desktop\IT-project 1\MassageHuis\MassageHuis.Util\obj\Debug\net9.
 C:\Users\brian\Desktop\IT-project 1\MassageHuis\MassageHuis.Util\obj\Debug\net9.0\refint\MassageHuis.Util.dll
 C:\Users\brian\Desktop\IT-project 1\MassageHuis\MassageHuis.Util\obj\Debug\net9.0\MassageHuis.Util.pdb
 C:\Users\brian\Desktop\IT-project 1\MassageHuis\MassageHuis.Util\obj\Debug\net9.0\ref\MassageHuis.Util.dll
+C:\Users\brian\Desktop\IT-project 1\MassageHuis\MassageHuis.Util\obj\Debug\net9.0\MassageHuis.Util.sourcelink.json

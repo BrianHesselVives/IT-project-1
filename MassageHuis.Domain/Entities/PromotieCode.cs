@@ -13,7 +13,7 @@ public partial class PromotieCode
 
     public float Bedrag { get; set; }
 
-    public string IdGebruiker { get; set; } = null!;
+    public string? IdAspNetUsers { get; set; }
 
     public string Status { get; set; } = null!;
 
@@ -21,7 +21,7 @@ public partial class PromotieCode
 
     public float? ResterendWaarde { get; set; }
 
-    public virtual Gebruiker IdGebruikerNavigation { get; set; } = null!;
+    public virtual AspNetUser? IdAspNetUsersNavigation { get; set; }
 
     public virtual ICollection<ReservatiePromotieCode> ReservatiePromotieCodes { get; set; } = new List<ReservatiePromotieCode>();
 

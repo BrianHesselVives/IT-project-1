@@ -15,3 +15,4 @@ C:\Users\brian\Desktop\IT-project 1\MassageHuis\MassageHuis.Service\obj\Debug\ne
 C:\Users\brian\Desktop\IT-project 1\MassageHuis\MassageHuis.Service\obj\Debug\net9.0\refint\MassageHuis.Services.dll
 C:\Users\brian\Desktop\IT-project 1\MassageHuis\MassageHuis.Service\obj\Debug\net9.0\MassageHuis.Services.pdb
 C:\Users\brian\Desktop\IT-project 1\MassageHuis\MassageHuis.Service\obj\Debug\net9.0\ref\MassageHuis.Services.dll
+C:\Users\brian\Desktop\IT-project 1\MassageHuis\MassageHuis.Service\obj\Debug\net9.0\MassageHuis.Services.sourcelink.json

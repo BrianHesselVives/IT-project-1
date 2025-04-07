@@ -11,7 +11,7 @@ public partial class Reservatie
 
     public DateOnly DatumReservatie { get; set; }
 
-    public string IdGebruiker { get; set; } = null!;
+    public string? IdAspNetUsers { get; set; }
 
     public string? IdPromotieCode { get; set; }
 
@@ -27,15 +27,13 @@ public partial class Reservatie
 
     public virtual ICollection<Betaling> Betalings { get; set; } = new List<Betaling>();
 
-    public virtual Gebruiker IdGebruikerNavigation { get; set; } = null!;
+    public virtual AspNetUser? IdAspNetUsersNavigation { get; set; }
 
-    public virtual Prijs IdPrijsNavigation { get; set; } = null!;
+    public virtual KostPrijs IdPrijsNavigation { get; set; } = null!;
 
     public virtual PromotieCode? IdPromotieCodeNavigation { get; set; }
 
     public virtual RegulierTijdslot IdRegulierTijdslotNavigation { get; set; } = null!;
 
     public virtual TypeMassage IdTypeMassageNavigation { get; set; } = null!;
-
-    public virtual ICollection<ReservatiePromotieCode> ReservatiePromotieCodes { get; set; } = new List<ReservatiePromotieCode>();
 }

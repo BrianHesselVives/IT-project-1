@@ -15,3 +15,4 @@ C:\Users\brian\Desktop\IT-project 1\MassageHuis\MassageHuis.Repository\obj\Debug
 C:\Users\brian\Desktop\IT-project 1\MassageHuis\MassageHuis.Repository\obj\Debug\net9.0\MassageHuis.Repositories.pdb
 C:\Users\brian\Desktop\IT-project 1\MassageHuis\MassageHuis.Repository\obj\Debug\net9.0\MassageHuis.Repositories.genruntimeconfig.cache
 C:\Users\brian\Desktop\IT-project 1\MassageHuis\MassageHuis.Repository\obj\Debug\net9.0\ref\MassageHuis.Repositories.dll
+C:\Users\brian\Desktop\IT-project 1\MassageHuis\MassageHuis.Repository\obj\Debug\net9.0\MassageHuis.Repositories.sourcelink.json

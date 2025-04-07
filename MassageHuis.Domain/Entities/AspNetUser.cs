@@ -35,11 +35,25 @@ public partial class AspNetUser
 
     public int AccessFailedCount { get; set; }
 
+    public string? Naam { get; set; }
+
+    public string? Voornaam { get; set; }
+
+    public DateOnly? GeboorteDatum { get; set; }
+
+    public string? Geslacht { get; set; }
+
     public virtual ICollection<AspNetUserClaim> AspNetUserClaims { get; set; } = new List<AspNetUserClaim>();
 
     public virtual ICollection<AspNetUserLogin> AspNetUserLogins { get; set; } = new List<AspNetUserLogin>();
 
     public virtual ICollection<AspNetUserToken> AspNetUserTokens { get; set; } = new List<AspNetUserToken>();
+
+    public virtual ICollection<Masseur> Masseurs { get; set; } = new List<Masseur>();
+
+    public virtual ICollection<PromotieCode> PromotieCodes { get; set; } = new List<PromotieCode>();
+
+    public virtual ICollection<Reservatie> Reservaties { get; set; } = new List<Reservatie>();
 
     public virtual ICollection<AspNetRole> Roles { get; set; } = new List<AspNetRole>();
 }
