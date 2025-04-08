@@ -8,6 +8,7 @@ using MassageHuis.Util.Mail.Interfaces;
 using MassageHuis.Util.Mail;
 using NuGet.Configuration;
 using EmailSettings = MassageHuis.Util.Mail.EmailSettings;
+using MassageHuis.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,9 +19,10 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 
-builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
+    .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
-
+    
 builder.Services.AddControllersWithViews();
 
 //toevoegen van de automapper
