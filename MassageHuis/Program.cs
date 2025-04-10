@@ -9,6 +9,12 @@ using MassageHuis.Util.Mail;
 using NuGet.Configuration;
 using EmailSettings = MassageHuis.Util.Mail.EmailSettings;
 using MassageHuis.Models;
+using MassageHuis.Repositories.Interfaces;
+using System.Net.Sockets;
+using MassageHuis.Services.Interfaces;
+using MassageHuis.Entities;
+using MassageHuis.Repositories;
+using MassageHuis.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -29,13 +35,13 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddAutoMapper(typeof(Program));
 
 builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
-/*Configuration.GetSection("EmailSettings")) zal de instellingen opvragen uit de
-AppSettings.json file en vervolgens wordt er een emailsettings - object
-aangemaakt en de waarden worden ge�njecteerd in het object*/
-builder.Services.AddSingleton<IEmailSend, EmailSend>();
-/*Als in een Constructor een IEmailSender-parameter wordt gevonden, zal een
-emailSender - object worden aangemaakt.*/
 
+builder.Services.AddSingleton<IEmailSend, EmailSend>();
+
+
+builder.Services.AddTransient<IService<Masseur>, MasseurService>();
+
+builder.Services.AddTransient<IDAO<Masseur>, MasseurDAO>();
 
 var app = builder.Build();
 

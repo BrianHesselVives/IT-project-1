@@ -1,13 +1,15 @@
-﻿using NuGet.Protocol.Plugins;
+﻿using AutoMapper;
+using MassageHuis.Entities;
+using MassageHuis.ViewModels;
+using NuGet.Protocol.Plugins;
 
 namespace MassageHuis.Automapper
 {
-    public class AutoMapperProfile
+    public class AutoMapperProfile : Profile
     {
         public AutoMapperProfile()
         {
-            // voorbeeld CreateMap<Adult, AdultVM>();
-            //CreateMap<TSource, TDestination>;
+            CreateMap<MasseurVM, Masseur>();
         }
     }
 }
