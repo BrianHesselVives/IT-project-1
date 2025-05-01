@@ -132,8 +132,12 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcS2xhbnRcSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/brian/Desktop/IT-project 1/MassageHuis/MassageHuis/Views/Klant/_kalender.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcS2xhbnRcX2thbGVuZGVyLmNzaHRtbA==
+[C:/Users/brian/Desktop/IT-project 1/MassageHuis/MassageHuis/Views/Klant/_Kalender.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcS2xhbnRcX0thbGVuZGVyLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/brian/Desktop/IT-project 1/MassageHuis/MassageHuis/Views/Klant/_SelectieMasseur.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcS2xhbnRcX1NlbGVjdGllTWFzc2V1ci5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/brian/Desktop/IT-project 1/MassageHuis/MassageHuis/Views/Shared/Error.cshtml]

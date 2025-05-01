@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("MassageHuis.Repositories")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+4626249410786dbce7be53e46074b32fc6718a5d")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+0747485090ab831e26236990b58487b1547f09cf")]
 [assembly: System.Reflection.AssemblyProductAttribute("MassageHuis.Repositories")]
 [assembly: System.Reflection.AssemblyTitleAttribute("MassageHuis.Repositories")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
