@@ -3,8 +3,36 @@
   "WorkspaceRootPath": "C:\\Users\\brian\\Desktop\\IT-project 1\\MassageHuis\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{77E0A6F9-723D-4F42-891F-D3355049EF65}|MassageHuis\\MassageHuis.csproj|c:\\users\\brian\\desktop\\it-project 1\\massagehuis\\massagehuis\\viewmodels\\addusertorolevm.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{77E0A6F9-723D-4F42-891F-D3355049EF65}|MassageHuis\\MassageHuis.csproj|solutionrelative:massagehuis\\viewmodels\\addusertorolevm.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{77E0A6F9-723D-4F42-891F-D3355049EF65}|MassageHuis\\MassageHuis.csproj|c:\\users\\brian\\desktop\\it-project 1\\massagehuis\\massagehuis\\controllers\\admincontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{77E0A6F9-723D-4F42-891F-D3355049EF65}|MassageHuis\\MassageHuis.csproj|solutionrelative:massagehuis\\controllers\\admincontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{77E0A6F9-723D-4F42-891F-D3355049EF65}|MassageHuis\\MassageHuis.csproj|c:\\users\\brian\\desktop\\it-project 1\\massagehuis\\massagehuis\\viewmodels\\masseurvm.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{77E0A6F9-723D-4F42-891F-D3355049EF65}|MassageHuis\\MassageHuis.csproj|solutionrelative:massagehuis\\viewmodels\\masseurvm.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{77E0A6F9-723D-4F42-891F-D3355049EF65}|MassageHuis\\MassageHuis.csproj|c:\\users\\brian\\desktop\\it-project 1\\massagehuis\\massagehuis\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{77E0A6F9-723D-4F42-891F-D3355049EF65}|MassageHuis\\MassageHuis.csproj|solutionrelative:massagehuis\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{77E0A6F9-723D-4F42-891F-D3355049EF65}|MassageHuis\\MassageHuis.csproj|c:\\users\\brian\\desktop\\it-project 1\\massagehuis\\massagehuis\\views\\admin\\details.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{77E0A6F9-723D-4F42-891F-D3355049EF65}|MassageHuis\\MassageHuis.csproj|solutionrelative:massagehuis\\views\\admin\\details.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{77E0A6F9-723D-4F42-891F-D3355049EF65}|MassageHuis\\MassageHuis.csproj|c:\\users\\brian\\desktop\\it-project 1\\massagehuis\\massagehuis\\views\\admin\\_masseur.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{77E0A6F9-723D-4F42-891F-D3355049EF65}|MassageHuis\\MassageHuis.csproj|solutionrelative:massagehuis\\views\\admin\\_masseur.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{A8EA3CA3-30C6-47ED-8E47-98CE68BC4E57}|MassageHuis.Service\\MassageHuis.Services.csproj|c:\\users\\brian\\desktop\\it-project 1\\massagehuis\\massagehuis.service\\masseurservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{A8EA3CA3-30C6-47ED-8E47-98CE68BC4E57}|MassageHuis.Service\\MassageHuis.Services.csproj|solutionrelative:massagehuis.service\\masseurservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{83126389-CCF7-49C6-87D2-859A1640CCB7}|MassageHuis.Domain\\MassageHuis.Domains.csproj|c:\\users\\brian\\desktop\\it-project 1\\massagehuis\\massagehuis.domain\\entities\\masseur.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{83126389-CCF7-49C6-87D2-859A1640CCB7}|MassageHuis.Domain\\MassageHuis.Domains.csproj|solutionrelative:massagehuis.domain\\entities\\masseur.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{A8EA3CA3-30C6-47ED-8E47-98CE68BC4E57}|MassageHuis.Service\\MassageHuis.Services.csproj|c:\\users\\brian\\desktop\\it-project 1\\massagehuis\\massagehuis.service\\massagehuis.services.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
@@ -13,18 +41,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{00D3658A-4BC8-43E1-8905-4E559ADE94FA}|MassageHuis.Repository\\MassageHuis.Repositories.csproj|c:\\users\\brian\\desktop\\it-project 1\\massagehuis\\massagehuis.repository\\masseurdao.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{00D3658A-4BC8-43E1-8905-4E559ADE94FA}|MassageHuis.Repository\\MassageHuis.Repositories.csproj|solutionrelative:massagehuis.repository\\masseurdao.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{77E0A6F9-723D-4F42-891F-D3355049EF65}|MassageHuis\\MassageHuis.csproj|c:\\users\\brian\\desktop\\it-project 1\\massagehuis\\massagehuis\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{77E0A6F9-723D-4F42-891F-D3355049EF65}|MassageHuis\\MassageHuis.csproj|solutionrelative:massagehuis\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{77E0A6F9-723D-4F42-891F-D3355049EF65}|MassageHuis\\MassageHuis.csproj|c:\\users\\brian\\desktop\\it-project 1\\massagehuis\\massagehuis\\controllers\\admincontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{77E0A6F9-723D-4F42-891F-D3355049EF65}|MassageHuis\\MassageHuis.csproj|solutionrelative:massagehuis\\controllers\\admincontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{83126389-CCF7-49C6-87D2-859A1640CCB7}|MassageHuis.Domain\\MassageHuis.Domains.csproj|c:\\users\\brian\\desktop\\it-project 1\\massagehuis\\massagehuis.domain\\entities\\masseur.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{83126389-CCF7-49C6-87D2-859A1640CCB7}|MassageHuis.Domain\\MassageHuis.Domains.csproj|solutionrelative:massagehuis.domain\\entities\\masseur.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -34,11 +50,63 @@
       "DocumentGroups": [
         {
           "DockedWidth": 396,
-          "SelectedChildIndex": 4,
+          "SelectedChildIndex": 1,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 2,
+              "Title": "MasseurVM.cs",
+              "DocumentMoniker": "C:\\Users\\brian\\Desktop\\IT-project 1\\MassageHuis\\MassageHuis\\ViewModels\\MasseurVM.cs",
+              "RelativeDocumentMoniker": "MassageHuis\\ViewModels\\MasseurVM.cs",
+              "ToolTip": "C:\\Users\\brian\\Desktop\\IT-project 1\\MassageHuis\\MassageHuis\\ViewModels\\MasseurVM.cs",
+              "RelativeToolTip": "MassageHuis\\ViewModels\\MasseurVM.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-01T09:57:46.758Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "AddUserToRoleVM.cs",
+              "DocumentMoniker": "C:\\Users\\brian\\Desktop\\IT-project 1\\MassageHuis\\MassageHuis\\ViewModels\\AddUserToRoleVM.cs",
+              "RelativeDocumentMoniker": "MassageHuis\\ViewModels\\AddUserToRoleVM.cs",
+              "ToolTip": "C:\\Users\\brian\\Desktop\\IT-project 1\\MassageHuis\\MassageHuis\\ViewModels\\AddUserToRoleVM.cs*",
+              "RelativeToolTip": "MassageHuis\\ViewModels\\AddUserToRoleVM.cs*",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAqAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-01T09:48:44.095Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "_Masseur.cshtml",
+              "DocumentMoniker": "C:\\Users\\brian\\Desktop\\IT-project 1\\MassageHuis\\MassageHuis\\Views\\Admin\\_Masseur.cshtml",
+              "RelativeDocumentMoniker": "MassageHuis\\Views\\Admin\\_Masseur.cshtml",
+              "ToolTip": "C:\\Users\\brian\\Desktop\\IT-project 1\\MassageHuis\\MassageHuis\\Views\\Admin\\_Masseur.cshtml",
+              "RelativeToolTip": "MassageHuis\\Views\\Admin\\_Masseur.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAMAAAAGAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-05-01T09:40:18.351Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "Details.cshtml",
+              "DocumentMoniker": "C:\\Users\\brian\\Desktop\\IT-project 1\\MassageHuis\\MassageHuis\\Views\\Admin\\Details.cshtml",
+              "RelativeDocumentMoniker": "MassageHuis\\Views\\Admin\\Details.cshtml",
+              "ToolTip": "C:\\Users\\brian\\Desktop\\IT-project 1\\MassageHuis\\MassageHuis\\Views\\Admin\\Details.cshtml",
+              "RelativeToolTip": "MassageHuis\\Views\\Admin\\Details.cshtml",
+              "ViewState": "AgIAAC8AAAAAAAAAAAAUwEAAAAANAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-05-01T09:34:49.498Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
               "Title": "MassageHuis.Services",
               "DocumentMoniker": "C:\\Users\\brian\\Desktop\\IT-project 1\\MassageHuis\\MassageHuis.Service\\MassageHuis.Services.csproj",
               "RelativeDocumentMoniker": "MassageHuis.Service\\MassageHuis.Services.csproj",
@@ -64,7 +132,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 9,
               "Title": "MasseurDAO.cs",
               "DocumentMoniker": "C:\\Users\\brian\\Desktop\\IT-project 1\\MassageHuis\\MassageHuis.Repository\\MasseurDAO.cs",
               "RelativeDocumentMoniker": "MassageHuis.Repository\\MasseurDAO.cs",
@@ -77,7 +145,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 7,
               "Title": "Masseur.cs",
               "DocumentMoniker": "C:\\Users\\brian\\Desktop\\IT-project 1\\MassageHuis\\MassageHuis.Domain\\Entities\\Masseur.cs",
               "RelativeDocumentMoniker": "MassageHuis.Domain\\Entities\\Masseur.cs",
@@ -90,26 +158,26 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 6,
               "Title": "MasseurService.cs",
               "DocumentMoniker": "C:\\Users\\brian\\Desktop\\IT-project 1\\MassageHuis\\MassageHuis.Service\\MasseurService.cs",
               "RelativeDocumentMoniker": "MassageHuis.Service\\MasseurService.cs",
               "ToolTip": "C:\\Users\\brian\\Desktop\\IT-project 1\\MassageHuis\\MassageHuis.Service\\MasseurService.cs",
               "RelativeToolTip": "MassageHuis.Service\\MasseurService.cs",
-              "ViewState": "AgIAAAQAAAAAAAAAAAAQwBUAAAAmAAAAAAAAAA==",
+              "ViewState": "AgIAAAQAAAAAAAAAAAAQwBUAAAAvAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-05-01T07:24:46.144Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 1,
               "Title": "AdminController.cs",
               "DocumentMoniker": "C:\\Users\\brian\\Desktop\\IT-project 1\\MassageHuis\\MassageHuis\\Controllers\\AdminController.cs",
               "RelativeDocumentMoniker": "MassageHuis\\Controllers\\AdminController.cs",
               "ToolTip": "C:\\Users\\brian\\Desktop\\IT-project 1\\MassageHuis\\MassageHuis\\Controllers\\AdminController.cs",
               "RelativeToolTip": "MassageHuis\\Controllers\\AdminController.cs",
-              "ViewState": "AgIAAJYAAAAAAAAAAAApwLkAAAAEAAAAAAAAAA==",
+              "ViewState": "AgIAADAAAAAAAAAAAAASwEYAAAAEAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-05-01T07:19:38.639Z",
               "EditorCaption": ""
