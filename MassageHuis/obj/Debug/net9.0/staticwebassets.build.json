@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "9FovvHF4446WgKeiLN9bUijI7TMFx98e1GUin5cUWaM=",
+  "Hash": "aOtiCvKsfYcBWWEtqnks/FGtzTQgP6PL9unUPTv92nQ=",
   "Source": "MassageHuis",
   "BasePath": "_content/MassageHuis",
   "Mode": "Default",
@@ -1592,12 +1592,12 @@
       "OriginalItemSpec": "C:\\Users\\brian\\.nuget\\packages\\microsoft.aspnetcore.identity.ui\\9.0.3\\staticwebassets\\V5\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.css"
     },
     {
-      "Identity": "C:\\Users\\brian\\Desktop\\IT-project 1\\MassageHuis\\MassageHuis\\obj\\Debug\\net9.0\\compressed\\3xafypuejt-b9sayid5wm.gz",
+      "Identity": "C:\\Users\\brian\\Desktop\\IT-project 1\\MassageHuis\\MassageHuis\\obj\\Debug\\net9.0\\compressed\\3xafypuejt-nf0pmhlvol.gz",
       "SourceId": "MassageHuis",
       "SourceType": "Discovered",
       "ContentRoot": "C:\\Users\\brian\\Desktop\\IT-project 1\\MassageHuis\\MassageHuis\\obj\\Debug\\net9.0\\compressed\\",
       "BasePath": "_content/MassageHuis",
-      "RelativePath": "css/site#[.{fingerprint=b9sayid5wm}]?.css.gz",
+      "RelativePath": "css/site#[.{fingerprint=nf0pmhlvol}]?.css.gz",
       "AssetKind": "All",
       "AssetMode": "All",
       "AssetRole": "Alternative",
@@ -1606,8 +1606,8 @@
       "RelatedAsset": "C:\\Users\\brian\\Desktop\\IT-project 1\\MassageHuis\\MassageHuis\\wwwroot\\css\\site.css",
       "AssetTraitName": "Content-Encoding",
       "AssetTraitValue": "gzip",
-      "Fingerprint": "wf4wcyqcqt",
-      "Integrity": "fNKkLSNFLZMVTc2zVrpMXQqOwPU3sU4GWcfEbCR2V1I=",
+      "Fingerprint": "tpo1z1kxir",
+      "Integrity": "YVqe5HabdB84p6qViHqyk7wQHabO5ARGQwy1MPLNC+M=",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "C:\\Users\\brian\\Desktop\\IT-project 1\\MassageHuis\\MassageHuis\\wwwroot\\css\\site.css"
@@ -4042,8 +4042,8 @@
       "RelatedAsset": "",
       "AssetTraitName": "",
       "AssetTraitValue": "",
-      "Fingerprint": "b9sayid5wm",
-      "Integrity": "j6fhJSuuyLpOSLuPJU0TsDV0iNjor5S3rDnvxJrt4bg=",
+      "Fingerprint": "nf0pmhlvol",
+      "Integrity": "c5gcEUarMV5QiNAoHAYQpZbFWglLyR3K6Q17T3vD0XY=",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\css\\site.css"
@@ -5353,167 +5353,6 @@
   ],
   "Endpoints": [
     {
-      "Route": "css/site.b9sayid5wm.css",
-      "AssetFile": "C:\\Users\\brian\\Desktop\\IT-project 1\\MassageHuis\\MassageHuis\\obj\\Debug\\net9.0\\compressed\\3xafypuejt-b9sayid5wm.gz",
-      "Selectors": [
-        {
-          "Name": "Content-Encoding",
-          "Value": "gzip",
-          "Quality": "0.003125000000"
-        }
-      ],
-      "ResponseHeaders": [
-        {
-          "Name": "Accept-Ranges",
-          "Value": "bytes"
-        },
-        {
-          "Name": "Content-Length",
-          "Value": "319"
-        },
-        {
-          "Name": "ETag",
-          "Value": "\"fNKkLSNFLZMVTc2zVrpMXQqOwPU3sU4GWcfEbCR2V1I=\""
-        },
-        {
-          "Name": "Last-Modified",
-          "Value": "Sun, 06 Apr 2025 09:00:16 GMT"
-        },
-        {
-          "Name": "Cache-Control",
-          "Value": "max-age=31536000, immutable"
-        },
-        {
-          "Name": "Content-Encoding",
-          "Value": "gzip"
-        },
-        {
-          "Name": "Vary",
-          "Value": "Content-Encoding"
-        },
-        {
-          "Name": "Content-Type",
-          "Value": "text/css"
-        },
-        {
-          "Name": "ETag",
-          "Value": "W/\"j6fhJSuuyLpOSLuPJU0TsDV0iNjor5S3rDnvxJrt4bg=\""
-        }
-      ],
-      "EndpointProperties": [
-        {
-          "Name": "fingerprint",
-          "Value": "b9sayid5wm"
-        },
-        {
-          "Name": "label",
-          "Value": "css/site.css"
-        },
-        {
-          "Name": "integrity",
-          "Value": "sha256-j6fhJSuuyLpOSLuPJU0TsDV0iNjor5S3rDnvxJrt4bg="
-        }
-      ]
-    },
-    {
-      "Route": "css/site.b9sayid5wm.css",
-      "AssetFile": "C:\\Users\\brian\\Desktop\\IT-project 1\\MassageHuis\\MassageHuis\\wwwroot\\css\\site.css",
-      "Selectors": [],
-      "ResponseHeaders": [
-        {
-          "Name": "Accept-Ranges",
-          "Value": "bytes"
-        },
-        {
-          "Name": "Content-Length",
-          "Value": "667"
-        },
-        {
-          "Name": "Content-Type",
-          "Value": "text/css"
-        },
-        {
-          "Name": "ETag",
-          "Value": "\"j6fhJSuuyLpOSLuPJU0TsDV0iNjor5S3rDnvxJrt4bg=\""
-        },
-        {
-          "Name": "Last-Modified",
-          "Value": "Sun, 06 Apr 2025 09:00:16 GMT"
-        },
-        {
-          "Name": "Cache-Control",
-          "Value": "max-age=31536000, immutable"
-        }
-      ],
-      "EndpointProperties": [
-        {
-          "Name": "fingerprint",
-          "Value": "b9sayid5wm"
-        },
-        {
-          "Name": "label",
-          "Value": "css/site.css"
-        },
-        {
-          "Name": "integrity",
-          "Value": "sha256-j6fhJSuuyLpOSLuPJU0TsDV0iNjor5S3rDnvxJrt4bg="
-        }
-      ]
-    },
-    {
-      "Route": "css/site.b9sayid5wm.css.gz",
-      "AssetFile": "C:\\Users\\brian\\Desktop\\IT-project 1\\MassageHuis\\MassageHuis\\obj\\Debug\\net9.0\\compressed\\3xafypuejt-b9sayid5wm.gz",
-      "Selectors": [],
-      "ResponseHeaders": [
-        {
-          "Name": "Accept-Ranges",
-          "Value": "bytes"
-        },
-        {
-          "Name": "Content-Length",
-          "Value": "319"
-        },
-        {
-          "Name": "Content-Type",
-          "Value": "text/css"
-        },
-        {
-          "Name": "ETag",
-          "Value": "\"fNKkLSNFLZMVTc2zVrpMXQqOwPU3sU4GWcfEbCR2V1I=\""
-        },
-        {
-          "Name": "Last-Modified",
-          "Value": "Sun, 06 Apr 2025 09:00:16 GMT"
-        },
-        {
-          "Name": "Cache-Control",
-          "Value": "max-age=31536000, immutable"
-        },
-        {
-          "Name": "Content-Encoding",
-          "Value": "gzip"
-        },
-        {
-          "Name": "Vary",
-          "Value": "Content-Encoding"
-        }
-      ],
-      "EndpointProperties": [
-        {
-          "Name": "fingerprint",
-          "Value": "b9sayid5wm"
-        },
-        {
-          "Name": "label",
-          "Value": "css/site.css.gz"
-        },
-        {
-          "Name": "integrity",
-          "Value": "sha256-fNKkLSNFLZMVTc2zVrpMXQqOwPU3sU4GWcfEbCR2V1I="
-        }
-      ]
-    },
-    {
       "Route": "css/site.css",
       "AssetFile": "C:\\Users\\brian\\.nuget\\packages\\microsoft.aspnetcore.identity.ui\\9.0.3\\staticwebassets\\css\\site.css",
       "Selectors": [],
@@ -5552,12 +5391,12 @@
     },
     {
       "Route": "css/site.css",
-      "AssetFile": "C:\\Users\\brian\\Desktop\\IT-project 1\\MassageHuis\\MassageHuis\\obj\\Debug\\net9.0\\compressed\\3xafypuejt-b9sayid5wm.gz",
+      "AssetFile": "C:\\Users\\brian\\Desktop\\IT-project 1\\MassageHuis\\MassageHuis\\obj\\Debug\\net9.0\\compressed\\3xafypuejt-nf0pmhlvol.gz",
       "Selectors": [
         {
           "Name": "Content-Encoding",
           "Value": "gzip",
-          "Quality": "0.003125000000"
+          "Quality": "0.002597402597"
         }
       ],
       "ResponseHeaders": [
@@ -5567,15 +5406,15 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "319"
+          "Value": "384"
         },
         {
           "Name": "ETag",
-          "Value": "\"fNKkLSNFLZMVTc2zVrpMXQqOwPU3sU4GWcfEbCR2V1I=\""
+          "Value": "\"YVqe5HabdB84p6qViHqyk7wQHabO5ARGQwy1MPLNC+M=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sun, 06 Apr 2025 09:00:16 GMT"
+          "Value": "Thu, 17 Apr 2025 18:39:18 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -5595,13 +5434,13 @@
         },
         {
           "Name": "ETag",
-          "Value": "W/\"j6fhJSuuyLpOSLuPJU0TsDV0iNjor5S3rDnvxJrt4bg=\""
+          "Value": "W/\"c5gcEUarMV5QiNAoHAYQpZbFWglLyR3K6Q17T3vD0XY=\""
         }
       ],
       "EndpointProperties": [
         {
           "Name": "integrity",
-          "Value": "sha256-j6fhJSuuyLpOSLuPJU0TsDV0iNjor5S3rDnvxJrt4bg="
+          "Value": "sha256-c5gcEUarMV5QiNAoHAYQpZbFWglLyR3K6Q17T3vD0XY="
         }
       ]
     },
@@ -5616,7 +5455,7 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "667"
+          "Value": "808"
         },
         {
           "Name": "Content-Type",
@@ -5624,11 +5463,11 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"j6fhJSuuyLpOSLuPJU0TsDV0iNjor5S3rDnvxJrt4bg=\""
+          "Value": "\"c5gcEUarMV5QiNAoHAYQpZbFWglLyR3K6Q17T3vD0XY=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sun, 06 Apr 2025 09:00:16 GMT"
+          "Value": "Thu, 17 Apr 2025 18:39:18 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -5638,13 +5477,13 @@
       "EndpointProperties": [
         {
           "Name": "integrity",
-          "Value": "sha256-j6fhJSuuyLpOSLuPJU0TsDV0iNjor5S3rDnvxJrt4bg="
+          "Value": "sha256-c5gcEUarMV5QiNAoHAYQpZbFWglLyR3K6Q17T3vD0XY="
         }
       ]
     },
     {
       "Route": "css/site.css.gz",
-      "AssetFile": "C:\\Users\\brian\\Desktop\\IT-project 1\\MassageHuis\\MassageHuis\\obj\\Debug\\net9.0\\compressed\\3xafypuejt-b9sayid5wm.gz",
+      "AssetFile": "C:\\Users\\brian\\Desktop\\IT-project 1\\MassageHuis\\MassageHuis\\obj\\Debug\\net9.0\\compressed\\3xafypuejt-nf0pmhlvol.gz",
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -5653,7 +5492,7 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "319"
+          "Value": "384"
         },
         {
           "Name": "Content-Type",
@@ -5661,11 +5500,11 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"fNKkLSNFLZMVTc2zVrpMXQqOwPU3sU4GWcfEbCR2V1I=\""
+          "Value": "\"YVqe5HabdB84p6qViHqyk7wQHabO5ARGQwy1MPLNC+M=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sun, 06 Apr 2025 09:00:16 GMT"
+          "Value": "Thu, 17 Apr 2025 18:39:18 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -5683,7 +5522,168 @@
       "EndpointProperties": [
         {
           "Name": "integrity",
-          "Value": "sha256-fNKkLSNFLZMVTc2zVrpMXQqOwPU3sU4GWcfEbCR2V1I="
+          "Value": "sha256-YVqe5HabdB84p6qViHqyk7wQHabO5ARGQwy1MPLNC+M="
+        }
+      ]
+    },
+    {
+      "Route": "css/site.nf0pmhlvol.css",
+      "AssetFile": "C:\\Users\\brian\\Desktop\\IT-project 1\\MassageHuis\\MassageHuis\\obj\\Debug\\net9.0\\compressed\\3xafypuejt-nf0pmhlvol.gz",
+      "Selectors": [
+        {
+          "Name": "Content-Encoding",
+          "Value": "gzip",
+          "Quality": "0.002597402597"
+        }
+      ],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "384"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"YVqe5HabdB84p6qViHqyk7wQHabO5ARGQwy1MPLNC+M=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Thu, 17 Apr 2025 18:39:18 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        },
+        {
+          "Name": "Content-Encoding",
+          "Value": "gzip"
+        },
+        {
+          "Name": "Vary",
+          "Value": "Content-Encoding"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/css"
+        },
+        {
+          "Name": "ETag",
+          "Value": "W/\"c5gcEUarMV5QiNAoHAYQpZbFWglLyR3K6Q17T3vD0XY=\""
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "nf0pmhlvol"
+        },
+        {
+          "Name": "label",
+          "Value": "css/site.css"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-c5gcEUarMV5QiNAoHAYQpZbFWglLyR3K6Q17T3vD0XY="
+        }
+      ]
+    },
+    {
+      "Route": "css/site.nf0pmhlvol.css",
+      "AssetFile": "C:\\Users\\brian\\Desktop\\IT-project 1\\MassageHuis\\MassageHuis\\wwwroot\\css\\site.css",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "808"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/css"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"c5gcEUarMV5QiNAoHAYQpZbFWglLyR3K6Q17T3vD0XY=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Thu, 17 Apr 2025 18:39:18 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "nf0pmhlvol"
+        },
+        {
+          "Name": "label",
+          "Value": "css/site.css"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-c5gcEUarMV5QiNAoHAYQpZbFWglLyR3K6Q17T3vD0XY="
+        }
+      ]
+    },
+    {
+      "Route": "css/site.nf0pmhlvol.css.gz",
+      "AssetFile": "C:\\Users\\brian\\Desktop\\IT-project 1\\MassageHuis\\MassageHuis\\obj\\Debug\\net9.0\\compressed\\3xafypuejt-nf0pmhlvol.gz",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "384"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/css"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"YVqe5HabdB84p6qViHqyk7wQHabO5ARGQwy1MPLNC+M=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Thu, 17 Apr 2025 18:39:18 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        },
+        {
+          "Name": "Content-Encoding",
+          "Value": "gzip"
+        },
+        {
+          "Name": "Vary",
+          "Value": "Content-Encoding"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "nf0pmhlvol"
+        },
+        {
+          "Name": "label",
+          "Value": "css/site.css.gz"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-YVqe5HabdB84p6qViHqyk7wQHabO5ARGQwy1MPLNC+M="
         }
       ]
     },

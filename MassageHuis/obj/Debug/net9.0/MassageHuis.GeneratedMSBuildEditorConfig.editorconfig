@@ -120,10 +120,6 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/brian/Desktop/IT-project 1/MassageHuis/MassageHuis/Views/Admin/Masseur.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cTWFzc2V1ci5jc2h0bWw=
-build_metadata.AdditionalFiles.CssScope = 
-
 [C:/Users/brian/Desktop/IT-project 1/MassageHuis/MassageHuis/Views/Home/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
@@ -150,6 +146,10 @@ build_metadata.AdditionalFiles.CssScope =
 
 [C:/Users/brian/Desktop/IT-project 1/MassageHuis/MassageHuis/Views/Uitbater/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVWl0YmF0ZXJcSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/brian/Desktop/IT-project 1/MassageHuis/MassageHuis/Views/Uitbater/Masseur.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVWl0YmF0ZXJcTWFzc2V1ci5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/brian/Desktop/IT-project 1/MassageHuis/MassageHuis/Views/_ViewImports.cshtml]
