@@ -17,5 +17,5 @@ public partial class RegulierTijdslot
 
     public virtual Schema IdSchemaNavigation { get; set; } = null!;
 
-    public virtual ICollection<Reservaty> Reservaties { get; set; } = new List<Reservaty>();
+    public virtual ICollection<Reservatie> Reservaties { get; set; } = new List<Reservatie>();
 }

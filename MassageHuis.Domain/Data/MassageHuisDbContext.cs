@@ -30,7 +30,7 @@ public partial class MassageHuisDbContext : DbContext
 
     public virtual DbSet<Betaling> Betalings { get; set; }
 
-    public virtual DbSet<KostPrij> KostPrijs { get; set; }
+    public virtual DbSet<KostPrijs> KostPrijs { get; set; }
 
     public virtual DbSet<Masseur> Masseurs { get; set; }
 
@@ -42,7 +42,7 @@ public partial class MassageHuisDbContext : DbContext
 
     public virtual DbSet<ReservatiePromotieCode> ReservatiePromotieCodes { get; set; }
 
-    public virtual DbSet<Reservaty> Reservaties { get; set; }
+    public virtual DbSet<Reservatie> Reservaties { get; set; }
 
     public virtual DbSet<Schema> Schemas { get; set; }
 
@@ -158,7 +158,7 @@ public partial class MassageHuisDbContext : DbContext
                 .HasConstraintName("FKBetaling230728");
         });
 
-        modelBuilder.Entity<KostPrij>(entity =>
+        modelBuilder.Entity<KostPrijs>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PK__Prijs__3214EC07411AC5FA");
 
@@ -269,7 +269,7 @@ public partial class MassageHuisDbContext : DbContext
                 .HasConstraintName("FKReservatie795620");
         });
 
-        modelBuilder.Entity<Reservaty>(entity =>
+        modelBuilder.Entity<Reservatie>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PK__Reservat__3214EC070AE0EE6F");
 
