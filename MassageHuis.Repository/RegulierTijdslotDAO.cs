@@ -6,42 +6,35 @@ using MassageHuis.Data;
 
 namespace MassageHuis.Repositories
 {
-    public class SchemaDAO : IDAO<Schema>
+    public class RegulierTijdslotDAO : IDAO<RegulierTijdslot>
     {
         private readonly MassageHuisDbContext _dbContext;
-        public SchemaDAO(MassageHuisDbContext dbContext)
+        public RegulierTijdslotDAO(MassageHuisDbContext dbContext)
         {
             _dbContext = dbContext;
         }
 
-        async public Task<Schema?> FindByIdAsync(Schema entity)
+        async public Task<RegulierTijdslot?> FindByIdAsync(RegulierTijdslot entity)
         {
-            try
-            {
-                return await _dbContext.Schemas.Where(b => b.IdMasseur == entity.IdMasseur).FirstOrDefaultAsync();
-            }
-            catch (Exception ex)
-            { 
-                throw new Exception("error DAO Masseur"); 
-            }
+            throw new NotImplementedException();
         }
         
 
-        Task IDAO<Schema>.AddAsync(Schema entity)
+        Task IDAO<RegulierTijdslot>.AddAsync(RegulierTijdslot entity)
         {
             throw new NotImplementedException();
         }
 
-        Task IDAO<Schema>.DeleteAsync(Schema entity)
+        Task IDAO<RegulierTijdslot>.DeleteAsync(RegulierTijdslot entity)
         {
             throw new NotImplementedException();
         }
 
-        async Task<IEnumerable<Schema>?> IDAO<Schema>.GetAllAsync()
+        async Task<IEnumerable<RegulierTijdslot>?> IDAO<RegulierTijdslot>.GetAllAsync()
         {
             try
             {
-                return await _dbContext.Schemas.ToListAsync();
+                return await _dbContext.RegulierTijdslots.ToListAsync();
             }
             catch (Microsoft.Data.SqlClient.SqlException ex)
             {
@@ -55,7 +48,7 @@ namespace MassageHuis.Repositories
             }
         }
 
-        Task IDAO<Schema>.UpdateAsync(Schema entity)
+        Task IDAO<RegulierTijdslot>.UpdateAsync(RegulierTijdslot entity)
         {
             throw new NotImplementedException();
         }

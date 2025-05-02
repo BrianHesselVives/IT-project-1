@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using MassageHuis.Entities;
 using MassageHuis.Repositories.Interfaces;
+using MassageHuis.Repositories;
 
 namespace MassageHuis.Services
 {
@@ -17,28 +18,27 @@ namespace MassageHuis.Services
         {
             _schemaDAO = schemaDAO;
         }
-
-        Task IService<Schema>.AddAsync(Schema entity)
+        public async Task AddAsync(Schema entity)
         {
             throw new NotImplementedException();
         }
 
-        Task IService<Schema>.DeleteAsync(Schema entity)
+        public async Task DeleteAsync(Schema entity)
         {
             throw new NotImplementedException();
         }
 
-        Task<Schema?> IService<Schema>.FindByIdAsync(Schema entity)
+        public async Task<Schema?> FindByIdAsync(Schema id)
         {
-            throw new NotImplementedException();
+            return await _schemaDAO.FindByIdAsync(id);
         }
 
-        Task<IEnumerable<Schema>?> IService<Schema>.GetAllAsync()
+        public async Task<IEnumerable<Schema>?> GetAllAsync()
         {
-            throw new NotImplementedException();
+            return await _schemaDAO.GetAllAsync();
         }
 
-        Task IService<Schema>.UpdateAsync(Schema entity)
+        public Task UpdateAsync(Schema entity)
         {
             throw new NotImplementedException();
         }
