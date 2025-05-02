@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "/QTFkT1POc4=",
+  "dgSpecHash": "cUG/MpaP5cY=",
   "success": true,
-  "projectFilePath": "C:\\Users\\brian\\Desktop\\IT-project 1\\MassageHuis\\MassageHuis\\MassageHuis.csproj",
+  "projectFilePath": "C:\\Users\\brian\\Desktop\\IT-project 1\\MassageHuis\\MassageHuis\\MassageHuis\\MassageHuis.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\brian\\.nuget\\packages\\automapper\\14.0.0\\automapper.14.0.0.nupkg.sha512",
     "C:\\Users\\brian\\.nuget\\packages\\azure.core\\1.38.0\\azure.core.1.38.0.nupkg.sha512",

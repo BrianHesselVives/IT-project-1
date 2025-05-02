@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace MassageHuis.Entities;
 
-public partial class Reservatie
+public partial class Reservaty
 {
     public int Id { get; set; }
 
@@ -29,7 +29,7 @@ public partial class Reservatie
 
     public virtual AspNetUser? IdAspNetUsersNavigation { get; set; }
 
-    public virtual KostPrijs IdPrijsNavigation { get; set; } = null!;
+    public virtual KostPrij IdPrijsNavigation { get; set; } = null!;
 
     public virtual PromotieCode? IdPromotieCodeNavigation { get; set; }
 

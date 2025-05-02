@@ -8578,11 +8578,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\brian\\Desktop\\IT-project 1\\MassageHuis\\MassageHuis\\MassageHuis.csproj",
+      "projectUniqueName": "C:\\Users\\brian\\Desktop\\IT-project 1\\MassageHuis\\MassageHuis\\MassageHuis\\MassageHuis.csproj",
       "projectName": "MassageHuis",
-      "projectPath": "C:\\Users\\brian\\Desktop\\IT-project 1\\MassageHuis\\MassageHuis\\MassageHuis.csproj",
+      "projectPath": "C:\\Users\\brian\\Desktop\\IT-project 1\\MassageHuis\\MassageHuis\\MassageHuis\\MassageHuis.csproj",
       "packagesPath": "C:\\Users\\brian\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\brian\\Desktop\\IT-project 1\\MassageHuis\\MassageHuis\\obj\\",
+      "outputPath": "C:\\Users\\brian\\Desktop\\IT-project 1\\MassageHuis\\MassageHuis\\MassageHuis\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -8603,14 +8603,14 @@
         "net9.0": {
           "targetAlias": "net9.0",
           "projectReferences": {
-            "C:\\Users\\brian\\Desktop\\IT-project 1\\MassageHuis\\MassageHuis.Domain\\MassageHuis.Domains.csproj": {
-              "projectPath": "C:\\Users\\brian\\Desktop\\IT-project 1\\MassageHuis\\MassageHuis.Domain\\MassageHuis.Domains.csproj"
+            "C:\\Users\\brian\\Desktop\\IT-project 1\\MassageHuis\\MassageHuis\\MassageHuis.Domain\\MassageHuis.Domains.csproj": {
+              "projectPath": "C:\\Users\\brian\\Desktop\\IT-project 1\\MassageHuis\\MassageHuis\\MassageHuis.Domain\\MassageHuis.Domains.csproj"
             },
-            "C:\\Users\\brian\\Desktop\\IT-project 1\\MassageHuis\\MassageHuis.Service\\MassageHuis.Services.csproj": {
-              "projectPath": "C:\\Users\\brian\\Desktop\\IT-project 1\\MassageHuis\\MassageHuis.Service\\MassageHuis.Services.csproj"
+            "C:\\Users\\brian\\Desktop\\IT-project 1\\MassageHuis\\MassageHuis\\MassageHuis.Service\\MassageHuis.Services.csproj": {
+              "projectPath": "C:\\Users\\brian\\Desktop\\IT-project 1\\MassageHuis\\MassageHuis\\MassageHuis.Service\\MassageHuis.Services.csproj"
             },
-            "C:\\Users\\brian\\Desktop\\IT-project 1\\MassageHuis\\MassageHuis.Util\\MassageHuis.Util.csproj": {
-              "projectPath": "C:\\Users\\brian\\Desktop\\IT-project 1\\MassageHuis\\MassageHuis.Util\\MassageHuis.Util.csproj"
+            "C:\\Users\\brian\\Desktop\\IT-project 1\\MassageHuis\\MassageHuis\\MassageHuis.Util\\MassageHuis.Util.csproj": {
+              "projectPath": "C:\\Users\\brian\\Desktop\\IT-project 1\\MassageHuis\\MassageHuis\\MassageHuis.Util\\MassageHuis.Util.csproj"
             }
           }
         }
