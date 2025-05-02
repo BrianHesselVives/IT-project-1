@@ -25,5 +25,5 @@ public partial class PromotieCode
 
     public virtual ICollection<ReservatiePromotieCode> ReservatiePromotieCodes { get; set; } = new List<ReservatiePromotieCode>();
 
-    public virtual ICollection<Reservaty> Reservaties { get; set; } = new List<Reservaty>();
+    public virtual ICollection<Reservatie> Reservaties { get; set; } = new List<Reservatie>();
 }

@@ -53,7 +53,7 @@ public partial class AspNetUser
 
     public virtual ICollection<PromotieCode> PromotieCodes { get; set; } = new List<PromotieCode>();
 
-    public virtual ICollection<Reservaty> Reservaties { get; set; } = new List<Reservaty>();
+    public virtual ICollection<Reservatie> Reservaties { get; set; } = new List<Reservatie>();
 
     public virtual ICollection<AspNetRole> Roles { get; set; } = new List<AspNetRole>();
 }
