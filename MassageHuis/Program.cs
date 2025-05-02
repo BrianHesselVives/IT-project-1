@@ -42,9 +42,13 @@ builder.Services.AddSingleton<IEmailSend, EmailSend>();
 
 
 builder.Services.AddTransient<IService<Masseur>, MasseurService>();
+builder.Services.AddTransient<IService<Schema>, SchemaService>();
+builder.Services.AddTransient<IService<RegulierTijdslot>, RegulierTijdslotService>();
+
 
 builder.Services.AddTransient<IDAO<Masseur>, MasseurDAO>();
-
+builder.Services.AddTransient<IDAO<Schema>, SchemaDAO>();
+builder.Services.AddTransient<IDAO<RegulierTijdslot>, RegulierTijdslotDAO>();
 var app = builder.Build();
 
 

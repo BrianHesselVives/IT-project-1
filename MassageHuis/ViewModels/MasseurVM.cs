@@ -18,6 +18,7 @@ namespace MassageHuis.ViewModels
         public string? Naam { get; set; }
         public IEnumerable<Masseur>? Masseurs { get; set; }
         public IEnumerable<ApplicationUser>? Gebruikers { get; set; }
-
+        public IEnumerable<Schema>? Schemas { get; set; }
+        public IEnumerable<RegulierTijdslot>? RegulierTijdsloten { get; set; }
     }
 }
