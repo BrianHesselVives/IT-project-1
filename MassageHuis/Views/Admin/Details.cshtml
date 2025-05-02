@@ -1,0 +1,96 @@
+﻿@using MassageHuis.ViewModels
+@model MassageHuis.ViewModels.RoleDetailsVM
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb mb-0">
+            <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Home</a></li>
+            <li class="breadcrumb-item"><a asp-controller="Admin" asp-action="Index">Admin Overzicht</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Details Rol</li>
+        </ol>
+    </nav>
+    <a asp-controller="Admin" asp-action="Index" class="btn btn-outline-secondary">
+        <i class="bi bi-arrow-return-left me-2"></i> Terug naar Overzicht
+    </a>
+</div>
+
+<h1>Details Rol</h1>
+
+<div>
+    <h4>@Model.Role.Name</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            ID
+        </dt>
+        <dd class="col-sm-10">
+            @Model.Role.Id
+        </dd>
+        <dt class="col-sm-2">
+            Naam
+        </dt>
+        <dd class="col-sm-10">
+            @Model.Role.Name
+        </dd>
+        @if (!string.IsNullOrEmpty(Model.Role.ConcurrencyStamp))
+        {
+            <dt class="col-sm-2">
+                Concurrency Stamp
+            </dt>
+            <dd class="col-sm-10">
+                @Model.Role.ConcurrencyStamp
+            </dd>
+        }
+    </dl>
+</div>
+<h4>Gebruiker toevoegen aan deze rol</h4>
+@if (Model.UsersNotInRole != null && Model.UsersNotInRole.Any())
+{
+    <form asp-action="AddUserToRole" method="post">
+        <div class="form-group">
+            <label for="UsersToAdd">Selecteer gebruikers om toe te voegen:</label>
+            <select class="form-control" name="UsersToAdd">
+                @foreach (var user in Model.UsersNotInRole)
+                {
+                    <option value="@user.Id">@user.UserName (@user.Email)</option>
+                }
+            </select>
+            @if (Model.Role.Name == "masseur")
+            {
+                @await Html.PartialAsync("_Masseur.cshtml")
+            }
+        </div>
+        <input type="hidden" name="RoleId" value="@Model.Role.Id" />
+        <button type="submit" class="btn btn-primary">Gebruikers toevoegen</button>
+    </form>
+}
+else
+{
+    <p>Alle gebruikers zijn al aan deze rol toegewezen of er zijn geen andere gebruikers in het systeem.</p>
+}
+<h4>Gebruikers verwijderen uit deze rol</h4>
+@if (Model.UsersInRole != null && Model.UsersInRole.Any())
+{
+    <form asp-action="RemoveUserFromRole" method="post">
+        <div class="form-group">
+            <label for="UsersToRemove">Selecteer gebruikers om te verwijderen:</label>
+            <select class="form-control" name="UsersToRemove">
+                @foreach (var user in Model.UsersInRole)
+                {
+                    <option value="@user.Id">@user.UserName (@user.Email)</option>
+                }
+            </select>
+        </div>
+        <input type="hidden" name="RoleId" value="@Model.Role.Id" />
+        <button type="submit" class="btn btn-danger">Gebruikers verwijderen</button>
+    </form>
+}
+
+else
+{
+    <p>Er zijn geen gebruikers in deze rol om te verwijderen.</p>
+}

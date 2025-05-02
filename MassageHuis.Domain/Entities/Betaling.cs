@@ -22,5 +22,5 @@ public partial class Betaling
 
     public int IdReservaties { get; set; }
 
-    public virtual Reservatie IdReservatiesNavigation { get; set; } = null!;
+    public virtual Reservaty IdReservatiesNavigation { get; set; } = null!;
 }
