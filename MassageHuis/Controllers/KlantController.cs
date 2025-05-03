@@ -7,6 +7,7 @@ using MassageHuis.Util.Mail.Interfaces;
 using MassageHuis.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Formatters;
 using System.Data;
 using System.Net.Sockets;
 
@@ -56,18 +57,13 @@ namespace MassageHuis.Controllers
         [HttpPost]
         public async Task<IActionResult> Kalender(MasseurVM masseurdata)
         {
-            BerekenBeschikbareSloten(masseurdata.Id);
-            return View(masseurdata);
-        }
-        public async Task BerekenBeschikbareSloten(int id)
-        {
             var schemas = await _schemaService.GetAllAsync();
-            var schema = schemas.Where(b => b.IdMasseur == id);
+            var schema = schemas.Where(b => b.IdMasseur == masseurdata.Id);
 
             var reservaties = await _reservatieService.GetAllAsync();
 
             var datumvandaag = DateOnly.FromDateTime(DateTime.Today);
-            var actieveSchemas = schemas.Where(s => s.IdMasseur == id && s.StartDatum <= datumvandaag && s.EindDatum >= datumvandaag)
+            var actieveSchemas = schemas.Where(s => s.IdMasseur == masseurdata.Id && s.StartDatum <= datumvandaag && s.EindDatum >= datumvandaag)
             .OrderByDescending(s => s.StartDatum)
             .FirstOrDefault();
 
@@ -80,6 +76,20 @@ namespace MassageHuis.Controllers
                 var lsDataMaand = GetAllDaysInMonth(DateTime.Now.Year, DateTime.Now.Month);
 
                 lsDataMaand = lsDataMaand.Where(b => b.Date >= DateTime.Today.Date).ToList();
+                var vrijeSlots = new List<DateTime>();
+                foreach (var dag in lsDataMaand)
+                {
+                    foreach (var slot in tijdslotenFilterd)
+                    {
+                        if ((int) dag.DayOfWeek == slot.Dag)
+                        {
+                            TimeSpan startTijd = new TimeSpan();
+                            startTijd = slot.StartTijd.ToTimeSpan();
+                            vrijeSlots.Add(dag.Add(startTijd));
+                        }
+                    }
+                }
+                masseurdata.vrijeSlots = vrijeSlots;
 
                 var uitzonderingtijdsloten = await _uitzonderingTijdslotService.GetAllAsync();
                 if (uitzonderingtijdsloten.Any())
@@ -89,10 +99,9 @@ namespace MassageHuis.Controllers
             }
             else
             {
-                Console.WriteLine($"Geen actief schema gevonden voor masseur-ID: {id}");
+                Console.WriteLine($"Geen actief schema gevonden voor masseur-ID: {masseurdata.Id}");
             }
-
-            return;
+            return View(masseurdata);
         }
         public static List<DateTime> GetAllDaysInMonth(int year, int month)
         {

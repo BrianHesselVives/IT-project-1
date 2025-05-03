@@ -4,6 +4,7 @@ using MassageHuis.Entities;
 using Microsoft.EntityFrameworkCore;
 using MassageHuis.Data;
 
+
 namespace MassageHuis.Repositories
 {
     public class RegulierTijdslotDAO : IDAO<RegulierTijdslot>
@@ -14,28 +15,38 @@ namespace MassageHuis.Repositories
             _dbContext = dbContext;
         }
 
-        async public Task<RegulierTijdslot?> FindByIdAsync(RegulierTijdslot entity)
+        public async Task AddAsync(RegulierTijdslot entity)
+        {
+
+            _dbContext.Entry(entity).State = EntityState.Added;
+            try
+            {
+                await _dbContext.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                throw;
+            }
+        }
+
+        public async Task DeleteAsync(RegulierTijdslot entity)
         {
             throw new NotImplementedException();
         }
-        
 
-        Task IDAO<RegulierTijdslot>.AddAsync(RegulierTijdslot entity)
+        public async Task<RegulierTijdslot?> FindByIdAsync(RegulierTijdslot entity)
         {
             throw new NotImplementedException();
         }
 
-        Task IDAO<RegulierTijdslot>.DeleteAsync(RegulierTijdslot entity)
-        {
-            throw new NotImplementedException();
-        }
-
-        async Task<IEnumerable<RegulierTijdslot>?> IDAO<RegulierTijdslot>.GetAllAsync()
+        public async Task<IEnumerable<RegulierTijdslot>?> GetAllAsync()
         {
             try
             {
                 return await _dbContext.RegulierTijdslots.ToListAsync();
             }
+
             catch (Microsoft.Data.SqlClient.SqlException ex)
             {
                 Debug.WriteLine("db error:", ex.ToString());
@@ -48,7 +59,7 @@ namespace MassageHuis.Repositories
             }
         }
 
-        Task IDAO<RegulierTijdslot>.UpdateAsync(RegulierTijdslot entity)
+        public Task UpdateAsync(RegulierTijdslot entity)
         {
             throw new NotImplementedException();
         }

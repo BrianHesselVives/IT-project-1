@@ -22,5 +22,6 @@ namespace MassageHuis.ViewModels
         public IEnumerable<RegulierTijdslot>? RegulierTijdsloten { get; set; }
         public IEnumerable<UitzonderingTijdslot>? UitzonderingTijdsloten { get; set; }
         public IEnumerable<Reservatie>? Reservaties { get; set; }
+        public List<DateTime>? vrijeSlots { get; set; }
     }
 }
