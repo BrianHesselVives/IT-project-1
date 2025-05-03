@@ -1,0 +1,42 @@
+﻿@using System.Globalization
+@model MassageHuis.ViewModels.MasseurVM
+<div class="container py-5">
+    <h2>Bevestig uw reservering</h2>
+    <p>Controleer de details voordat u de reservering plaatst:</p>
+
+    <dl class="row">
+        <dt class="col-sm-3">Datum en tijd:</dt>
+        <dd class="col-sm-9">@Model.vrijeSlots.FirstOrDefault().ToString("dddd dd MMMM HH:mm", new CultureInfo("nl-BE"))</dd>
+
+        <dt class="col-sm-3">Masseur:</dt>
+        <dd class="col-sm-9">@Model.Naam</dd>
+
+        <dt class="col-sm-3">Type massage:</dt>
+        <dd class="col-sm-9">placeholder voor type massage</dd>
+
+        <dt class="col-sm-3">Prijs:</dt>
+        <dd class="col-sm-9">Placeholder voor de prijs</dd>
+    </dl>
+
+    <div class="mb-3">
+        <p>
+            <a class="btn btn-link" data-bs-toggle="collapse" href="#kortingscodeVeld" role="button" aria-expanded="false" aria-controls="kortingscodeVeld">
+                Kortingscode (optioneel)
+            </a>
+        </p>
+        <div class="collapse" id="kortingscodeVeld">
+            <div class="card card-body">
+                <label for="kortingscode" class="form-label visually-hidden">Voer uw kortingscode in:</label>
+                <input type="text" class="form-control" id="kortingscode" placeholder="Voer uw kortingscode in">
+            </div>
+        </div>
+    </div>
+
+    <form method="post" asp-controller="Reservatie" asp-action="PlaatsDefinitieveReservatie">
+        @Html.AntiForgeryToken()
+        <input type="hidden" name="Id" value="@Model.Id" />
+        <input type="hidden" name="vrijeSlots" value="@Model.vrijeSlots.FirstOrDefault().ToString()" />
+        <button type="submit" class="btn btn-success">Reservering plaatsen</button>
+        <a asp-controller="Home" asp-action="Index" class="btn btn-secondary">Annuleren</a>
+    </form>
+</div>

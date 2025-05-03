@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using MassageHuis.Entities;
 using MassageHuis.Models;
-using MassageHuis.Services;
+using MassageHuis.Extensions;
 using MassageHuis.Services.Interfaces;
 using MassageHuis.Util.Mail.Interfaces;
 using MassageHuis.ViewModels;
@@ -10,6 +10,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using System.Data;
 using System.Net.Sockets;
+using Microsoft.AspNetCore.Http;
+using System.Text.Json;
 
 namespace MassageHuis.Controllers
 {
@@ -17,9 +19,9 @@ namespace MassageHuis.Controllers
     public class KlantController : Controller
     {
         private IService<Masseur> _masseurService;
-        private IService<Schema> _schemaService;    
+        private IService<Schema> _schemaService;
         private IService<Reservatie> _reservatieService;
-        private IService<UitzonderingTijdslot> _uitzonderingTijdslotService; 
+        private IService<UitzonderingTijdslot> _uitzonderingTijdslotService;
         private IService<RegulierTijdslot> _regulierTijdslotService;
         private readonly IMapper _mapper;
         private readonly IEmailSend _emailSender;
@@ -28,13 +30,13 @@ namespace MassageHuis.Controllers
 
         public KlantController(
             IMapper mapper,
-            UserManager<ApplicationUser> usermanager, 
-            IService<Masseur> masseurservice, 
-            IService<Schema> schemaservice, 
-            IService<UitzonderingTijdslot> uitzonderingTijdslotservice, 
+            UserManager<ApplicationUser> usermanager,
+            IService<Masseur> masseurservice,
+            IService<Schema> schemaservice,
+            IService<UitzonderingTijdslot> uitzonderingTijdslotservice,
             IService<Reservatie> reservatieservice,
 
-            IService<RegulierTijdslot> regulierTijdslotservice, 
+            IService<RegulierTijdslot> regulierTijdslotservice,
             IEmailSend emailSender)
         {
             _masseurService = masseurservice;
@@ -61,8 +63,9 @@ namespace MassageHuis.Controllers
             var schema = schemas.Where(b => b.IdMasseur == masseurdata.Id);
 
             var reservaties = await _reservatieService.GetAllAsync();
-
             var datumvandaag = DateOnly.FromDateTime(DateTime.Today);
+            var toekomstiseReservaties = reservaties.Where(b => b.DatumReservatie >= datumvandaag);
+
             var actieveSchemas = schemas.Where(s => s.IdMasseur == masseurdata.Id && s.StartDatum <= datumvandaag && s.EindDatum >= datumvandaag)
             .OrderByDescending(s => s.StartDatum)
             .FirstOrDefault();
@@ -81,7 +84,7 @@ namespace MassageHuis.Controllers
                 {
                     foreach (var slot in tijdslotenFilterd)
                     {
-                        if ((int) dag.DayOfWeek == slot.Dag)
+                        if ((int)dag.DayOfWeek == slot.Dag)
                         {
                             TimeSpan startTijd = new TimeSpan();
                             startTijd = slot.StartTijd.ToTimeSpan();
@@ -101,6 +104,10 @@ namespace MassageHuis.Controllers
             {
                 Console.WriteLine($"Geen actief schema gevonden voor masseur-ID: {masseurdata.Id}");
             }
+            ReservatieVM reservatieSessie = new ReservatieVM();
+            reservatieSessie.MasseurId = masseurdata.Id;
+            reservatieSessie.MasseurNaam = masseurdata.Naam;
+            HttpContext.Session.SetObject("Reservatie", reservatieSessie);
             return View(masseurdata);
         }
         public static List<DateTime> GetAllDaysInMonth(int year, int month)

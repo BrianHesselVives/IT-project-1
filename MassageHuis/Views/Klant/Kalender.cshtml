@@ -1,17 +1,222 @@
-﻿@using MassageHuis.ViewModels
-@model MassageHuis.ViewModels.MasseurVM
+﻿@model MassageHuis.ViewModels.MasseurVM
+@using System.Globalization
+
+@{
+    var year = Model.CalendarYear;
+    var month = Model.CalendarMonth;
+    var culture = new CultureInfo("nl-BE");
+
+    var firstDayOfMonth = new DateTime(year, month, 1);
+    var daysInMonth = DateTime.DaysInMonth(year, month);
+    int startDayOfWeek = (int)firstDayOfMonth.DayOfWeek;
+    int startOffset = (startDayOfWeek == 0) ? 6 : startDayOfWeek - 1;
+    var slotsGroupedByDate = Model.vrijeSlots?
+                                .OrderBy(s => s)
+                                .GroupBy(slot => slot.Date)
+                                .ToDictionary(g => g.Key, g => g.ToList())
+                                ?? new Dictionary<DateTime, List<DateTime>>();
+
+    var availableDates = slotsGroupedByDate.Keys.ToHashSet();
+
+    var currentMonthName = culture.DateTimeFormat.GetMonthName(month);
+    var prevMonth = firstDayOfMonth.AddMonths(-1);
+    var nextMonth = firstDayOfMonth.AddMonths(1);
+}
+
+<!--
+    <style>
+    /* Styles are similar to the previous Bootstrap example */
+    .available-date-highlight {
+        font-weight: bold;
+        border-radius: 50%;
+        width: 3em;
+        height: 3em;
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
+        text-decoration: none; /* Remove underline from link */
+        color: inherit; /* Inherit text color */
+    }
+    /* Make the link itself clickable */
+    .available-date-link {
+        display: inline-block; /* Allow sizing */
+        cursor: pointer;
+        text-decoration: none;
+    }
+
+        .available-date-link:hover .available-date-highlight {
+            /* Optional: Add hover effect if needed, e.g., slight brightness change */
+            filter: brightness(95%);
+        }
+
+    .calendar-nav a {
+        text-decoration: none;
+    }
+
+    .table th, .table td {
+        vertical-align: middle;
+        height: 60px;
+        width: calc(100% / 7);
+    }
+
+    .table td {
+        padding: 0.25rem;
+    }
+
+    .other-month {
+        color: var(--bs-secondary-color);
+        background-color: var(--bs-light-bg-subtle);
+    }
+    /* Style for the submit button within the form to look like list item */
+    .modal-body .list-group-item > form > button.list-group-button {
+        width: 100%;
+        text-align: left;
+        border: none;
+        background: none;
+        padding: 0;
+        color: inherit;
+        font: inherit;
+        cursor: pointer;
+        appearance: none;
+    }
+
+    .modal-body .list-group-item-action:hover button.list-group-button,
+    .modal-body .list-group-item-action:focus button.list-group-button {
+        outline: none;
+    }
+
+    .modal-body .list-group-item.active {
+        z-index: 2;
+    }
+</style>
+-->
 
 <div class='container pb-5'>
-    <h2>Plaats een afspraak bij: @Model.Naam</h2>
-    <div class="list-group">
-        <button type="button" class="list-group-item list-group-item-action active" aria-current="true">
-            The current button
-        </button>
-        @foreach(DateTime vrijSlot in Model.vrijeSlots)
-        {
-            <button type="button" class="list-group-item list-group-item-action">@vrijSlot</button>
-        }
-    </div>
-</div>
+    <h2 class="mb-3">Plaats een afspraak bij: @Model.Naam</h2>
+    <div class="mt-5">
+        <div class="d-flex justify-content-between align-items-center mb-3 calendar-nav">
+            <a asp-action="PlaatsReservatie"
+               asp-route-id="@Model.Id"
+               asp-route-year="@prevMonth.Year"
+               asp-route-month="@prevMonth.Month"
+               class="btn btn-outline-primary">&lt; Vorige</a>
 
-@await Html.PartialAsync("_KalenderLayout.cshtml")
+            <h3 class="mb-0 text-center">@currentMonthName @year</h3>
+
+            <a asp-action="PlaatsReservatie"
+               asp-route-id="@Model.Id"
+               asp-route-year="@nextMonth.Year"
+               asp-route-month="@nextMonth.Month"
+               class="btn btn-outline-primary">Volgende &gt;</a>
+        </div>
+
+        <table class="table table-bordered text-center shadow-sm">
+            <thead class="table-dark">
+                <tr>
+                    <th>Ma</th>
+                    <th>Di</th>
+                    <th>Wo</th>
+                    <th>Do</th>
+                    <th>Vr</th>
+                    <th>Za</th>
+                    <th>Zo</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    int dayCounter = 1;
+                    for (int week = 0; week < 6; week++)
+                    {
+                        if (dayCounter > daysInMonth && week > 0 && startOffset == 0) break;
+                        if (week > 0 && (dayCounter > daysInMonth)) break;
+
+                        <tr>
+                            @for (int dayOfWeek = 0; dayOfWeek < 7; dayOfWeek++)
+                            {
+                                if ((week == 0 && dayOfWeek < startOffset) || dayCounter > daysInMonth)
+                                {
+                                    <td class="other-month"></td>
+                                }
+                                else
+                                {
+                                    var currentDate = new DateTime(year, month, dayCounter);
+                                    bool hasSlots = availableDates.Contains(currentDate.Date);
+                                    string cellClass = hasSlots ? "bg-success-subtle text-success-emphasis" : "";
+                                    string dateString = currentDate.ToString("yyyy-MM-dd");
+                                    string modalId = $"modal-date-{dateString}";
+
+                                    <td class="@(hasSlots ? "" : "")">
+                                        @if (hasSlots)
+                                        {
+                                            <a href="#" class="available-date-link"
+                                               data-bs-toggle="modal"
+                                               data-bs-target="#@modalId"
+                                               title="Bekijk tijden voor @currentDate.ToString("d MMM", culture)">
+                                                <div class="available-date-highlight @cellClass">
+                                                    @dayCounter
+                                                </div>
+                                            </a>
+                                        }
+                                        else
+                                        {
+                                            @dayCounter
+                                        }
+                                    </td>
+                                    dayCounter++;
+                                }
+                            }
+                        </tr>
+                        if (week == 0) startOffset = 0;
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+
+    @foreach (var dateGroup in slotsGroupedByDate)
+    {
+        var modalDate = dateGroup.Key;
+        var slotsForThisDate = dateGroup.Value;
+        string modalDateString = modalDate.ToString("yyyy-MM-dd");
+        string modalUniqueId = $"modal-date-{modalDateString}";
+        string formattedModalDate = modalDate.ToString("dddd dd MMMM yyyy", culture);   
+        <div class="modal fade" id="@modalUniqueId" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="@(modalUniqueId)Label" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="@(modalUniqueId)Label">Beschikbare tijden op @formattedModalDate</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Selecteer een tijd:</p>
+                        <div class="list-group">
+                            @if (slotsForThisDate.Any())
+                            {
+                                @foreach (var slot in slotsForThisDate)
+                                {
+                                    <div class="list-group-item list-group-item-action">
+                                        <form method="post" asp-controller="Reservatie" asp-action="BevestigReservatie" class="m-0 p-0">
+                                            @Html.AntiForgeryToken()
+                                            <input type="hidden" name="vrijeSlots" value="@slot" />
+                                            <input type="hidden" name="Id" value="@Model.Id" />
+                                            <button type="submit" class="list-group-button">
+                                                @slot.ToString("HH:mm")
+                                            </button>
+                                        </form>
+                                    </div>
+                                }
+                            }
+                            else
+                            {
+                                <div class="list-group-item">Geen tijden gevonden voor deze datum.</div>
+                            }
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Sluiten</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>

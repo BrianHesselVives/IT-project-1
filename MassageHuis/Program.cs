@@ -51,9 +51,16 @@ builder.Services.AddTransient<IDAO<Schema>, SchemaDAO>();
 builder.Services.AddTransient<IDAO<RegulierTijdslot>, RegulierTijdslotDAO>();
 builder.Services.AddTransient<IDAO<Reservatie>, ReservatieDAO>();
 builder.Services.AddTransient<IDAO<UitzonderingTijdslot>, UitzonderingTijdslotDAO>();
+
+// session
+builder.Services.AddSession(options =>
+{
+    options.Cookie.Name = "be.shop.Session";
+    options.IdleTimeout = TimeSpan.FromMinutes(10);
+});
+
+
 var app = builder.Build();
-
-
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -72,7 +79,7 @@ app.UseRouting();
 app.UseAuthorization();
 
 app.MapStaticAssets();
-
+app.UseSession();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}")
