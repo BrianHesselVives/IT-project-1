@@ -136,12 +136,12 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcS2xhbnRcS2FsZW5kZXIuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/brian/Desktop/IT-project 1/MassageHuis/MassageHuis/MassageHuis/Views/Klant/_KalenderLayout.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcS2xhbnRcX0thbGVuZGVyTGF5b3V0LmNzaHRtbA==
-build_metadata.AdditionalFiles.CssScope = 
-
 [C:/Users/brian/Desktop/IT-project 1/MassageHuis/MassageHuis/MassageHuis/Views/Klant/_SelectieMasseur.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcS2xhbnRcX1NlbGVjdGllTWFzc2V1ci5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/brian/Desktop/IT-project 1/MassageHuis/MassageHuis/MassageHuis/Views/Reservatie/BevestigReservatie.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmVzZXJ2YXRpZVxCZXZlc3RpZ1Jlc2VydmF0aWUuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/brian/Desktop/IT-project 1/MassageHuis/MassageHuis/MassageHuis/Views/Shared/Error.cshtml]
