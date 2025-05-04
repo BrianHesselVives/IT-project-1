@@ -1,7 +1,10 @@
-﻿@model MassageHuis.ViewModels.VerlofOverzichtVM
+﻿@using MassageHuis.ViewModels
+
+@model MassageHuis.ViewModels.VerlofOverzichtVM
 
 <div class="container mt-5">
     <h2><i class="bi bi-calendar-check mr-2"></i> Verlof Overzicht (Uitbater)</h2>
+
     @if (Model != null && Model.VerlofPeriodes.Any())
     {
         <table class="table table-striped">
@@ -13,40 +16,70 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var verlofPeriode in Model.VerlofPeriodes)
+                @{
+                    List<VerlofVM> samengevoegdePeriodes = new List<VerlofVM>();
+                    VerlofVM vorigePeriode = null;
+
+                    foreach (var verlofPeriode in Model.VerlofPeriodes.OrderBy(p => p.StartDatum))
+                    {
+                        var verlofVm = new VerlofVM
+                    {
+                        StartDatum = DateOnly.FromDateTime(verlofPeriode.StartDatum),
+                        EindDatum = verlofPeriode.EindDatum.HasValue ? DateOnly.FromDateTime(verlofPeriode.EindDatum.Value) : (DateOnly?)null,
+                        DagDeel = verlofPeriode.TypeVerlof,
+                    };
+
+                        if (vorigePeriode == null)
+                        {
+                            vorigePeriode = verlofVm;
+                        }
+                        else if (vorigePeriode.DagDeel == verlofVm.DagDeel &&
+                        vorigePeriode.EindDatum.HasValue &&
+                        vorigePeriode.EindDatum.Value.AddDays(1) == verlofVm.StartDatum)
+                        {
+                            vorigePeriode.EindDatum = verlofVm.EindDatum;
+                        }
+                        else
+                        {
+                            samengevoegdePeriodes.Add(vorigePeriode);
+                            vorigePeriode = verlofVm;
+                        }
+                    }
+
+                    if (vorigePeriode != null)
+                    {
+                        samengevoegdePeriodes.Add(vorigePeriode);
+                    }
+                }
+
+                @foreach (var periode in samengevoegdePeriodes)
                 {
                     <tr>
                         <td>
-                            @if (verlofPeriode.EindDatum.HasValue && verlofPeriode.StartDatum != verlofPeriode.EindDatum.Value)
+                            @if (periode.EindDatum.HasValue && periode.StartDatum != periode.EindDatum)
                             {
-                                <div class="accordion" id="verlofPeriode@(verlofPeriode.Id)">
+                                <div class="accordion" id="verlofPeriode@(periode.StartDatum.ToString("yyyyMMdd"))">
                                     <div class="accordion-item">
-                                        <h2 class="accordion-header" id="heading@(verlofPeriode.Id)">
-                                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse@(verlofPeriode.Id)" aria-expanded="true" aria-controls="collapse@(verlofPeriode.Id)">
-                                                @verlofPeriode.WeergaveDatum
+                                        <h2 class="accordion-header" id="heading@(periode.StartDatum.ToString("yyyyMMdd"))">
+                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse@(periode.StartDatum.ToString("yyyyMMdd"))" aria-expanded="false" aria-controls="collapse@(periode.StartDatum.ToString("yyyyMMdd"))">
+                                                @periode.StartDatum.ToString("dd-MM-yyyy") - @periode.EindDatum.Value.ToString("dd-MM-yyyy")
                                             </button>
                                         </h2>
-                                        <div id="collapse@(verlofPeriode.Id)" class="accordion-collapse collapse" aria-labelledby="heading@(verlofPeriode.Id)" data-bs-parent="#verlofPeriode@(verlofPeriode.Id)">
+                                        <div id="collapse@(periode.StartDatum.ToString("yyyyMMdd"))" class="accordion-collapse collapse" aria-labelledby="heading@(periode.StartDatum.ToString("yyyyMMdd"))" data-bs-parent="#verlofPeriode@(periode.StartDatum.ToString("yyyyMMdd"))">
                                             <div class="accordion-body">
                                                 <ul class="list-group">
-                                                    @foreach (var dag in verlofPeriode.Dagen)
+                                                    @for (var dag = periode.StartDatum; dag <= periode.EindDatum; dag = dag.AddDays(1))
                                                     {
-                                                        DateTime currentDag = dag;
                                                         <li class="list-group-item d-flex justify-content-between align-items-center">
                                                             @dag.ToString("dd-MM-yyyy")
-                                                            <form method="post" asp-action="VerlofVerwijderen" asp-route-id="@verlofPeriode.Id" asp-route-datum="@dag.ToString("yyyy-MM-dd")">
-                                                                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Bent u zeker dat u dit verlof wilt verwijderen?')">
+                                                            <form method="post" asp-action="VerlofVerwijderen" asp-route-datum="@dag.ToString("yyyy-MM-dd")" class="ms-2">
+                                                                <button type="submit" class="btn btn-outline-danger btn-sm" onclick="return confirm('Verwijder verlof voor @dag.ToString("dd-MM-yyyy")?')">
                                                                     <i class="bi bi-trash"></i>
                                                                 </button>
                                                             </form>
                                                         </li>
                                                     }
                                                 </ul>
-                                                <form method="post" asp-action="VerlofVerwijderen" asp-route-id="@verlofPeriode.Id">
-                                                    <button type="submit" class="btn btn-danger mt-2" onclick="return confirm('Bent u zeker dat u deze hele periode wilt verwijderen?')">
-                                                        <i class="bi bi-trash"></i> Verwijder Alles
-                                                    </button>
-                                                </form>
                                             </div>
                                         </div>
                                     </div>
@@ -54,16 +87,27 @@
                             }
                             else
                             {
-                                @verlofPeriode.StartDatum.ToString("dd-MM-yyyy")
+                                @periode.StartDatum.ToString("dd-MM-yyyy")
                             }
                         </td>
-                        <td>@verlofPeriode.TypeVerlof</td>
+                        <td>@periode.DagDeel</td>
                         <td>
-                            <form method="post" asp-action="VerlofVerwijderen" asp-route-id="@verlofPeriode.Id">
-                                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Bent u zeker dat u dit verlof wilt verwijderen?')">
-                                    <i class="bi bi-trash"></i> Verwijderen
-                                </button>
-                            </form>
+                            @if (periode.EindDatum.HasValue && periode.StartDatum != periode.EindDatum)
+                            {
+                                <form method="post" asp-action="VerlofVerwijderenRange" asp-route-startDatum="@periode.StartDatum.ToString("yyyy-MM-dd")" asp-route-eindDatum="@periode.EindDatum?.ToString("yyyy-MM-dd")">
+                                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Bent u zeker dat u deze volledige verlofperiode wilt verwijderen?')">
+                                        <i class="bi bi-trash"></i> Volledige periode
+                                    </button>
+                                </form>
+                            }
+                            else
+                            {
+                                <form method="post" asp-action="VerlofVerwijderen" asp-route-datum="@periode.StartDatum.ToString("yyyy-MM-dd")">
+                                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Bent u zeker dat u dit verlof wilt verwijderen?')">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </form>
+                            }
                         </td>
                     </tr>
                 }
@@ -74,6 +118,7 @@
     {
         <p>Er zijn geen verlofdagen geregistreerd voor de uitbater.</p>
     }
+
     @if (TempData["ErrorMessage"] != null)
     {
         <div class="alert alert-danger">

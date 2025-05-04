@@ -30,15 +30,15 @@ namespace MassageHuis.ViewModels
         public bool? VerlofGeregistreerd { get; set; }
     }
 
-    // Custom validatie attribuut voor toekomstige datums
-    public class FutureDateAttribute : ValidationAttribute
+    // Custom validatie attribuut voor toekomstige datums
+    public class FutureDateAttribute : ValidationAttribute
     {
         public override bool IsValid(object value)
         {
             if (value == null)
             {
                 return true; // Laat null (optionele) datums toe, Required vangt verplichte af
-            }
+            }
 
             if (value is DateOnly dateValue)
             {
@@ -49,8 +49,8 @@ namespace MassageHuis.ViewModels
         }
     }
 
-    // Custom validatie attribuut om te controleren of een datum groter dan of gelijk is aan een andere
-    public class DateGreaterThanOrEqualAttribute : ValidationAttribute
+    // Custom validatie attribuut om te controleren of een datum groter dan of gelijk is aan een andere
+    public class DateGreaterThanOrEqualAttribute : ValidationAttribute
     {
         private readonly string _otherPropertyName;
 
@@ -64,7 +64,7 @@ namespace MassageHuis.ViewModels
             if (value == null)
             {
                 return ValidationResult.Success; // Laat null (optionele) datums toe
-            }
+            }
 
             var otherPropertyInfo = validationContext.ObjectType.GetProperty(_otherPropertyName);
             if (otherPropertyInfo == null)
