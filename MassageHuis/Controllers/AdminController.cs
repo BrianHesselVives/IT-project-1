@@ -37,7 +37,8 @@ public class AdminController : Controller
         var roles = _roleManager.Roles.ToList();
         return View(roles);
     }
-    [Authorize(Roles = "administrator")]
+    [Authorize(Roles = "uitbater, administrator")]
+    [Route("MasseurBeheer/Details")]
     public async Task<IActionResult> Details(string id)
     {
         if (string.IsNullOrEmpty(id))
@@ -66,7 +67,7 @@ public class AdminController : Controller
     }
     [HttpPost]
     [ValidateAntiForgeryToken]
-    [Authorize(Roles = "administrator")]
+    [Authorize(Roles = "uitbater, administrator")]
     public async Task<IActionResult> RemoveUserFromRole(AddUserToRoleVM model)
     {
         if (ModelState.IsValid)
@@ -123,7 +124,7 @@ public class AdminController : Controller
     }
     [HttpPost]
     [ValidateAntiForgeryToken]
-    [Authorize(Roles = "administrator")]
+    [Authorize(Roles = "uitbater, administrator")]
     public async Task<IActionResult> AddUserToRole(AddUserToRoleVM model)
     {
         if (ModelState.IsValid)
@@ -173,7 +174,8 @@ public class AdminController : Controller
 
             if (ModelState.IsValid) // Controleer of er geen fouten zijn opgetreden tijdens het toevoegen
             {
-                return RedirectToAction("Details", new { id = model.RoleId });
+                return RedirectToAction("Details", new { id = model.RoleId })
+                    ;
             }
         }
 

@@ -8,5 +8,6 @@ namespace MassageHuis.ViewModels
         public IdentityRole Role { get; set; }
         public IEnumerable<ApplicationUser> UsersInRole { get; set; }
         public IEnumerable<ApplicationUser> UsersNotInRole { get; set; }
+
     }
 }
