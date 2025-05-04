@@ -3,6 +3,8 @@ using System.Diagnostics;
 using MassageHuis.Entities;
 using Microsoft.EntityFrameworkCore;
 using MassageHuis.Data;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace MassageHuis.Repositories
 {
@@ -14,41 +16,65 @@ namespace MassageHuis.Repositories
             _dbContext = dbContext;
         }
 
-        async public Task<UitzonderingTijdslot?> FindByIdAsync(UitzonderingTijdslot entity)
+        public async Task<IEnumerable<UitzonderingTijdslot>?> GetAllAsync()
         {
-            throw new NotImplementedException();
-        }
-        
-
-        Task IDAO<UitzonderingTijdslot>.AddAsync(UitzonderingTijdslot entity)
-        {
-            throw new NotImplementedException();
+            return await _dbContext.UitzonderingTijdslots.ToListAsync();
         }
 
-        Task IDAO<UitzonderingTijdslot>.DeleteAsync(UitzonderingTijdslot entity)
+        public async Task<UitzonderingTijdslot?> FindByIdAsync(UitzonderingTijdslot entity)
         {
-            throw new NotImplementedException();
+            return await _dbContext.UitzonderingTijdslots.FindAsync(entity.Id);
         }
 
-        async Task<IEnumerable<UitzonderingTijdslot>?> IDAO<UitzonderingTijdslot>.GetAllAsync()
+        public async Task AddAsync(UitzonderingTijdslot entity)
         {
-            try
+            _dbContext.UitzonderingTijdslots.Add(entity);
+            await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task AddRangeAsync(IEnumerable<UitzonderingTijdslot> entities)
+        {
+            using (var transaction = _dbContext.Database.BeginTransaction())
             {
-                return await _dbContext.UitzonderingTijdslots.ToListAsync();
-            }
-            catch (Microsoft.Data.SqlClient.SqlException ex)
-            {
-                Debug.WriteLine("db error:", ex.ToString());
-                return null;
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine(ex);
-                return null;
+                try
+                {
+                    await _dbContext.UitzonderingTijdslots.AddRangeAsync(entities);
+                    await _dbContext.SaveChangesAsync();
+                    await transaction.CommitAsync();
+                }
+                catch (Exception)
+                {
+                    await transaction.RollbackAsync();
+                    throw;
+                }
             }
         }
 
-        Task IDAO<UitzonderingTijdslot>.UpdateAsync(UitzonderingTijdslot entity)
+        public async Task DeleteAsync(UitzonderingTijdslot entity)
+        {
+            _dbContext.UitzonderingTijdslots.Remove(entity);
+            await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task DeleteRangeAsync(IEnumerable<UitzonderingTijdslot> entities)
+        {
+            using (var transaction = _dbContext.Database.BeginTransaction())
+            {
+                try
+                {
+                    _dbContext.UitzonderingTijdslots.RemoveRange(entities);
+                    await _dbContext.SaveChangesAsync();
+                    await transaction.CommitAsync();
+                }
+                catch (Exception)
+                {
+                    await transaction.RollbackAsync();
+                    throw; // Gooi de exception opnieuw om de service te informeren over de fout
+                }
+            }
+        }
+
+        public Task UpdateAsync(UitzonderingTijdslot entity)
         {
             throw new NotImplementedException();
         }

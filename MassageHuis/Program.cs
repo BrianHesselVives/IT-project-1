@@ -84,6 +84,10 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}")
     .WithStaticAssets();
+app.MapControllerRoute(
+    name: "VerlofVerwijderen",
+    pattern: "Uitbater/VerlofVerwijderen/{id}",
+    defaults: new { controller = "Uitbater", action = "VerlofVerwijderen" });
 
 app.MapRazorPages()
    .WithStaticAssets();

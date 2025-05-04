@@ -14,6 +14,16 @@ namespace MassageHuis.Repositories
             _dbContext = dbContext;
         }
 
+        public Task AddRangeAsync(IEnumerable<Schema> entities)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task DeleteRangeAsync(IEnumerable<Schema> entities)
+        {
+            throw new NotImplementedException();
+        }
+
         async public Task<Schema?> FindByIdAsync(Schema entity)
         {
             try

@@ -23,7 +23,17 @@ namespace MassageHuis.Services
             throw new NotImplementedException();
         }
 
+        public Task AddRangeAsync(IEnumerable<Schema> entities)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task DeleteAsync(Schema entity)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task DeleteRangeAsync(IEnumerable<Schema> entities)
         {
             throw new NotImplementedException();
         }

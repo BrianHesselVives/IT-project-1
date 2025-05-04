@@ -3,28 +3,40 @@
   "WorkspaceRootPath": "C:\\Users\\brian\\Desktop\\IT-project 1\\MassageHuis\\MassageHuis\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{77E0A6F9-723D-4F42-891F-D3355049EF65}|MassageHuis\\MassageHuis.csproj|c:\\users\\brian\\desktop\\it-project 1\\massagehuis\\massagehuis\\massagehuis\\viewmodels\\verlofvm.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{77E0A6F9-723D-4F42-891F-D3355049EF65}|MassageHuis\\MassageHuis.csproj|solutionrelative:massagehuis\\viewmodels\\verlofvm.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{77E0A6F9-723D-4F42-891F-D3355049EF65}|MassageHuis\\MassageHuis.csproj|c:\\users\\brian\\desktop\\it-project 1\\massagehuis\\massagehuis\\massagehuis\\controllers\\uitbatercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{77E0A6F9-723D-4F42-891F-D3355049EF65}|MassageHuis\\MassageHuis.csproj|solutionrelative:massagehuis\\controllers\\uitbatercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{77E0A6F9-723D-4F42-891F-D3355049EF65}|MassageHuis\\MassageHuis.csproj|c:\\users\\brian\\desktop\\it-project 1\\massagehuis\\massagehuis\\massagehuis\\views\\uitbater\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{77E0A6F9-723D-4F42-891F-D3355049EF65}|MassageHuis\\MassageHuis.csproj|solutionrelative:massagehuis\\views\\uitbater\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{77E0A6F9-723D-4F42-891F-D3355049EF65}|MassageHuis\\MassageHuis.csproj|c:\\users\\brian\\desktop\\it-project 1\\massagehuis\\massagehuis\\massagehuis\\views\\uitbater\\verlofoverzicht.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{77E0A6F9-723D-4F42-891F-D3355049EF65}|MassageHuis\\MassageHuis.csproj|solutionrelative:massagehuis\\views\\uitbater\\verlofoverzicht.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{77E0A6F9-723D-4F42-891F-D3355049EF65}|MassageHuis\\MassageHuis.csproj|c:\\users\\brian\\desktop\\it-project 1\\massagehuis\\massagehuis\\massagehuis\\viewmodels\\verlofvm.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{77E0A6F9-723D-4F42-891F-D3355049EF65}|MassageHuis\\MassageHuis.csproj|solutionrelative:massagehuis\\viewmodels\\verlofvm.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{77E0A6F9-723D-4F42-891F-D3355049EF65}|MassageHuis\\MassageHuis.csproj|c:\\users\\brian\\desktop\\it-project 1\\massagehuis\\massagehuis\\massagehuis\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{77E0A6F9-723D-4F42-891F-D3355049EF65}|MassageHuis\\MassageHuis.csproj|solutionrelative:massagehuis\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{77E0A6F9-723D-4F42-891F-D3355049EF65}|MassageHuis\\MassageHuis.csproj|c:\\users\\brian\\desktop\\it-project 1\\massagehuis\\massagehuis\\massagehuis\\controllers\\reservatiecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{77E0A6F9-723D-4F42-891F-D3355049EF65}|MassageHuis\\MassageHuis.csproj|solutionrelative:massagehuis\\controllers\\reservatiecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{77E0A6F9-723D-4F42-891F-D3355049EF65}|MassageHuis\\MassageHuis.csproj|c:\\users\\brian\\desktop\\it-project 1\\massagehuis\\massagehuis\\massagehuis\\controllers\\admincontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{77E0A6F9-723D-4F42-891F-D3355049EF65}|MassageHuis\\MassageHuis.csproj|solutionrelative:massagehuis\\controllers\\admincontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{77E0A6F9-723D-4F42-891F-D3355049EF65}|MassageHuis\\MassageHuis.csproj|c:\\users\\brian\\desktop\\it-project 1\\massagehuis\\massagehuis\\massagehuis\\views\\uitbater\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{77E0A6F9-723D-4F42-891F-D3355049EF65}|MassageHuis\\MassageHuis.csproj|solutionrelative:massagehuis\\views\\uitbater\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{77E0A6F9-723D-4F42-891F-D3355049EF65}|MassageHuis\\MassageHuis.csproj|c:\\users\\brian\\desktop\\it-project 1\\massagehuis\\massagehuis\\massagehuis\\views\\uitbater\\verlofaanvraag.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
       "RelativeMoniker": "D:0:0:{77E0A6F9-723D-4F42-891F-D3355049EF65}|MassageHuis\\MassageHuis.csproj|solutionrelative:massagehuis\\views\\uitbater\\verlofaanvraag.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{00D3658A-4BC8-43E1-8905-4E559ADE94FA}|MassageHuis.Repository\\MassageHuis.Repositories.csproj|c:\\users\\brian\\desktop\\it-project 1\\massagehuis\\massagehuis\\massagehuis.repository\\reguliertijdslotdao.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{00D3658A-4BC8-43E1-8905-4E559ADE94FA}|MassageHuis.Repository\\MassageHuis.Repositories.csproj|solutionrelative:massagehuis.repository\\reguliertijdslotdao.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A8EA3CA3-30C6-47ED-8E47-98CE68BC4E57}|MassageHuis.Service\\MassageHuis.Services.csproj|c:\\users\\brian\\desktop\\it-project 1\\massagehuis\\massagehuis\\massagehuis.service\\uitzonderingtijdslotservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A8EA3CA3-30C6-47ED-8E47-98CE68BC4E57}|MassageHuis.Service\\MassageHuis.Services.csproj|solutionrelative:massagehuis.service\\uitzonderingtijdslotservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -34,84 +46,123 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 4,
+          "SelectedChildIndex": 2,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "AdminController.cs",
-              "DocumentMoniker": "C:\\Users\\brian\\Desktop\\IT-project 1\\MassageHuis\\MassageHuis\\MassageHuis\\Controllers\\AdminController.cs",
-              "RelativeDocumentMoniker": "MassageHuis\\Controllers\\AdminController.cs",
-              "ToolTip": "C:\\Users\\brian\\Desktop\\IT-project 1\\MassageHuis\\MassageHuis\\MassageHuis\\Controllers\\AdminController.cs",
-              "RelativeToolTip": "MassageHuis\\Controllers\\AdminController.cs",
-              "ViewState": "AgIAAHYAAAAAAAAAAAAkwJoAAABEAAAAAAAAAA==",
+              "DocumentIndex": 3,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\brian\\Desktop\\IT-project 1\\MassageHuis\\MassageHuis\\MassageHuis\\Program.cs",
+              "RelativeDocumentMoniker": "MassageHuis\\Program.cs",
+              "ToolTip": "C:\\Users\\brian\\Desktop\\IT-project 1\\MassageHuis\\MassageHuis\\MassageHuis\\Program.cs",
+              "RelativeToolTip": "MassageHuis\\Program.cs",
+              "ViewState": "AgIAADgAAAAAAAAAAADwv2EAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-04T13:18:17.067Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "Index.cshtml",
-              "DocumentMoniker": "C:\\Users\\brian\\Desktop\\IT-project 1\\MassageHuis\\MassageHuis\\MassageHuis\\Views\\Uitbater\\Index.cshtml",
-              "RelativeDocumentMoniker": "MassageHuis\\Views\\Uitbater\\Index.cshtml",
-              "ToolTip": "C:\\Users\\brian\\Desktop\\IT-project 1\\MassageHuis\\MassageHuis\\MassageHuis\\Views\\Uitbater\\Index.cshtml",
-              "RelativeToolTip": "MassageHuis\\Views\\Uitbater\\Index.cshtml",
-              "ViewState": "AgIAACkAAAAAAAAAAADwv1gAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-05-04T12:22:28.008Z",
+              "WhenOpened": "2025-05-04T15:45:21.287Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 2,
-              "Title": "VerlofVM.cs",
-              "DocumentMoniker": "C:\\Users\\brian\\Desktop\\IT-project 1\\MassageHuis\\MassageHuis\\MassageHuis\\ViewModels\\VerlofVM.cs",
-              "RelativeDocumentMoniker": "MassageHuis\\ViewModels\\VerlofVM.cs",
-              "ToolTip": "C:\\Users\\brian\\Desktop\\IT-project 1\\MassageHuis\\MassageHuis\\MassageHuis\\ViewModels\\VerlofVM.cs",
-              "RelativeToolTip": "MassageHuis\\ViewModels\\VerlofVM.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABgAAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-04T11:59:02.508Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "ReservatieController.cs",
-              "DocumentMoniker": "C:\\Users\\brian\\Desktop\\IT-project 1\\MassageHuis\\MassageHuis\\MassageHuis\\Controllers\\ReservatieController.cs",
-              "RelativeDocumentMoniker": "MassageHuis\\Controllers\\ReservatieController.cs",
-              "ToolTip": "C:\\Users\\brian\\Desktop\\IT-project 1\\MassageHuis\\MassageHuis\\MassageHuis\\Controllers\\ReservatieController.cs",
-              "RelativeToolTip": "MassageHuis\\Controllers\\ReservatieController.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABkAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-04T11:12:14.279Z",
+              "Title": "VerlofOverzicht.cshtml",
+              "DocumentMoniker": "C:\\Users\\brian\\Desktop\\IT-project 1\\MassageHuis\\MassageHuis\\MassageHuis\\Views\\Uitbater\\VerlofOverzicht.cshtml",
+              "RelativeDocumentMoniker": "MassageHuis\\Views\\Uitbater\\VerlofOverzicht.cshtml",
+              "ToolTip": "C:\\Users\\brian\\Desktop\\IT-project 1\\MassageHuis\\MassageHuis\\MassageHuis\\Views\\Uitbater\\VerlofOverzicht.cshtml",
+              "RelativeToolTip": "MassageHuis\\Views\\Uitbater\\VerlofOverzicht.cshtml",
+              "ViewState": "AgIAACcAAAAAAAAAAADwv0gAAAAIAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-05-04T15:32:56.725Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "UitbaterController.cs",
-              "DocumentMoniker": "C:\\Users\\brian\\Desktop\\IT-project 1\\MassageHuis\\MassageHuis\\MassageHuis\\Controllers\\UitbaterController.cs",
-              "RelativeDocumentMoniker": "MassageHuis\\Controllers\\UitbaterController.cs",
-              "ToolTip": "C:\\Users\\brian\\Desktop\\IT-project 1\\MassageHuis\\MassageHuis\\MassageHuis\\Controllers\\UitbaterController.cs",
-              "RelativeToolTip": "MassageHuis\\Controllers\\UitbaterController.cs",
-              "ViewState": "AgIAAFgAAAAAAAAAAAAiwHMAAAAcAAAAAAAAAA==",
+              "Title": "VerlofVM.cs",
+              "DocumentMoniker": "C:\\Users\\brian\\Desktop\\IT-project 1\\MassageHuis\\MassageHuis\\MassageHuis\\ViewModels\\VerlofVM.cs",
+              "RelativeDocumentMoniker": "MassageHuis\\ViewModels\\VerlofVM.cs",
+              "ToolTip": "C:\\Users\\brian\\Desktop\\IT-project 1\\MassageHuis\\MassageHuis\\MassageHuis\\ViewModels\\VerlofVM.cs",
+              "RelativeToolTip": "MassageHuis\\ViewModels\\VerlofVM.cs",
+              "ViewState": "AgIAAGAAAAAAAAAAAAAcwHUAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-04T11:11:33.213Z",
+              "WhenOpened": "2025-05-04T15:31:27.463Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 5,
+              "Title": "Index.cshtml",
+              "DocumentMoniker": "C:\\Users\\brian\\Desktop\\IT-project 1\\MassageHuis\\MassageHuis\\MassageHuis\\Views\\Uitbater\\Index.cshtml",
+              "RelativeDocumentMoniker": "MassageHuis\\Views\\Uitbater\\Index.cshtml",
+              "ToolTip": "C:\\Users\\brian\\Desktop\\IT-project 1\\MassageHuis\\MassageHuis\\MassageHuis\\Views\\Uitbater\\Index.cshtml",
+              "RelativeToolTip": "MassageHuis\\Views\\Uitbater\\Index.cshtml",
+              "ViewState": "AgIAAB4AAAAAAAAAAAAAADsAAAAZAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-05-04T15:29:46.147Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
               "Title": "VerlofAanvraag.cshtml",
               "DocumentMoniker": "C:\\Users\\brian\\Desktop\\IT-project 1\\MassageHuis\\MassageHuis\\MassageHuis\\Views\\Uitbater\\VerlofAanvraag.cshtml",
               "RelativeDocumentMoniker": "MassageHuis\\Views\\Uitbater\\VerlofAanvraag.cshtml",
               "ToolTip": "C:\\Users\\brian\\Desktop\\IT-project 1\\MassageHuis\\MassageHuis\\MassageHuis\\Views\\Uitbater\\VerlofAanvraag.cshtml",
               "RelativeToolTip": "MassageHuis\\Views\\Uitbater\\VerlofAanvraag.cshtml",
-              "ViewState": "AgIAAAYAAAAAAAAAAAAAACAAAAB+AAAAAAAAAA==",
+              "ViewState": "AgIAABwAAAAAAAAAAADwv0UAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-05-04T11:08:40.423Z",
+              "WhenOpened": "2025-05-04T15:27:41.756Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "RegulierTijdslotDAO.cs",
+              "DocumentMoniker": "C:\\Users\\brian\\Desktop\\IT-project 1\\MassageHuis\\MassageHuis\\MassageHuis.Repository\\RegulierTijdslotDAO.cs",
+              "RelativeDocumentMoniker": "MassageHuis.Repository\\RegulierTijdslotDAO.cs",
+              "ToolTip": "C:\\Users\\brian\\Desktop\\IT-project 1\\MassageHuis\\MassageHuis\\MassageHuis.Repository\\RegulierTijdslotDAO.cs",
+              "RelativeToolTip": "MassageHuis.Repository\\RegulierTijdslotDAO.cs",
+              "ViewState": "AgIAAA8AAAAAAAAAAAAgwDQAAABWAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-04T15:17:28.286Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "ReservatieController.cs",
+              "DocumentMoniker": "C:\\Users\\brian\\Desktop\\IT-project 1\\MassageHuis\\MassageHuis\\MassageHuis\\Controllers\\ReservatieController.cs",
+              "RelativeDocumentMoniker": "MassageHuis\\Controllers\\ReservatieController.cs",
+              "ToolTip": "C:\\Users\\brian\\Desktop\\IT-project 1\\MassageHuis\\MassageHuis\\MassageHuis\\Controllers\\ReservatieController.cs",
+              "RelativeToolTip": "MassageHuis\\Controllers\\ReservatieController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-04T13:54:31.12Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "UitbaterController.cs",
+              "DocumentMoniker": "C:\\Users\\brian\\Desktop\\IT-project 1\\MassageHuis\\MassageHuis\\MassageHuis\\Controllers\\UitbaterController.cs",
+              "RelativeDocumentMoniker": "MassageHuis\\Controllers\\UitbaterController.cs",
+              "ToolTip": "C:\\Users\\brian\\Desktop\\IT-project 1\\MassageHuis\\MassageHuis\\MassageHuis\\Controllers\\UitbaterController.cs",
+              "RelativeToolTip": "MassageHuis\\Controllers\\UitbaterController.cs",
+              "ViewState": "AgIAAOAAAAAAAAAAAAAwwAkBAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-04T13:54:31.129Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "UitzonderingTijdSlotService.cs",
+              "DocumentMoniker": "C:\\Users\\brian\\Desktop\\IT-project 1\\MassageHuis\\MassageHuis\\MassageHuis.Service\\UitzonderingTijdSlotService.cs",
+              "RelativeDocumentMoniker": "MassageHuis.Service\\UitzonderingTijdSlotService.cs",
+              "ToolTip": "C:\\Users\\brian\\Desktop\\IT-project 1\\MassageHuis\\MassageHuis\\MassageHuis.Service\\UitzonderingTijdSlotService.cs",
+              "RelativeToolTip": "MassageHuis.Service\\UitzonderingTijdSlotService.cs",
+              "ViewState": "AgIAACEAAAAAAAAAAAAAACQAAAAMAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-04T13:54:22.708Z",
               "EditorCaption": ""
             }
           ]
