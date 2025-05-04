@@ -15,7 +15,6 @@ using System.Text.Json;
 
 namespace MassageHuis.Controllers
 {
-
     public class KlantController : Controller
     {
         private IService<Masseur> _masseurService;
@@ -73,6 +72,7 @@ namespace MassageHuis.Controllers
             var vandaagnummeriek = (int)DateTime.Today.DayOfWeek;
             var tijdsloten = await _regulierTijdslotService.GetAllAsync();
 
+
             if (actieveSchemas != null)
             {
                 var tijdslotenFilterd = tijdsloten.Where(b => b.IdSchema == actieveSchemas.Id);
@@ -80,25 +80,35 @@ namespace MassageHuis.Controllers
 
                 lsDataMaand = lsDataMaand.Where(b => b.Date >= DateTime.Today.Date).ToList();
                 var vrijeSlots = new List<DateTime>();
+
+                // Haal alle uitzonderingstijdsloten op, zowel voor de masseur als voor de uitbater (IdSchema 8)
+                var uitzonderingTijdsloten = await _uitzonderingTijdslotService.GetAllAsync();
+                var uitzonderingTijdslotenFilterd = uitzonderingTijdsloten.Where(b => b.IdSchema == actieveSchemas.Id || b.IdSchema == 8).ToList();
+
                 foreach (var dag in lsDataMaand)
                 {
                     foreach (var slot in tijdslotenFilterd)
                     {
                         if ((int)dag.DayOfWeek == slot.Dag)
                         {
-                            TimeSpan startTijd = new TimeSpan();
-                            startTijd = slot.StartTijd.ToTimeSpan();
-                            vrijeSlots.Add(dag.Add(startTijd));
+                            TimeSpan startTijd = slot.StartTijd.ToTimeSpan();
+                            DateTime slotTijd = dag.Add(startTijd);
+
+                            // Controleer of de slotTijd niet in een uitzonderingstijdslot valt
+                            bool isVerlofDag = uitzonderingTijdslotenFilterd.Any(uitzondering =>
+                                DateOnly.FromDateTime(slotTijd.Date) == uitzondering.Datum &&
+                                slotTijd.TimeOfDay >= uitzondering.Startijd.ToTimeSpan() &&
+                                slotTijd.TimeOfDay < uitzondering.Eindtijd.ToTimeSpan()
+                            );
+
+                            if (!isVerlofDag)
+                            {
+                                vrijeSlots.Add(slotTijd);
+                            }
                         }
                     }
                 }
                 masseurdata.vrijeSlots = vrijeSlots;
-
-                var uitzonderingtijdsloten = await _uitzonderingTijdslotService.GetAllAsync();
-                if (uitzonderingtijdsloten.Any())
-                {
-                    var uitzonderingTijdslotenFilterd = uitzonderingtijdsloten.Where(b => b.IdSchema == actieveSchemas.Id);
-                }
             }
             else
             {
@@ -122,7 +132,5 @@ namespace MassageHuis.Controllers
 
             return dates;
         }
-
-
     }
 }

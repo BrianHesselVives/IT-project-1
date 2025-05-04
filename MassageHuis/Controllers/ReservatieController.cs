@@ -105,16 +105,17 @@ namespace MassageHuis.Controllers
                 // 4. Controleer of het tijdslot al gereserveerd is
                 var isGereserveerd = reservaties.Where(b => b.DatumReservatie != geselecteerdeDatum && b.Status != "geannuleerd");
 
-                if (isGereserveerd == null)
+                if (isGereserveerd.FirstOrDefault() == null)
                 {
-                    
+                    // voeg reservatie toe aan database 
+                    // 
                 }
                 else
                 {
                     ViewBag.ErrorMessage = "Het geselecteerde tijdslot is helaas al gereserveerd.";
                     return View("~/Views/Shared/Error.cshtml");
                 }
-                    return View(masseurdata); 
+                    return View("../Home/Index",masseurdata); 
             }
             else
             {
