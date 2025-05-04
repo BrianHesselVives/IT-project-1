@@ -22,9 +22,19 @@ namespace MassageHuis.Services
             await _regulierTijdslotDAO.AddAsync(entity);
         }
 
+        public Task AddRangeAsync(IEnumerable<RegulierTijdslot> entities)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task DeleteAsync(RegulierTijdslot entity)
         {
             await _regulierTijdslotDAO.DeleteAsync(entity);
+        }
+
+        public Task DeleteRangeAsync(IEnumerable<RegulierTijdslot> entities)
+        {
+            throw new NotImplementedException();
         }
 
         public async Task<RegulierTijdslot?> FindByIdAsync(RegulierTijdslot id)

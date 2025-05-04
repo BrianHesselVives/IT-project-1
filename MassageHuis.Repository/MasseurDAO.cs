@@ -30,6 +30,11 @@ namespace MassageHuis.Repositories
             }
         }
 
+        public Task AddRangeAsync(IEnumerable<Masseur> entities)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task DeleteAsync(Masseur entity)
         {
             try
@@ -46,6 +51,11 @@ namespace MassageHuis.Repositories
             {
                 throw new Exception("error DAO Masseur Delete");
             }
+        }
+
+        public Task DeleteRangeAsync(IEnumerable<Masseur> entities)
+        {
+            throw new NotImplementedException();
         }
 
         public async Task<Masseur?> FindByIdAsync(Masseur id)

@@ -1,0 +1,83 @@
+﻿@model MassageHuis.ViewModels.VerlofOverzichtVM
+
+<div class="container mt-5">
+    <h2><i class="bi bi-calendar-check mr-2"></i> Verlof Overzicht (Uitbater)</h2>
+    @if (Model != null && Model.VerlofPeriodes.Any())
+    {
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Datum / Periode</th>
+                    <th>Type Verlof</th>
+                    <th>Acties</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var verlofPeriode in Model.VerlofPeriodes)
+                {
+                    <tr>
+                        <td>
+                            @if (verlofPeriode.EindDatum.HasValue && verlofPeriode.StartDatum != verlofPeriode.EindDatum.Value)
+                            {
+                                <div class="accordion" id="verlofPeriode@(verlofPeriode.Id)">
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header" id="heading@(verlofPeriode.Id)">
+                                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse@(verlofPeriode.Id)" aria-expanded="true" aria-controls="collapse@(verlofPeriode.Id)">
+                                                @verlofPeriode.WeergaveDatum
+                                            </button>
+                                        </h2>
+                                        <div id="collapse@(verlofPeriode.Id)" class="accordion-collapse collapse" aria-labelledby="heading@(verlofPeriode.Id)" data-bs-parent="#verlofPeriode@(verlofPeriode.Id)">
+                                            <div class="accordion-body">
+                                                <ul class="list-group">
+                                                    @foreach (var dag in verlofPeriode.Dagen)
+                                                    {
+                                                        DateTime currentDag = dag;
+                                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                            @dag.ToString("dd-MM-yyyy")
+                                                            <form method="post" asp-action="VerlofVerwijderen" asp-route-id="@verlofPeriode.Id" asp-route-datum="@dag.ToString("yyyy-MM-dd")">
+                                                                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Bent u zeker dat u dit verlof wilt verwijderen?')">
+                                                                    <i class="bi bi-trash"></i>
+                                                                </button>
+                                                            </form>
+                                                        </li>
+                                                    }
+                                                </ul>
+                                                <form method="post" asp-action="VerlofVerwijderen" asp-route-id="@verlofPeriode.Id">
+                                                    <button type="submit" class="btn btn-danger mt-2" onclick="return confirm('Bent u zeker dat u deze hele periode wilt verwijderen?')">
+                                                        <i class="bi bi-trash"></i> Verwijder Alles
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                            else
+                            {
+                                @verlofPeriode.StartDatum.ToString("dd-MM-yyyy")
+                            }
+                        </td>
+                        <td>@verlofPeriode.TypeVerlof</td>
+                        <td>
+                            <form method="post" asp-action="VerlofVerwijderen" asp-route-id="@verlofPeriode.Id">
+                                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Bent u zeker dat u dit verlof wilt verwijderen?')">
+                                    <i class="bi bi-trash"></i> Verwijderen
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p>Er zijn geen verlofdagen geregistreerd voor de uitbater.</p>
+    }
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger">
+            @TempData["ErrorMessage"]
+        </div>
+    }
+</div>

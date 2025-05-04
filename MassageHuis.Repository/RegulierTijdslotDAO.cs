@@ -30,14 +30,30 @@ namespace MassageHuis.Repositories
             }
         }
 
+        public Task AddRangeAsync(IEnumerable<RegulierTijdslot> entities)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task DeleteAsync(RegulierTijdslot entity)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task DeleteRangeAsync(IEnumerable<RegulierTijdslot> entities)
         {
             throw new NotImplementedException();
         }
 
         public async Task<RegulierTijdslot?> FindByIdAsync(RegulierTijdslot entity)
         {
-            throw new NotImplementedException();
+            try
+            {
+
+                return await _dbContext.RegulierTijdslots.Where(b => b.Id == entity.Id).FirstOrDefaultAsync();
+            }
+            catch (Exception ex)
+            { throw new Exception("error DAO Masseur"); }
         }
 
         public async Task<IEnumerable<RegulierTijdslot>?> GetAllAsync()

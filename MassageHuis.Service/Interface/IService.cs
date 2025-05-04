@@ -14,5 +14,7 @@ namespace MassageHuis.Services.Interfaces
 
         Task UpdateAsync(T entity);
         Task<T?> FindByIdAsync(T entity);
+        Task AddRangeAsync(IEnumerable<T> entities);
+        Task DeleteRangeAsync(IEnumerable<T> entities);
     }
 }

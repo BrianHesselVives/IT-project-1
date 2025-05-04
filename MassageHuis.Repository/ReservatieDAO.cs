@@ -14,6 +14,16 @@ namespace MassageHuis.Repositories
             _dbContext = dbContext;
         }
 
+        public Task AddRangeAsync(IEnumerable<Reservatie> entities)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task DeleteRangeAsync(IEnumerable<Reservatie> entities)
+        {
+            throw new NotImplementedException();
+        }
+
         async public Task<Reservatie?> FindByIdAsync(Reservatie entity)
         {
             throw new NotImplementedException();

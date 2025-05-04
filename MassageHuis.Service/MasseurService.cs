@@ -22,9 +22,19 @@ namespace MassageHuis.Services
             await _masseurDAO.AddAsync(entity);
         }
 
+        public Task AddRangeAsync(IEnumerable<Masseur> entities)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task DeleteAsync(Masseur entity)
         {
             await _masseurDAO.DeleteAsync(entity);
+        }
+
+        public Task DeleteRangeAsync(IEnumerable<Masseur> entities)
+        {
+            throw new NotImplementedException();
         }
 
         public async Task<Masseur?> FindByIdAsync(Masseur id)
