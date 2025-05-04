@@ -16,7 +16,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("MassageHuis")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+9e8c77e1fb712183afacf61d0bc0d6eebedd13db")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+fb53976c78650b179048d90f0b17359536f2c2a0")]
 [assembly: System.Reflection.AssemblyProductAttribute("MassageHuis")]
 [assembly: System.Reflection.AssemblyTitleAttribute("MassageHuis")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

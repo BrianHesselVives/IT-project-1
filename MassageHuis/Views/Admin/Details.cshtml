@@ -1,6 +1,8 @@
 ﻿@using MassageHuis.ViewModels
 @model MassageHuis.ViewModels.RoleDetailsVM
-
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
 @{
     ViewData["Title"] = "Details";
 }
@@ -9,7 +11,15 @@
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb mb-0">
             <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Home</a></li>
-            <li class="breadcrumb-item"><a asp-controller="Admin" asp-action="Index">Admin Overzicht</a></li>
+            @if (SignInManager.IsSignedIn(User) && (await UserManager.IsInRoleAsync(await UserManager.GetUserAsync(User), "uitbater")))
+            {
+                <li class="breadcrumb-item"><a asp-controller="Uitbater" asp-action="Index">Uitbater Overzicht</a></li>
+            }
+            @if (SignInManager.IsSignedIn(User) && (await UserManager.IsInRoleAsync(await UserManager.GetUserAsync(User), "administrator")))
+            {
+                <li class="breadcrumb-item"><a asp-controller="Admin" asp-action="Index">Admin Overzicht</a></li>
+            }
+            
             <li class="breadcrumb-item active" aria-current="page">Details Rol</li>
         </ol>
     </nav>
@@ -18,7 +28,7 @@
     </a>
 </div>
 
-<h1>Details Rol</h1>
+<h1>Details @Model.Role.Name</h1>
 
 <div>
     <h4>@Model.Role.Name</h4>
