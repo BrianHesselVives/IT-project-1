@@ -27,10 +27,10 @@ namespace MassageHuis.Controllers
         {
             _roleManager = roleManager;
             _userManager = userManager;
+            _mapper = mapper;
             _uitzonderingTijdslotService = uitzonderingTijdsloService;
             _reservatieService = reservatieService;
             _regulierTijdslotService = regulierTijdslotService;
-            _mapper = mapper;
         }
 
         [Authorize(Roles = "uitbater")]
@@ -127,12 +127,12 @@ namespace MassageHuis.Controllers
                                 nieuwVerlof.Eindtijd > bestaandVerlof.Startijd)
                             {
                                 overlappendVerlofGevonden = true;
-                                break; // Stop met zoeken naar overlappende verlof voor dit nieuwe verlofslot
+                                break;
                             }
                         }
                         if (overlappendVerlofGevonden)
                         {
-                            break; // Stop met controleren van de overige nieuwe verlofslots
+                            break;
                         }
                     }
 
@@ -163,13 +163,13 @@ namespace MassageHuis.Controllers
                                     if (tijd != null && tijd.EindTijd < verlofSlot.Eindtijd && tijd.EindTijd > verlofSlot.Startijd)
                                     {
                                         overlappendeReservatieGevonden = true;
-                                        break; // Stop met zoeken naar overlappende reservaties voor dit verlofslot
+                                        break;
                                     }
                                 }
                             }
                             if (overlappendeReservatieGevonden)
                             {
-                                break; // Stop met controleren van de overige verlofslots
+                                break;
                             }
                         }
 
@@ -239,11 +239,22 @@ namespace MassageHuis.Controllers
             return View(viewModel);
         }
 
-        // Actie om een verlofdag te verwijderen
+        // Actie om een enkele verlofdag te verwijderen
         [HttpPost]
-        public async Task<IActionResult> VerlofVerwijderen(int id)
+        public async Task<IActionResult> VerlofVerwijderen(string datum)
         {
-            var verlof = await _uitzonderingTijdslotService.FindByIdAsync(new UitzonderingTijdslot { Id = id });
+            if (string.IsNullOrEmpty(datum))
+            {
+                return BadRequest("Datum is vereist.");
+            }
+
+            DateOnly verlofDatum;
+            if (!DateOnly.TryParse(datum, out verlofDatum))
+            {
+                return BadRequest("Ongeldig datumformaat.");
+            }
+            var verlofDagen = await _uitzonderingTijdslotService.GetAllAsync();
+             var verlof = verlofDagen.FirstOrDefault(v => v.IdSchema == 8 && v.Datum == verlofDatum);
             if (verlof == null)
             {
                 return NotFound();
@@ -260,6 +271,52 @@ namespace MassageHuis.Controllers
                 return RedirectToAction("VerlofOverzicht");
             }
         }
+
+        // Actie om een reeks verlofdagen te verwijderen
+        [HttpPost]
+        public async Task<IActionResult> VerlofVerwijderenRange(string startDatum, string eindDatum)
+        {
+            if (string.IsNullOrEmpty(startDatum))
+            {
+                return BadRequest("Startdatum is vereist.");
+            }
+
+            DateOnly verlofStartDatum;
+            if (!DateOnly.TryParse(startDatum, out verlofStartDatum))
+            {
+                return BadRequest("Ongeldig startdatumformaat.");
+            }
+
+            DateOnly? verlofEindDatum = null;
+            if (!string.IsNullOrEmpty(eindDatum))
+            {
+                if (!DateOnly.TryParse(eindDatum, out DateOnly parsedEindDatum))
+                {
+                    return BadRequest("Ongeldig einddatumformaat.");
+                }
+                verlofEindDatum = parsedEindDatum;
+            }
+
+            var verlofDagen = await _uitzonderingTijdslotService.GetAllAsync();
+            var teVerwijderenVerlofDagen = verlofDagen.Where(v => v.IdSchema == 8 && v.Datum >= verlofStartDatum && (!verlofEindDatum.HasValue || v.Datum <= verlofEindDatum)).ToList();
+
+
+            if (!teVerwijderenVerlofDagen.Any())
+            {
+                TempData["ErrorMessage"] = "Geen verlof gevonden om te verwijderen binnen het opgegeven datumbereik.";
+                return RedirectToAction("VerlofOverzicht");
+            }
+
+            try
+            {
+                await _uitzonderingTijdslotService.DeleteRangeAsync(teVerwijderenVerlofDagen);
+                return RedirectToAction("VerlofOverzicht");
+            }
+            catch (Exception)
+            {
+                TempData["ErrorMessage"] = "Er is een fout opgetreden bij het verwijderen van de verlofperiode.";
+                return RedirectToAction("VerlofOverzicht");
+            }
+        }
     }
 }
-
