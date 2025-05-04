@@ -34,11 +34,15 @@
                             }
                             else if (SignInManager.IsSignedIn(User) && await UserManager.IsInRoleAsync(await UserManager.GetUserAsync(User), "uitbater"))
                             {
-                                <a class="nav-link" asp-controller="Uitbater" asp-action="Index"><i class="bi bi-clipboard-pulse"></i> Uitbater Overzicht</a>
+                                <a class="nav-link" asp-controller="Uitbater" asp-action="Index"><i class="bi bi-clipboard-pulse"></i> Mijn Overzicht</a>
                             }
                             else if (SignInManager.IsSignedIn(User) && await UserManager.IsInRoleAsync(await UserManager.GetUserAsync(User), "klant"))
                             {
                                 <a class="nav-link" asp-controller="Klant" asp-action="Index"><i class="bi bi-calendar3-event"></i> Reserveren</a>
+                            }
+                            else if (SignInManager.IsSignedIn(User) && await UserManager.IsInRoleAsync(await UserManager.GetUserAsync(User), "masseur"))
+                            {
+                                <a class="nav-link" asp-controller="Masseur" asp-action="Index"><i class="bi bi-clipboard-pulse"></i> Mijn Overzicht</a>
                             }
                         </li>
 

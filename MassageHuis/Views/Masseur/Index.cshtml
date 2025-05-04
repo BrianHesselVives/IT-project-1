@@ -1,0 +1,49 @@
+﻿@using MassageHuis.ViewModels
+@model MassageHuis.ViewModels.VerlofVM
+@if (Model.VerlofGeregistreerd == true)
+{
+    <div class="alert alert alert-success alert-dismissible fade show" role="alert">
+        Verlof succesvol geregistreerd
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+@if (!ViewContext.ViewData.ModelState.IsValid)
+{
+    <div class="alert alert-danger">
+        <strong>Er zijn problemen opgetreden:</strong>
+        <ul>
+            @foreach (var keyValuePair in ViewContext.ViewData.ModelState)
+            {
+                var key = keyValuePair.Key;
+                var modelState = keyValuePair.Value;
+                @foreach (var error in modelState.Errors)
+                {
+                    @if (string.IsNullOrEmpty(key))
+                    {
+                        <li>@error.ErrorMessage</li>
+                    }
+                    else if (key == "VerlofRegistratie")
+                    {
+                        <li>@error.ErrorMessage</li>
+                    }
+                }
+            }
+        </ul>
+    </div>
+}
+
+<div class="container mt-4">
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-3">
+        <div class="col">
+            <div class="card admin-tile h-100">
+                <div class="card-body text-center d-flex flex-column align-items-center justify-content-center">
+                    <i class="bi bi-calendar-event-fill admin-tile-icon"></i>
+                    <h5 class="admin-tile-title">Verlof</h5>
+                    <h6 class="admin-tile-subtitle">Plan verlofdagen</h6>
+                    <p class="card-text small">Verlof van het massagehuis inplannen en beheren.</p>
+                    <a asp-controller="Uitbater" asp-action="VerlofAanvraag" class="admin-tile-link">Verlof Invullen <i class="bi bi-arrow-right-short"></i></a>
+                    <a asp-controller="Uitbater" asp-action="VerlofOverzicht" class="admin-tile-link mt-2">Verlof Overzicht <i class="bi bi-arrow-right-short"></i></a>
+                </div>
+            </div>
+        </div>
+        

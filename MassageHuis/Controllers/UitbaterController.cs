@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using MassageHuis.Entities;
 using MassageHuis.Models;
+using MassageHuis.Repositories;
 using MassageHuis.Services;
 using MassageHuis.Services.Interfaces;
 using MassageHuis.Util.Mail.Interfaces;
@@ -21,9 +22,13 @@ namespace MassageHuis.Controllers
         private IService<UitzonderingTijdslot> _uitzonderingTijdslotService;
         private IService<Reservatie> _reservatieService;
         private IService<RegulierTijdslot> _regulierTijdslotService;
+        private IService<Masseur> _masseurService;
+        private IService<Schema> _schemaService;
         private readonly IMapper _mapper;
 
-        public UitbaterController(RoleManager<IdentityRole> roleManager, UserManager<ApplicationUser> userManager, IMapper mapper, IService<UitzonderingTijdslot> uitzonderingTijdsloService, IService<Reservatie> reservatieService, IService<RegulierTijdslot> regulierTijdslotService)
+        public UitbaterController(RoleManager<IdentityRole> roleManager, UserManager<ApplicationUser> userManager, IMapper mapper, IService<UitzonderingTijdslot> uitzonderingTijdsloService, IService<Reservatie> reservatieService, IService<RegulierTijdslot> regulierTijdslotService,
+            IService<Masseur> masseurservice,
+            IService<Schema> schemaservice)
         {
             _roleManager = roleManager;
             _userManager = userManager;
@@ -31,6 +36,8 @@ namespace MassageHuis.Controllers
             _uitzonderingTijdslotService = uitzonderingTijdsloService;
             _reservatieService = reservatieService;
             _regulierTijdslotService = regulierTijdslotService;
+            _masseurService = masseurservice;
+            _schemaService = schemaservice;
         }
 
         [Authorize(Roles = "uitbater")]
@@ -40,7 +47,7 @@ namespace MassageHuis.Controllers
             return View(model);
         }
 
-        [Authorize(Roles = "uitbater")]
+        [Authorize(Roles = "masseur,uitbater")]
         public IActionResult VerlofAanvraag()
         {
             var model = new VerlofVM();
@@ -49,7 +56,7 @@ namespace MassageHuis.Controllers
             return View(model);
         }
 
-        [Authorize(Roles = "uitbater")]
+        [Authorize(Roles = "masseur,uitbater")]
         [HttpPost]
         public async Task<IActionResult> BevestigVerlof(VerlofVM verlofPeriode)
         {
@@ -57,6 +64,20 @@ namespace MassageHuis.Controllers
 
             if (ModelState.IsValid)
             {
+                var masseurs = await _masseurService.GetAllAsync();
+                var userId = _userManager.GetUserId(User);
+                masseurs = masseurs.Where(p => p.IdAspNetUsers == userId);
+                var actieveMasseur = masseurs.FirstOrDefault();
+                var schemas = await _schemaService.GetAllAsync();
+                Schema actiefSchema = null; // Declareer actiefSchema buiten de if-lus
+                if (actieveMasseur != null)
+                {
+                    actiefSchema = schemas
+                        .Where(s => s.IdMasseur == actieveMasseur.Id)
+                        .OrderByDescending(s => s.StartDatum)
+                        .FirstOrDefault();
+                }
+
                 switch (verlofPeriode.DagDeel)
                 {
                     case VerlofVM.FullDay:
@@ -64,13 +85,13 @@ namespace MassageHuis.Controllers
                         DateOnly? eind = verlofPeriode.EindDatum;
                         if (!eind.HasValue || start == eind)
                         {
-                            teRegistrerenUitzondering(start, new TimeOnly(0, 0, 0), new TimeOnly(23, 59, 59), "Volledige dag Verlof", teRegistrerenUitzonderingen);
+                            teRegistrerenUitzondering(start, new TimeOnly(0, 0, 0), new TimeOnly(23, 59, 59), "Volledige dag Verlof", teRegistrerenUitzonderingen, actiefSchema?.Id ?? 0); // Gebruik 0 als standaardwaarde indien null
                         }
                         else if (start < eind)
                         {
                             for (DateOnly dag = start; dag <= eind; dag = dag.AddDays(1))
                             {
-                                teRegistrerenUitzondering(dag, new TimeOnly(0, 0, 0), new TimeOnly(23, 59, 59), "Volledige dag Verlof", teRegistrerenUitzonderingen);
+                                teRegistrerenUitzondering(dag, new TimeOnly(0, 0, 0), new TimeOnly(23, 59, 59), "Volledige dag Verlof", teRegistrerenUitzonderingen, actiefSchema?.Id ?? 0); // Gebruik 0 als standaardwaarde indien null
                             }
                         }
                         break;
@@ -79,13 +100,13 @@ namespace MassageHuis.Controllers
                         DateOnly? eindMo = verlofPeriode.EindDatum;
                         if (!eindMo.HasValue || startMo == eindMo)
                         {
-                            teRegistrerenUitzondering(startMo, new TimeOnly(0, 0, 0), new TimeOnly(11, 59, 59), "Voormiddag Verlof", teRegistrerenUitzonderingen);
+                            teRegistrerenUitzondering(startMo, new TimeOnly(0, 0, 0), new TimeOnly(11, 59, 59), "Voormiddag Verlof", teRegistrerenUitzonderingen, actiefSchema?.Id ?? 0); // Gebruik 0 als standaardwaarde indien null
                         }
                         else if (startMo < eindMo)
                         {
                             for (DateOnly dag = startMo; dag <= eindMo; dag = dag.AddDays(1))
                             {
-                                teRegistrerenUitzondering(dag, new TimeOnly(0, 0, 0), new TimeOnly(11, 59, 59), "Voormiddag Verlof", teRegistrerenUitzonderingen);
+                                teRegistrerenUitzondering(dag, new TimeOnly(0, 0, 0), new TimeOnly(11, 59, 59), "Voormiddag Verlof", teRegistrerenUitzonderingen, actiefSchema?.Id ?? 0); // Gebruik 0 als standaardwaarde indien null
                             }
                         }
                         break;
@@ -94,13 +115,13 @@ namespace MassageHuis.Controllers
                         DateOnly? eindAf = verlofPeriode.EindDatum;
                         if (!eindAf.HasValue || startAf == eindAf)
                         {
-                            teRegistrerenUitzondering(startAf, new TimeOnly(12, 00, 0), new TimeOnly(23, 59, 59), "Namiddag Verlof", teRegistrerenUitzonderingen);
+                            teRegistrerenUitzondering(startAf, new TimeOnly(12, 00, 0), new TimeOnly(23, 59, 59), "Namiddag Verlof", teRegistrerenUitzonderingen, actiefSchema?.Id ?? 0); // Gebruik 0 als standaardwaarde indien null
                         }
                         else if (startAf < eindAf)
                         {
                             for (DateOnly dag = startAf; dag <= eindAf; dag = dag.AddDays(1))
                             {
-                                teRegistrerenUitzondering(dag, new TimeOnly(12, 00, 0), new TimeOnly(23, 59, 59), "Namiddag Verlof", teRegistrerenUitzonderingen);
+                                teRegistrerenUitzondering(dag, new TimeOnly(12, 00, 0), new TimeOnly(23, 59, 59), "Namiddag Verlof", teRegistrerenUitzonderingen, actiefSchema?.Id ?? 0); // Gebruik 0 als standaardwaarde indien null
                             }
                         }
                         break;
@@ -111,9 +132,9 @@ namespace MassageHuis.Controllers
 
                 if (ModelState.IsValid && teRegistrerenUitzonderingen.Any())
                 {
-                    // Haal alle bestaande verlofdagen op voor deze masseur (uitbater met IdSchema 8)
                     var bestaandeVerlofDagen = await _uitzonderingTijdslotService.GetAllAsync();
-                    bestaandeVerlofDagen = bestaandeVerlofDagen.Where(v => v.IdSchema == 8 && v.TypeUitzondering.Contains("Verlof")).ToList();
+                    // Filter bestaande verlofdagen op basis van het schema ID van de actieve masseur
+                    bestaandeVerlofDagen = bestaandeVerlofDagen.Where(v => v.IdSchema == actiefSchema?.Id && v.TypeUitzondering.Contains("Verlof")).ToList();
 
                     bool overlappendVerlofGevonden = false;
 
@@ -155,12 +176,11 @@ namespace MassageHuis.Controllers
                                 // Controleer of de reservatie op dezelfde dag valt
                                 if (reservatie.DatumReservatie == verlofSlot.Datum)
                                 {
-                                    // Controleer op tijdsoverlap
-                                    RegulierTijdslot rsslt = new RegulierTijdslot();
-                                    rsslt.Id = reservatie.Id;
-                                    var tijd = await _regulierTijdslotService.FindByIdAsync(rsslt);
-
-                                    if (tijd != null && tijd.EindTijd < verlofSlot.Eindtijd && tijd.EindTijd > verlofSlot.Startijd)
+                                    // Controleer op tijdsoverlapvar findId = new RegulierTijdslot();
+                                    var findId = new RegulierTijdslot();
+                                    findId.Id = reservatie.IdRegulierTijdslot;
+                                    RegulierTijdslot tijd = await _regulierTijdslotService.FindByIdAsync(findId);
+                                    if (tijd != null && tijd.EindTijd > verlofSlot.Startijd && tijd.StartTijd < verlofSlot.Eindtijd)
                                     {
                                         overlappendeReservatieGevonden = true;
                                         break;
@@ -184,43 +204,186 @@ namespace MassageHuis.Controllers
                             {
                                 await _uitzonderingTijdslotService.AddRangeAsync(teRegistrerenUitzonderingen);
                                 verlofPeriode.VerlofGeregistreerd = true;
-                                return View("Index", verlofPeriode);
+                                if (User.IsInRole("uitbater"))
+                                {
+                                    return View("Index", verlofPeriode);
+                                }
+                                else
+                                {
+                                    return View("../Masseur/Index", verlofPeriode);
+                                }
                             }
                             catch
                             {
                                 verlofPeriode.VerlofGeregistreerd = false;
                                 ModelState.AddModelError("VerlofRegistratie", "Kon verlof niet registreren.");
-                                return View("Index", verlofPeriode);
+                                if (User.IsInRole("uitbater"))
+                                {
+                                    return View("Index", verlofPeriode);
+                                }
+                                else
+                                {
+                                    return View("../Masseur/Index", verlofPeriode);
+                                }
+                            }
+                        }
+                    }
+                }
+
+                {
+                    var bestaandeVerlofDagen = await _uitzonderingTijdslotService.GetAllAsync();
+                    bestaandeVerlofDagen = bestaandeVerlofDagen.Where(v => v.IdSchema == actiefSchema?.Id && v.TypeUitzondering.Contains("Verlof")).ToList(); // Gebruik 0 als standaardwaarde indien null
+
+                    bool overlappendVerlofGevonden = false;
+
+                    // Controleer of de nieuwe verlof aanvraag overlapt met bestaande verlofdagen
+                    foreach (var nieuwVerlof in teRegistrerenUitzonderingen)
+                    {
+                        foreach (var bestaandVerlof in bestaandeVerlofDagen)
+                        {
+                            if (nieuwVerlof.Datum == bestaandVerlof.Datum &&
+                                nieuwVerlof.Startijd < bestaandVerlof.Eindtijd &&
+                                nieuwVerlof.Eindtijd > bestaandVerlof.Startijd )
+                            {
+                                overlappendVerlofGevonden = true;
+                                break;
+                            }
+                        }
+                        if (overlappendVerlofGevonden)
+                        {
+                            break;
+                        }
+                    }
+
+                    if (overlappendVerlofGevonden)
+                    {
+                        ModelState.AddModelError("VerlofRegistratie", "De aangevraagde verlofperiode overlapt met bestaande verlofdagen.");
+                        return View("VerlofAanvraag", verlofPeriode);
+                    }
+                    else
+                    {
+                        // Haal alle bestaande reservaties op
+                        var bestaandeReservaties = await _reservatieService.GetAllAsync();
+                        bool overlappendeReservatieGevonden = false;
+
+                        // Controleer of er reservaties binnen de aangevraagde verlofperiode vallen
+                        foreach (var verlofSlot in teRegistrerenUitzonderingen)
+                        {
+                            foreach (var reservatie in bestaandeReservaties)
+                            {
+                                // Controleer of de reservatie op dezelfde dag valt
+                                if (reservatie.DatumReservatie == verlofSlot.Datum)
+                                {
+                                    // Controleer op tijdsoverlap
+                                    var findId = new RegulierTijdslot();
+                                    findId.Id = reservatie.IdRegulierTijdslot;
+                                    RegulierTijdslot tijd = await _regulierTijdslotService.FindByIdAsync(findId); // Haal de tijdslot op basis van de ID
+                                    if (tijd != null && tijd.EindTijd > verlofSlot.Startijd && tijd.StartTijd < verlofSlot.Eindtijd)
+                                    {
+                                        overlappendeReservatieGevonden = true;
+                                        break;
+                                    }
+                                }
+                            }
+                            if (overlappendeReservatieGevonden)
+                            {
+                                break;
+                            }
+                        }
+
+                        if (overlappendeReservatieGevonden)
+                        {
+                            ModelState.AddModelError("VerlofRegistratie", "Er zijn bestaande reservaties die binnen de aangevraagde verlofperiode vallen. Verlof kan niet worden geregistreerd.");
+                            return View("VerlofAanvraag", verlofPeriode);
+                        }
+                        else
+                        {
+                            try
+                            {
+                                await _uitzonderingTijdslotService.AddRangeAsync(teRegistrerenUitzonderingen);
+                                verlofPeriode.VerlofGeregistreerd = true;
+                                if (User.IsInRole("uitbater"))
+                                {
+                                    return View("Index", verlofPeriode);
+                                }
+                                else
+                                {
+                                    return View("../Masseur/Index", verlofPeriode);
+                                }
+                            }
+                            catch
+                            {
+                                verlofPeriode.VerlofGeregistreerd = false;
+                                ModelState.AddModelError("VerlofRegistratie", "Kon verlof niet registreren.");
+                                if (User.IsInRole("uitbater"))
+                                {
+                                    return View("Index", verlofPeriode);
+                                }
+                                else
+                                {
+                                    return View("../Masseur/Index", verlofPeriode);
+                                }
                             }
                         }
                     }
                 }
             }
-
             return View("VerlofAanvraag", verlofPeriode);
         }
 
-        private void teRegistrerenUitzondering(DateOnly datum, TimeOnly startTijd, TimeOnly eindTijd, string type, List<UitzonderingTijdslot> lijst)
+
+        private void teRegistrerenUitzondering(DateOnly datum, TimeOnly startTijd, TimeOnly eindTijd, string type, List<UitzonderingTijdslot> lijst, int id)
         {
             UitzonderingTijdslot Verlof = new UitzonderingTijdslot();
             Verlof.Startijd = startTijd;
             Verlof.Eindtijd = eindTijd;
             Verlof.TypeUitzondering = type;
             Verlof.Datum = datum;
-            Verlof.IdSchema = 8; // schema uitbater en id masseur voor uitbater is 13
+            if (User.IsInRole("uitbater"))
+            {
+                Verlof.IdSchema = 8; // schema uitbater en id masseur voor uitbater is 13
+            }
+            else
+            {
+                Verlof.IdSchema = id;
+            }
             lijst.Add(Verlof);
         }
 
-        [Authorize(Roles = "uitbater")]
+        [Authorize(Roles = "masseur,uitbater")]
         public async Task<IActionResult> VerlofOverzicht()
         {
+
             var verlofDagen = await _uitzonderingTijdslotService.GetAllAsync();
+
+            var userId = _userManager.GetUserId(User);
+
+            int schemaId = 0;
+            if (User.IsInRole("uitbater"))
+            {
+                schemaId = 8;
+            }
+            else
+            {
+                var masseurs = await _masseurService.GetAllAsync();
+                masseurs = masseurs.Where(p => p.IdAspNetUsers == userId);
+                var actieveMasseur = masseurs.FirstOrDefault();
+                var schemas = await _schemaService.GetAllAsync();
+                Schema actiefSchema = null; // Declareer buiten de if-lus
+                if (actieveMasseur != null)
+                {
+                    actiefSchema = schemas
+                        .Where(s => s.IdMasseur == actieveMasseur.Id)
+                        .OrderByDescending(s => s.StartDatum)
+                        .FirstOrDefault();
+                }
+                schemaId = actiefSchema?.Id ?? 0; // Gebruik 0 als standaardwaarde indien null
+            }
             var uitbaterVerlof = verlofDagen
-                .Where(v => v.IdSchema == 8 && v.TypeUitzondering.Contains("Verlof"))
+                .Where(v => v.IdSchema == schemaId && v.TypeUitzondering.Contains("Verlof"))
                 .OrderBy(v => v.Datum)
                 .ThenBy(v => v.Startijd)
                 .ToList();
-
             var verlofPeriodes = new List<VerlofPeriodeVM>();
             if (uitbaterVerlof.Any())
             {
@@ -241,6 +404,7 @@ namespace MassageHuis.Controllers
 
         // Actie om een enkele verlofdag te verwijderen
         [HttpPost]
+        [Authorize(Roles = "masseur,uitbater")]
         public async Task<IActionResult> VerlofVerwijderen(string datum)
         {
             if (string.IsNullOrEmpty(datum))
@@ -254,7 +418,30 @@ namespace MassageHuis.Controllers
                 return BadRequest("Ongeldig datumformaat.");
             }
             var verlofDagen = await _uitzonderingTijdslotService.GetAllAsync();
-             var verlof = verlofDagen.FirstOrDefault(v => v.IdSchema == 8 && v.Datum == verlofDatum);
+            var userId = _userManager.GetUserId(User);
+
+            int schemaId = 0;
+            if (User.IsInRole("uitbater"))
+            {
+                schemaId = 8;
+            }
+            else
+            {
+                var masseurs = await _masseurService.GetAllAsync();
+                masseurs = masseurs.Where(p => p.IdAspNetUsers == userId);
+                var actieveMasseur = masseurs.FirstOrDefault();
+                var schemas = await _schemaService.GetAllAsync();
+                Schema actiefSchema = null;
+                if (actieveMasseur != null)
+                {
+                    actiefSchema = schemas
+                    .Where(s => s.IdMasseur == actieveMasseur.Id)
+                    .OrderByDescending(s => s.StartDatum)
+                    .FirstOrDefault();
+                }
+                schemaId = actiefSchema?.Id ?? 0;
+            }
+            var verlof = verlofDagen.FirstOrDefault(v => v.IdSchema == schemaId && v.Datum == verlofDatum);
             if (verlof == null)
             {
                 return NotFound();
@@ -274,6 +461,7 @@ namespace MassageHuis.Controllers
 
         // Actie om een reeks verlofdagen te verwijderen
         [HttpPost]
+        [Authorize(Roles = "masseur,uitbater")]
         public async Task<IActionResult> VerlofVerwijderenRange(string startDatum, string eindDatum)
         {
             if (string.IsNullOrEmpty(startDatum))
@@ -298,7 +486,30 @@ namespace MassageHuis.Controllers
             }
 
             var verlofDagen = await _uitzonderingTijdslotService.GetAllAsync();
-            var teVerwijderenVerlofDagen = verlofDagen.Where(v => v.IdSchema == 8 && v.Datum >= verlofStartDatum && (!verlofEindDatum.HasValue || v.Datum <= verlofEindDatum)).ToList();
+            var userId = _userManager.GetUserId(User);
+
+            int schemaId = 0;
+            if (User.IsInRole("uitbater"))
+            {
+                schemaId = 8;
+            }
+            else
+            {
+                var masseurs = await _masseurService.GetAllAsync();
+                masseurs = masseurs.Where(p => p.IdAspNetUsers == userId);
+                var actieveMasseur = masseurs.FirstOrDefault();
+                var schemas = await _schemaService.GetAllAsync();
+                Schema actiefSchema = null;
+                if (actieveMasseur != null)
+                {
+                    actiefSchema = schemas
+                    .Where(s => s.IdMasseur == actieveMasseur.Id)
+                    .OrderByDescending(s => s.StartDatum)
+                    .FirstOrDefault();
+                }
+                schemaId = actiefSchema?.Id ?? 0;
+            }
+            var teVerwijderenVerlofDagen = verlofDagen.Where(v => v.IdSchema == schemaId && v.Datum >= verlofStartDatum && (!verlofEindDatum.HasValue || v.Datum <= verlofEindDatum)).ToList();
 
 
             if (!teVerwijderenVerlofDagen.Any())
