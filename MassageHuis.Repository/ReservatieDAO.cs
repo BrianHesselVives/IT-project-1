@@ -30,9 +30,18 @@ namespace MassageHuis.Repositories
         }
         
 
-        Task IDAO<Reservatie>.AddAsync(Reservatie entity)
+        async Task IDAO<Reservatie>.AddAsync(Reservatie entity)
         {
-            throw new NotImplementedException();
+            _dbContext.Entry(entity).State = EntityState.Added;
+            try
+            {
+                await _dbContext.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                throw;
+            }
         }
 
         Task IDAO<Reservatie>.DeleteAsync(Reservatie entity)

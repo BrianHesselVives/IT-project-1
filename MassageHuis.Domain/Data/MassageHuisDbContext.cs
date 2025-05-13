@@ -28,9 +28,9 @@ public partial class MassageHuisDbContext : DbContext
 
     public virtual DbSet<AspNetUserToken> AspNetUserTokens { get; set; }
 
-    public virtual DbSet<Betaling> Betalings { get; set; }
+    public virtual DbSet<Betaling> Betalingen { get; set; }
 
-    public virtual DbSet<KostPrijs> KostPrijs { get; set; }
+    public virtual DbSet<KostPrijs> KostPrijzen { get; set; }
 
     public virtual DbSet<Masseur> Masseurs { get; set; }
 
@@ -152,7 +152,7 @@ public partial class MassageHuisDbContext : DbContext
                 .HasMaxLength(255)
                 .IsUnicode(false);
 
-            entity.HasOne(d => d.IdReservatiesNavigation).WithMany(p => p.Betalings)
+            entity.HasOne(d => d.IdReservatiesNavigation).WithMany(p => p.Betalingen)
                 .HasForeignKey(d => d.IdReservaties)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FKBetaling230728");
@@ -273,9 +273,12 @@ public partial class MassageHuisDbContext : DbContext
         {
             entity.HasKey(e => e.Id).HasName("PK__Reservat__3214EC070AE0EE6F");
 
+            entity.Property(e => e.DatumCreatie).HasColumnType("datetime");
+            entity.Property(e => e.DatumReservatie).HasColumnType("datetime");
             entity.Property(e => e.IdAspNetUsers)
                 .HasMaxLength(450)
                 .HasColumnName("Id_AspNetUsers");
+            entity.Property(e => e.IdMasseur).HasColumnName("Id_Masseur");
             entity.Property(e => e.IdPrijs).HasColumnName("Id_Prijs");
             entity.Property(e => e.IdPromotieCode)
                 .HasMaxLength(255)
@@ -290,6 +293,11 @@ public partial class MassageHuisDbContext : DbContext
             entity.HasOne(d => d.IdAspNetUsersNavigation).WithMany(p => p.Reservaties)
                 .HasForeignKey(d => d.IdAspNetUsers)
                 .HasConstraintName("FK_Reservaties_AspNetUsers");
+
+            entity.HasOne(d => d.IdMasseurNavigation).WithMany(p => p.Reservaties)
+                .HasForeignKey(d => d.IdMasseur)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__Reservati__Id_Ma__160F4887");
 
             entity.HasOne(d => d.IdPrijsNavigation).WithMany(p => p.Reservaties)
                 .HasForeignKey(d => d.IdPrijs)

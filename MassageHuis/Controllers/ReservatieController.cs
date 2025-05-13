@@ -47,13 +47,19 @@ namespace MassageHuis.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> BevestigReservatie(MasseurVM masseurdata)
+        public async Task<IActionResult> OverzichtReservatie(ReservatieVM reservatieData)
         {
-            if (masseurdata?.vrijeSlots != null && masseurdata?.Id > 0)
+            return View("BevestigReservatie", reservatieData);
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> BevestigReservatie(ReservatieVM reservatieData)
+        {
+            if (reservatieData?.GeselecteerdSlot != null && reservatieData?.MasseurId > 0)
             {
-                DateTime geselecteerdSlot = masseurdata.vrijeSlots.FirstOrDefault();
-                int masseurId = masseurdata.Id;
-                DateOnly geselecteerdeDatum = DateOnly.FromDateTime(geselecteerdSlot.Date);
+                var geselecteerdSlot = reservatieData?.GeselecteerdSlot;
+                int? masseurId = reservatieData?.MasseurId;
+                DateOnly geselecteerdeDatum = DateOnly.FromDateTime(geselecteerdSlot.Value);
 
                 // 1. Haal relevante gegevens op
                 var schemas = await _schemaService.GetAllAsync();
@@ -76,8 +82,8 @@ namespace MassageHuis.Controllers
                 }
 
                 // 3a. Controleer of het een geldig regulier tijdslot is
-                var dagVanDeWeek = (int)geselecteerdSlot.DayOfWeek;
-                var startTijdVanSlot = geselecteerdSlot.TimeOfDay;
+                var dagVanDeWeek = (int)geselecteerdSlot.Value.DayOfWeek;
+                var startTijdVanSlot = geselecteerdSlot.Value.TimeOfDay;
 
                 var geldigRegulierSlot = reguliereTijdsloten
                     .Any(r => r.IdSchema == actiefSchema.Id &&
@@ -103,19 +109,33 @@ namespace MassageHuis.Controllers
                 }
 
                 // 4. Controleer of het tijdslot al gereserveerd is
-                var isGereserveerd = reservaties.Where(b => b.DatumReservatie != geselecteerdeDatum && b.Status != "geannuleerd");
+                var isGereserveerd = reservaties.Where(b => DateOnly.FromDateTime((DateTime)b.DatumReservatie) == geselecteerdeDatum && b.Status == "Gereserveerd" && b.IdRegulierTijdslot == reservatieData.IdTijdSlot);
 
                 if (isGereserveerd.FirstOrDefault() == null)
                 {
-                    // voeg reservatie toe aan database 
-                    // 
+
+                    Reservatie reservatie = new Reservatie()
+                    {
+                        DatumCreatie = DateTime.Now,
+                        DatumReservatie = geselecteerdSlot,// zorgt ervoor dat er een tijd ingevuld is bij de reservatie, 00:00:00
+                        IdAspNetUsers = _userManager.GetUserId(User),
+                        IdMasseur = (int)reservatieData.MasseurId,
+                        IdTypeMassage = 3,//id massage dient nog meegegeven te worden.
+                        IdRegulierTijdslot = reservatieData.IdTijdSlot,//tijdelijke waarde
+                        IdPrijs = 4,//prijs moet nog opgehaald worden via dao een het type massage
+                        Status = "Gereserveerd",
+                        TeBetalenBedrag = 90, //dient berekend te worden aan de hand van de promocode.
+
+                    };
+
+                    await _reservatieService.AddAsync(reservatie);
                 }
                 else
                 {
                     ViewBag.ErrorMessage = "Het geselecteerde tijdslot is helaas al gereserveerd.";
                     return View("~/Views/Shared/Error.cshtml");
                 }
-                    return View("../Home/Index",masseurdata); 
+                    return View("../Home/Index",reservatieData); 
             }
             else
             {

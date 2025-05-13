@@ -7,9 +7,9 @@ public partial class Reservatie
 {
     public int Id { get; set; }
 
-    public DateOnly DatumCreatie { get; set; }
+    public DateTime? DatumCreatie { get; set; }
 
-    public DateOnly DatumReservatie { get; set; }
+    public DateTime? DatumReservatie { get; set; }
 
     public string? IdAspNetUsers { get; set; }
 
@@ -25,9 +25,13 @@ public partial class Reservatie
 
     public float TeBetalenBedrag { get; set; }
 
-    public virtual ICollection<Betaling> Betalings { get; set; } = new List<Betaling>();
+    public int IdMasseur { get; set; }
+
+    public virtual ICollection<Betaling> Betalingen { get; set; } = new List<Betaling>();
 
     public virtual AspNetUser? IdAspNetUsersNavigation { get; set; }
+
+    public virtual Masseur IdMasseurNavigation { get; set; } = null!;
 
     public virtual KostPrijs IdPrijsNavigation { get; set; } = null!;
 

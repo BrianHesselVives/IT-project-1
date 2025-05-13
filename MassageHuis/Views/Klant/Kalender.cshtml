@@ -1,56 +1,47 @@
-﻿@model MassageHuis.ViewModels.MasseurVM
+﻿@model MassageHuis.ViewModels.KalenderVM
 @using System.Globalization
 
 @{
-    var year = Model.CalendarYear;
-    var month = Model.CalendarMonth;
+    var year = DateTime.Now.Year;
+    var month = DateTime.Now.Month;
     var culture = new CultureInfo("nl-BE");
 
     var today = DateTime.Today;
     var firstDayOfCurrentMonth = new DateTime(today.Year, today.Month, 1);
     var firstDayOfMonth = new DateTime(year, month, 1);
 
-    // Correcte berekening van vorige en volgende maand
     var prevMonthDateTime = firstDayOfMonth.AddMonths(-1);
     var nextMonthDateTime = firstDayOfMonth.AddMonths(1);
 
     var daysInMonth = DateTime.DaysInMonth(year, month);
     int startDayOfWeek = (int)firstDayOfMonth.DayOfWeek;
     int startOffset = (startDayOfWeek == 0) ? 6 : startDayOfWeek - 1;
-    var slotsGroupedByDate = Model.vrijeSlots?
-                            .OrderBy(s => s)
-                            .GroupBy(slot => slot.Date)
-                            .ToDictionary(g => g.Key, g => g.ToList())
-                            ?? new Dictionary<DateTime, List<DateTime>>();
-
-    var availableDates = slotsGroupedByDate.Keys.ToHashSet();
+    var slotsGroupedByDate = Model.SlotsPerDag.OrderBy(b => b.Key).ToList();
+    var availableDates = Model.SlotsPerDag.Keys.ToHashSet();
 
     var currentMonthName = culture.DateTimeFormat.GetMonthName(month);
-    // Voorgaande maand, maar alleen als het niet voor de huidige maand is.
     var prevMonth = (prevMonthDateTime >= firstDayOfCurrentMonth) ? prevMonthDateTime : firstDayOfCurrentMonth;
     var nextMonth = nextMonthDateTime;
 }
 
 <div class='container pb-5'>
-    <h2 class="mb-3">Plaats een afspraak bij: @Model.Naam</h2>
+    <h2 class="mb-3">Plaats een afspraak bij: @Model.NaamMasseur</h2>
     <div class="mt-5">
         <div class="d-flex justify-content-between align-items-center mb-3 calendar-nav">
             @if (firstDayOfMonth >= firstDayOfCurrentMonth)
             {
                 <a asp-action="Kalender"
-                   asp-route-id="@Model.Id"
                    asp-route-year="@prevMonth.Year"
                    asp-route-month="@prevMonth.Month"
                    class="btn btn-outline-primary">&lt; Vorige</a>
             }
             else
             {
-                <span class="invisible">&lt; Vorige</span> 
+                <span class="invisible">&lt; Vorige</span>
             }
 
             <h3 class="mb-0 text-center">@currentMonthName @year</h3>
             <a asp-action="Kalender"
-               asp-route-id="@Model.Id"
                asp-route-year="@nextMonth.Year"
                asp-route-month="@nextMonth.Month"
                class="btn btn-outline-primary">Volgende &gt;</a>
@@ -121,11 +112,10 @@
 
     @foreach (var dateGroup in slotsGroupedByDate)
     {
-        var modalDate = dateGroup.Key;
         var slotsForThisDate = dateGroup.Value;
-        string modalDateString = modalDate.ToString("yyyy-MM-dd");
+        string modalDateString = dateGroup.Key.ToString("yyyy-MM-dd");
         string modalUniqueId = $"modal-date-{modalDateString}";
-        string formattedModalDate = modalDate.ToString("dddd dd MMMM", culture);
+        string formattedModalDate = dateGroup.Key.ToString("dddd dd MMMM", culture);
         <div class="modal fade" id="@modalUniqueId" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="@(modalUniqueId)Label" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
@@ -141,12 +131,15 @@
                                 @foreach (var slot in slotsForThisDate)
                                 {
                                     <div class="list-group-item list-group-item-action">
-                                        <form method="post" asp-controller="Reservatie" asp-action="BevestigReservatie" class="m-0 p-0">
+                                        <form method="post" asp-controller="Reservatie" asp-action="OverzichtReservatie" class="m-0 p-0">
                                             @Html.AntiForgeryToken()
-                                            <input type="hidden" name="vrijeSlots" value="@slot" />
-                                            <input type="hidden" name="Id" value="@Model.Id" />
+                                            <input type="hidden" name="GeselecteerdSlot" value="@slot.starttijd" />
+                                            <input type="hidden" name="IdTijdSlot" value="@slot.Id" />
+                                            <input type="hidden" name="MasseurId" value="@Model.IdMasseur" />
+                                            <input type="hidden" name="MasseurNaam" value="@Model.NaamMasseur" />
+
                                             <button type="submit" class="list-group-button">
-                                                @slot.ToString("HH:mm")
+                                                @slot.starttijd
                                             </button>
                                         </form>
                                     </div>

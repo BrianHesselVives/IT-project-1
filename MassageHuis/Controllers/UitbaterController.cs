@@ -174,7 +174,7 @@ namespace MassageHuis.Controllers
                             foreach (var reservatie in bestaandeReservaties)
                             {
                                 // Controleer of de reservatie op dezelfde dag valt
-                                if (reservatie.DatumReservatie == verlofSlot.Datum)
+                                if (DateOnly.FromDateTime((DateTime)reservatie.DatumReservatie) == verlofSlot.Datum)
                                 {
                                     // Controleer op tijdsoverlapvar findId = new RegulierTijdslot();
                                     var findId = new RegulierTijdslot();
@@ -272,7 +272,7 @@ namespace MassageHuis.Controllers
                             foreach (var reservatie in bestaandeReservaties)
                             {
                                 // Controleer of de reservatie op dezelfde dag valt
-                                if (reservatie.DatumReservatie == verlofSlot.Datum)
+                                if (DateOnly.FromDateTime((DateTime)reservatie.DatumReservatie) == verlofSlot.Datum)
                                 {
                                     // Controleer op tijdsoverlap
                                     var findId = new RegulierTijdslot();

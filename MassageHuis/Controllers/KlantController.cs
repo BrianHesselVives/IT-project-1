@@ -12,6 +12,7 @@ using System.Data;
 using System.Net.Sockets;
 using Microsoft.AspNetCore.Http;
 using System.Text.Json;
+using MassageHuis.Repositories;
 
 namespace MassageHuis.Controllers
 {
@@ -63,8 +64,8 @@ namespace MassageHuis.Controllers
 
             var reservaties = await _reservatieService.GetAllAsync();
             var datumvandaag = DateOnly.FromDateTime(DateTime.Today);
-            var toekomstiseReservaties = reservaties.Where(b => b.DatumReservatie >= datumvandaag);
-
+            var toekomstiseReservaties = reservaties.Where(b =>DateOnly.FromDateTime((DateTime)b.DatumReservatie) >= datumvandaag);
+            var vrijeSlots = new List<VrijSlotVM>();
             var actieveSchemas = schemas.Where(s => s.IdMasseur == masseurdata.Id && s.StartDatum <= datumvandaag && s.EindDatum >= datumvandaag)
             .OrderByDescending(s => s.StartDatum)
             .FirstOrDefault();
@@ -79,7 +80,6 @@ namespace MassageHuis.Controllers
                 var lsDataMaand = GetAllDaysInMonth(DateTime.Now.Year, DateTime.Now.Month);
 
                 lsDataMaand = lsDataMaand.Where(b => b.Date >= DateTime.Today.Date).ToList();
-                var vrijeSlots = new List<DateTime>();
 
                 // Haal alle uitzonderingstijdsloten op, zowel voor de masseur als voor de uitbater (IdSchema 8)
                 var uitzonderingTijdsloten = await _uitzonderingTijdslotService.GetAllAsync();
@@ -103,12 +103,17 @@ namespace MassageHuis.Controllers
 
                             if (!isVerlofDag)
                             {
-                                vrijeSlots.Add(slotTijd);
+                                var isGereserveerd = reservaties.Where(b => b.DatumReservatie == slotTijd && b.Status == "Gereserveerd" && b.IdRegulierTijdslot == slot.Id);
+
+                                if (isGereserveerd.FirstOrDefault() == null)
+                                {
+                                    VrijSlotVM newSlot = new VrijSlotVM { Id = slot.Id, IdSchema = actieveSchemas.Id, starttijd = slotTijd };
+                                    vrijeSlots.Add(newSlot);
+                                }
                             }
                         }
                     }
                 }
-                masseurdata.vrijeSlots = vrijeSlots;
             }
             else
             {
@@ -118,7 +123,16 @@ namespace MassageHuis.Controllers
             reservatieSessie.MasseurId = masseurdata.Id;
             reservatieSessie.MasseurNaam = masseurdata.Naam;
             HttpContext.Session.SetObject("Reservatie", reservatieSessie);
-            return View(masseurdata);
+            var slotsPerDag = vrijeSlots
+                .GroupBy(s => s.starttijd.Date)
+                .ToDictionary(g => g.Key, g => g.ToList());
+            var kalenderVM = new KalenderVM
+            {
+                NaamMasseur = masseurdata.Naam,
+                IdMasseur = masseurdata.Id,
+                SlotsPerDag = slotsPerDag
+            };
+            return View(kalenderVM);
         }
         public static List<DateTime> GetAllDaysInMonth(int year, int month)
         {

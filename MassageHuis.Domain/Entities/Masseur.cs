@@ -19,5 +19,7 @@ public partial class Masseur
 
     public virtual ICollection<MasseurTypeMassage> MasseurTypeMassages { get; set; } = new List<MasseurTypeMassage>();
 
+    public virtual ICollection<Reservatie> Reservaties { get; set; } = new List<Reservatie>();
+
     public virtual ICollection<Schema> Schemas { get; set; } = new List<Schema>();
 }
