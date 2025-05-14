@@ -12,6 +12,20 @@ namespace MassageHuis.ViewModels
         public DateTime? GeselecteerdSlot { get; set; }
         public string? TypeMassage { get; set; }
         public int? IdTypeMassage { get; set; }
+        public int Id { get; set; }
+        public string? KlantNaam { get; set; }
+
+        public DateTime? DatumCreatie { get; set; }
+
+        public DateTime? DatumReservatie { get; set; }
+
+        public string? IdAspNetUsers { get; set; }
+
+        public string? IdPromotieCode { get; set; }
+
+        public string Status { get; set; } = null!;
+
+        public float TeBetalenBedrag { get; set; }
 
     }
 }

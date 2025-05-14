@@ -21,9 +21,9 @@ public class AdminController : Controller
     private IService<Masseur> _masseurService;
     private readonly IMapper _mapper;
     private readonly IEmailSend _emailSender;
-    
 
-    public AdminController(RoleManager<IdentityRole> roleManager, UserManager<ApplicationUser> userManager,IMapper mapper, IService<Masseur> masseurservice, IEmailSend emailSender)
+
+    public AdminController(RoleManager<IdentityRole> roleManager, UserManager<ApplicationUser> userManager, IMapper mapper, IService<Masseur> masseurservice, IEmailSend emailSender)
     {
         _roleManager = roleManager;
         _userManager = userManager;
@@ -77,7 +77,7 @@ public class AdminController : Controller
             {
                 ModelState.AddModelError(string.Empty, "Rol niet gevonden.");
                 return View("Details", new RoleDetailsVM { Role = role }); // Herlaad de pagina met foutmelding
-            }
+            }
 
             if (model.UsersToRemove != null && model.UsersToRemove.Any())
             {
@@ -110,13 +110,13 @@ public class AdminController : Controller
             }
 
             if (ModelState.IsValid) // Controleer of er geen fouten zijn opgetreden tijdens het verwijderen
-            {
+            {
                 return RedirectToAction("Details", new { id = model.RoleId });
             }
         }
 
-        // Als er fouten zijn, herlaad de pagina met de foutmeldingen
-        var existingRole = await _roleManager.FindByIdAsync(model.RoleId);
+        // Als er fouten zijn, herlaad de pagina met de foutmeldingen
+        var existingRole = await _roleManager.FindByIdAsync(model.RoleId);
         var usersInRole = await _userManager.GetUsersInRoleAsync(existingRole?.Name);
         var allUsers = _userManager.Users.ToList();
         var usersNotInRole = allUsers.Except(usersInRole).ToList();
@@ -134,7 +134,7 @@ public class AdminController : Controller
             {
                 ModelState.AddModelError(string.Empty, "Rol niet gevonden.");
                 return View("Details", new RoleDetailsVM { Role = role }); // Herlaad de pagina met foutmelding
-            }
+            }
 
             if (model.UsersToAdd != null && model.UsersToAdd.Any())
             {
@@ -143,9 +143,25 @@ public class AdminController : Controller
                     var user = await _userManager.FindByIdAsync(userId);
                     if (user != null)
                     {
+                        // Verwijder de gebruiker eerst uit de huidige rollen
+                        var userRoles = await _userManager.GetRolesAsync(user);
+                        if (userRoles.Any()) // Controleer of de gebruiker al rollen heeft
+                        {
+                            var removeResult = await _userManager.RemoveFromRolesAsync(user, userRoles);
+                            // hier moet nog de masseur in de masseur tabel op niet actief geplaatst worden. anders krijgen we null exceptions
+                            if (!removeResult.Succeeded)
+                            {
+                                foreach (var error in removeResult.Errors)
+                                {
+                                    ModelState.AddModelError(string.Empty, $"Fout bij verwijderen van rollen voor {user.UserName}: {error.Description}");
+                                }
+                                return View("Details", new RoleDetailsVM { Role = role }); // Terugkeren met foutmelding
+                            }
+                        }
+
                         var result = await _userManager.AddToRoleAsync(user, role.Name);
-                        // hier komt de code voor het toevoegen aan de masseeur tabel
-                        if(role.Name == "masseur")
+                        // hier komt de code voor het toevoegen aan de masseeur tabel
+                        if (role.Name == "masseur")
                         {
                             MasseurVM newMasseurToAdd = new MasseurVM();
                             newMasseurToAdd.IdAspNetUsers = user.Id;
@@ -153,10 +169,8 @@ public class AdminController : Controller
                             newMasseurToAdd.Actief = true;
                             var masseur = _mapper.Map<Masseur>(newMasseurToAdd);
                             await _masseurService.AddAsync(masseur);
-
-
                         }
-                        
+
                         if (!result.Succeeded)
                         {
                             foreach (var error in result.Errors)
@@ -173,14 +187,14 @@ public class AdminController : Controller
             }
 
             if (ModelState.IsValid) // Controleer of er geen fouten zijn opgetreden tijdens het toevoegen
-            {
+            {
                 return RedirectToAction("Details", new { id = model.RoleId })
-                    ;
+                  ;
             }
         }
 
-        // Als er fouten zijn, herlaad de pagina met de foutmeldingen
-        var existingRole = await _roleManager.FindByIdAsync(model.RoleId);
+        // Als er fouten zijn, herlaad de pagina met de foutmeldingen
+        var existingRole = await _roleManager.FindByIdAsync(model.RoleId);
         var usersInRole = await _userManager.GetUsersInRoleAsync(existingRole?.Name);
         var allUsers = _userManager.Users.ToList();
         var usersNotInRole = allUsers.Except(usersInRole).ToList();

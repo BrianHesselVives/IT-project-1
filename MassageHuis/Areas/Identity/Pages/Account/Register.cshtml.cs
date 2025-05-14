@@ -131,7 +131,8 @@ namespace MassageHuis.Areas.Identity.Pages.Account
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User created a new account with password.");
-
+                    // nieuwe klant toevoegen aan rol klant.
+                    await _userManager.AddToRoleAsync(user, "klant");
                     var userId = await _userManager.GetUserIdAsync(user);
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));

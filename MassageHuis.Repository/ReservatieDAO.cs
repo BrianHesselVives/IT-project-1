@@ -26,7 +26,13 @@ namespace MassageHuis.Repositories
 
         async public Task<Reservatie?> FindByIdAsync(Reservatie entity)
         {
-            throw new NotImplementedException();
+            try
+            {
+
+                return await _dbContext.Reservaties.Where(b => b.Id == entity.Id).FirstOrDefaultAsync();
+            }
+            catch (Exception ex)
+            { throw new Exception("error DAO Reservatie"); }
         }
         
 
@@ -44,16 +50,35 @@ namespace MassageHuis.Repositories
             }
         }
 
-        Task IDAO<Reservatie>.DeleteAsync(Reservatie entity)
+        async Task IDAO<Reservatie>.DeleteAsync(Reservatie entity)
         {
-            throw new NotImplementedException();
+            // voor het plaatsen van reservering op status geannuleerd
+            try
+            {
+                var annulatieReservatie = await _dbContext.Reservaties.Where(b => b.Id == entity.Id).FirstOrDefaultAsync();
+                if (annulatieReservatie != null)
+                {
+                    annulatieReservatie.Status = "Geannuleerd"; // Status wijzigen naar "Geannuleerd"
+                    _dbContext.Update(annulatieReservatie);
+                    await _dbContext.SaveChangesAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("error DAO Masseur Delete");
+            }
         }
 
         async Task<IEnumerable<Reservatie>?> IDAO<Reservatie>.GetAllAsync()
         {
             try
             {
-                return await _dbContext.Reservaties.ToListAsync();
+                return await _dbContext.Reservaties
+                    .Include(r => r.IdMasseurNavigation) 
+                    .ThenInclude(m => m.IdAspNetUsersNavigation)
+                    .Include(n=>n.IdTypeMassageNavigation)
+                    .Include(o=> o.IdAspNetUsersNavigation)
+                    .ToListAsync();
             }
             catch (Microsoft.Data.SqlClient.SqlException ex)
             {

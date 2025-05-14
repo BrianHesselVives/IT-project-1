@@ -1,10 +1,12 @@
 ﻿using AutoMapper;
 using MassageHuis.Entities;
 using MassageHuis.Models;
+using MassageHuis.Repositories;
 using MassageHuis.Services;
 using MassageHuis.Services.Interfaces;
 using MassageHuis.Util.Mail.Interfaces;
 using MassageHuis.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Formatters;
@@ -56,6 +58,7 @@ namespace MassageHuis.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "klant")]
         public async Task<IActionResult> BevestigReservatie(ReservatieVM reservatieData)
         {
             if (reservatieData?.GeselecteerdSlot != null && reservatieData?.MasseurId > 0)
@@ -109,6 +112,7 @@ namespace MassageHuis.Controllers
                 {
                     ViewBag.ErrorMessage = "Het geselecteerde tijdslot is niet meer beschikbaar (valt binnen een uitzondering).";
                     return View("~/Views/Shared/Error.cshtml");
+
                 }
 
                 // 4. Controleer of het tijdslot al gereserveerd is
@@ -259,5 +263,69 @@ namespace MassageHuis.Controllers
 
             return str.ToString();
         }
+        [Authorize(Roles = "uitbater, administrator, klant, masseur")]
+        public async Task<IActionResult> KlantReservatieOverzicht(IEnumerable<ReservatieVM> reservatieData) {
+
+            var user = await _userManager.GetUserAsync(User);
+
+            var reservatieVMs = new List<ReservatieVM>();
+
+            if (await _userManager.IsInRoleAsync(user, "klant"))
+            {
+                var klantReservaties = await _reservatieService.GetAllAsync();
+                var userReservaties = klantReservaties.Where(b => b.IdAspNetUsers == user.Id).OrderBy(b=> b.DatumReservatie);
+
+                foreach (var Res in userReservaties)
+                {
+                    var reservatieVM = _mapper.Map<ReservatieVM>(Res); // Map de Reservatie naar ReservatieVM
+                    reservatieVMs.Add(reservatieVM);
+                }
+            }
+            if (await _userManager.IsInRoleAsync(user, "uitbater")) 
+            {
+                var klantReservaties = await _reservatieService.GetAllAsync();
+                var userReservaties = klantReservaties.OrderBy(b => b.DatumReservatie);
+
+                foreach (var Res in userReservaties)
+                {
+                    var reservatieVM = _mapper.Map<ReservatieVM>(Res); // Map de Reservatie naar ReservatieVM
+                    reservatieVMs.Add(reservatieVM);
+                }
+            }
+
+                return View("OverzichtReservaties",reservatieVMs);
+        }
+        [Authorize(Roles = "uitbater, administrator, klant, masseur")]
+        public async Task<IActionResult> AnnuleerReservatie(int id) {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return Unauthorized();
+            }
+            Reservatie teAnnuleren = new Reservatie { Id=id};
+            var reservatie = await _reservatieService.FindByIdAsync(teAnnuleren);
+            if (reservatie == null)
+            {
+                return NotFound();
+            }
+
+            if (reservatie.IdAspNetUsers != user.Id) 
+            {
+                return Forbid();
+            }
+
+            if (reservatie.DatumReservatie <= DateTime.Today.AddDays(4))
+            {
+                ViewBag.ErrorMessage = "Reserveringen kunnen alleen tot 4 dagen voor de geplande datum worden geannuleerd.";
+                return View("~/Views/Shared/Error.cshtml");
+            }
+            if (await _userManager.IsInRoleAsync(user, "uitbater") || await _userManager.IsInRoleAsync(user, "masseur") || user.Id == reservatie.IdAspNetUsers)
+            {
+                await _reservatieService.DeleteAsync(reservatie); // Verwijder de reservering
+            }
+            return RedirectToAction("KlantReservatieOverzicht");
+        }
+
     }
+
 }

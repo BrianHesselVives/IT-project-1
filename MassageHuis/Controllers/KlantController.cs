@@ -56,6 +56,10 @@ namespace MassageHuis.Controllers
             masseursvm.Gebruikers = await _userManager.GetUsersInRoleAsync("masseur");
             return View(masseursvm);
         }
+        public async Task<IActionResult> SoortenMassages()
+        {
+            return View();
+        }
         [HttpPost]
         public async Task<IActionResult> Kalender(MasseurVM masseurdata)
         {

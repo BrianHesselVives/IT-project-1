@@ -42,18 +42,15 @@
                             }
                             else if (SignInManager.IsSignedIn(User) && await UserManager.IsInRoleAsync(await UserManager.GetUserAsync(User), "masseur"))
                             {
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" id="mijnAccountDropdownKlant" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <i class="bi bi-person-circle"></i> Mijn Account
-                                </a>
-                                <ul class="dropdown-menu" aria-labelledby="mijnAccountDropdownKlant">
-                                    <li><a class="dropdown-item" asp-controller="Klant" asp-action="Edit"><i class="bi bi-person"></i>  Mijn Profiel</a></li>
-                                    <li><a class="dropdown-item" asp-controller="Klant" asp-action="OverzichtReservaties"><i class="bi bi-calendar-event"></i>  Mijn Reservaties</a></li>
-                                </ul>
-                            </li>
+                                <a class="nav-link" asp-controller="Masseur" asp-action="Index"><i class="bi bi-clipboard-pulse"></i> Mijn Overzicht</a>
                             }
                         </li>
-
+                        <li class="nav-item">
+                            @if (SignInManager.IsSignedIn(User) && await UserManager.IsInRoleAsync(await UserManager.GetUserAsync(User), "klant"))
+                            {
+                            <a class="nav-link" asp-controller="Klant" asp-action="SoortenMassages"><i class="bi bi-ui-radios"></i> Soorten Massages</a>
+                            }
+                        </li>
                     </ul>
                     <partial name="_LoginPartial" />
                 </div>
@@ -68,14 +65,13 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2025 - MassageHuis - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            Brian Hessel&copy; 2025 - MassageHuis </a>
         </div>
     </footer>
-    @section Scripts
-{
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>}
+    <script src="https://cdn.jsdelivr.net/npm/@@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.min.js" integrity="sha384-RuyvpeZCxMJCqVUGFI0Do1mQrods/hhxYlcVfGPOfQtPJh0JCw12tUAZ/Mv10S7D" crossorigin="anonymous"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
