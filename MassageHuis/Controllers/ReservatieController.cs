@@ -8,8 +8,11 @@ using MassageHuis.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Formatters;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
 using System.Data;
+using System.Net.Mail;
 using System.Net.Sockets;
+using System.Text;
 
 namespace MassageHuis.Controllers
 {
@@ -135,12 +138,126 @@ namespace MassageHuis.Controllers
                     ViewBag.ErrorMessage = "Het geselecteerde tijdslot is helaas al gereserveerd.";
                     return View("~/Views/Shared/Error.cshtml");
                 }
-                    return View("../Home/Index",reservatieData); 
+
+                //eindtijd massage
+                DateTime eindtijdMassage = (DateTime)geselecteerdSlot;
+                eindtijdMassage = eindtijdMassage.Date + (reguliereTijdsloten.Where(b => b.Id == reservatieData.IdTijdSlot).FirstOrDefault().EindTijd.ToTimeSpan());
+                var massageDuur = eindtijdMassage - (DateTime)geselecteerdSlot;
+
+                var user = await _userManager.GetUserAsync(User);
+                var email = await _userManager.GetEmailAsync(user);
+
+                StringBuilder EmailTextBuilder = new StringBuilder();
+
+                EmailTextBuilder.AppendLine("<!DOCTYPE html>");
+                EmailTextBuilder.AppendLine("<html>");
+                EmailTextBuilder.AppendLine("<head>");
+                EmailTextBuilder.AppendLine("<meta charset=\"UTF-8\">");
+                EmailTextBuilder.AppendLine("<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">");
+                EmailTextBuilder.AppendLine("<title>Reserveringsbevestiging</title>");
+                EmailTextBuilder.AppendLine("<link rel=\"stylesheet\" href=\"https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css\">"); // Gebruik CDN voor Bootstrap
+                EmailTextBuilder.AppendLine("<style>");
+                EmailTextBuilder.AppendLine("body { font-family: Arial, sans-serif; }");
+                EmailTextBuilder.AppendLine(".container { max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #ccc; border-radius: 5px; }");
+                EmailTextBuilder.AppendLine("h1 { color: #0078d7; }");
+                EmailTextBuilder.AppendLine("p { margin-bottom: 10px; }");
+                EmailTextBuilder.AppendLine(".details-box { background-color: #f0f8ff; padding: 15px; border-radius: 5px; margin-bottom: 15px;}"); // Nieuwe class voor styling
+                EmailTextBuilder.AppendLine("</style>");
+                EmailTextBuilder.AppendLine("</head>");
+                EmailTextBuilder.AppendLine("<body>");
+                EmailTextBuilder.AppendLine("<div class=\"container\">");
+
+                EmailTextBuilder.AppendLine($"<h1>Beste {user.Voornaam} {user.Naam},</h1>");
+                EmailTextBuilder.AppendLine("<p>Hartelijk dank voor uw reservering bij ons massagehuis! We kijken ernaar uit om u te verwelkomen voor uw ontspannende massage.</p>");
+                EmailTextBuilder.AppendLine("<p>Hieronder vindt u een overzicht van uw reserveringsgegevens:</p>");
+
+                EmailTextBuilder.AppendLine("<div class=\"details-box\">");  // Start details box
+                EmailTextBuilder.AppendLine($"<p><strong>Naam:</strong> {user.Voornaam} {user.Naam}</p>");
+                EmailTextBuilder.AppendLine($"<p><strong>Datum:</strong> {geselecteerdSlot.Value.Date.ToString("dd-MM-yyyy")}</p>");
+                EmailTextBuilder.AppendLine($"<p><strong>Tijd:</strong> {geselecteerdSlot.Value.TimeOfDay.ToString(@"hh\:mm")}</p>");
+                EmailTextBuilder.AppendLine("<p><strong>Type massage:</strong> [Naam van het type massage, bijvoorbeeld: Ontspanningsmassage]</p>"); // Placeholder
+                EmailTextBuilder.AppendLine($"<p><strong>Masseur:</strong> {reservatieData.MasseurNaam}</p>");
+                EmailTextBuilder.AppendLine($"<p><strong>Duur van de massage:</strong> {massageDuur.TotalMinutes} minuten</p>");
+
+                EmailTextBuilder.AppendLine("</div>"); //einde details box
+
+                EmailTextBuilder.AppendLine("<p>Uw reservering is nu definitief bevestigd.</p>");
+                EmailTextBuilder.AppendLine($"<p>Wij zien u graag op {geselecteerdSlot.Value.Date.ToString("dd-MM-yyyy")}!</p>");
+
+                EmailTextBuilder.AppendLine("<p>Met ontspannende groet,</p>");
+                EmailTextBuilder.AppendLine($"<p>{reservatieData.MasseurNaam} / Het team van Massagehuis</p>");
+
+                EmailTextBuilder.AppendLine("</div>");
+                EmailTextBuilder.AppendLine("</body>");
+                EmailTextBuilder.AppendLine("</html>");
+
+                
+                //ICS file
+                string calendarContent = GenerateICSInviteBody
+                    (
+                        "Massagehuis",
+                        user.Email,
+                        $"Reservatie {reservatieData.TypeMassage} op ",
+                        $"Dit is de reservatie voor de een {reservatieData.TypeMassage} op {geselecteerdSlot.Value.Date.ToString("dd-MM-yyyy")} om {geselecteerdSlot.Value.TimeOfDay.ToString(@"hh\:mm")}",
+                        "Ieper",
+                        (DateTime)geselecteerdSlot,
+                        eindtijdMassage,
+                        isCancel: false
+                    );
+                byte[] calendarBytes = Encoding.UTF8.GetBytes(calendarContent);
+
+                // Bijlage genereren
+                Attachment calendarAttachment = new Attachment(new MemoryStream(calendarBytes), "Reservatie.ics", "text/calendar");
+                _emailSender.SendReservationEmailAsync(email.ToString(), $"Massagehuis: Uw reservatie op {geselecteerdSlot.Value.Date.ToString("dd-MM-yyyy")}" , EmailTextBuilder.ToString(),calendarAttachment);
+                return View("../Home/Index",reservatieData); 
             }
             else
             {
                 return View("~/Views/Shared/Error.cshtml");
             }
+        }
+
+        private static string GenerateICSInviteBody(string organizer, string attendees, string subject, string description, string location, DateTime startTime, DateTime endTime, int? eventID = null, bool isCancel = false)
+        {
+            StringBuilder str = new StringBuilder();
+
+            // Begin calendar
+            str.AppendLine("BEGIN:VCALENDAR");
+            str.AppendLine("PRODID:-//Microsoft Corporation//Outlook 12.0 MIMEDIR//EN");
+            str.AppendLine("VERSION:2.0");
+            str.AppendLine(string.Format("METHOD:{0}", (isCancel ? "CANCEL" : "REQUEST")));
+            str.AppendLine("BEGIN:VEVENT");
+
+            // Event details
+            str.AppendLine(string.Format("DTSTART:{0:yyyyMMddTHHmmssZ}", startTime.ToUniversalTime()));
+            str.AppendLine(string.Format("DTSTAMP:{0:yyyyMMddTHHmmss}", DateTime.UtcNow));
+            str.AppendLine(string.Format("DTEND:{0:yyyyMMddTHHmmssZ}", endTime.ToUniversalTime()));
+            if (isCancel)
+            {
+                str.AppendLine("STATUS:CANCELLED");
+            }
+            str.AppendLine(string.Format("LOCATION: {0}", location));
+            str.AppendLine(string.Format("UID:{0}", (eventID.HasValue ? "Event" + eventID : Guid.NewGuid().ToString())));
+            str.AppendLine(string.Format("DESCRIPTION:{0}", description.Replace("\n", "<br>")));
+            str.AppendLine(string.Format("X-ALT-DESC;FMTTYPE=text/html:{0}", description.Replace("\n", "<br>")));
+            str.AppendLine(string.Format("SUMMARY:{0}", subject));
+
+            // Organizer and attendees
+            str.AppendLine(string.Format("ORGANIZER;CN=\"{0}\":MAILTO:{1}", organizer, "test@123.com"));
+            str.AppendLine(string.Format("ATTENDEE;CN=\"{0}\";RSVP=TRUE:mailto:{1}", attendees,attendees));
+
+            // Alarm
+            str.AppendLine("BEGIN:VALARM");
+            str.AppendLine("TRIGGER:-PT15M");
+            str.AppendLine("ACTION:DISPLAY");
+            str.AppendLine("DESCRIPTION:Reminder");
+            str.AppendLine("END:VALARM");
+
+            // End event and calendar
+            str.AppendLine("END:VEVENT");
+            str.AppendLine("END:VCALENDAR");
+
+            return str.ToString();
         }
     }
 }

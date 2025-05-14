@@ -3,37 +3,35 @@
 @{
     ViewData["Title"] = "Registreren";
 }
-
-<h1>@ViewData["Title"]</h1>
-
-<div class="row">
-    <div class="col-md-4">
-        <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
-            <h2>Maak een account aan.</h2>
-            <hr />
+<div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+        <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="bg-white rounded shadow-md p-4">
+            <h2 class="text-center mb-4">Maak een account aan.</h2>
+            <hr class="mb-4" />
+            <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
             <div class="form-floating mb-3">
-                <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />
-                <label asp-for="Input.Email">Email</label>
+                <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="naam@voorbeeld.com" />
+                <label asp-for="Input.Email" class="form-label">Email</label>
                 <span asp-validation-for="Input.Email" class="text-danger"></span>
             </div>
             <div class="form-floating mb-3">
                 <input asp-for="Input.Naam" class="form-control" autocomplete="family-name" aria-required="true" placeholder="@Html.DisplayNameFor(m => m.Input.Naam)" />
-                <label asp-for="Input.Naam">@Html.DisplayNameFor(m => m.Input.Naam)</label>
+                <label asp-for="Input.Naam" class="form-label">@Html.DisplayNameFor(m => m.Input.Naam)</label>
                 <span asp-validation-for="Input.Naam" class="text-danger"></span>
             </div>
             <div class="form-floating mb-3">
                 <input asp-for="Input.Voornaam" class="form-control" autocomplete="given-name" aria-required="true" placeholder="@Html.DisplayNameFor(m => m.Input.Voornaam)" />
-                <label asp-for="Input.Voornaam">@Html.DisplayNameFor(m => m.Input.Voornaam)</label>
+                <label asp-for="Input.Voornaam" class="form-label">@Html.DisplayNameFor(m => m.Input.Voornaam)</label>
                 <span asp-validation-for="Input.Voornaam" class="text-danger"></span>
             </div>
             <div class="form-floating mb-3">
-                <select asp-for="Input.Geslacht" class="form-control" aria-required="true">
+                <select asp-for="Input.Geslacht" class="form-select" aria-required="true">
                     <option value="">Selecteer geslacht</option>
                     <option value="M">M</option>
                     <option value="V">V</option>
                     <option value="">X</option>
                 </select>
-                <label asp-for="Input.Geslacht">@Html.DisplayNameFor(m => m.Input.Geslacht)</label>
+                <label asp-for="Input.Geslacht" class="form-label">@Html.DisplayNameFor(m => m.Input.Geslacht)</label>
                 <span asp-validation-for="Input.Geslacht" class="text-danger"></span>
             </div>
             <div class="form-floating mb-3">
@@ -45,21 +43,16 @@
             </div>
             <div class="form-floating mb-3">
                 <input asp-for="Input.Password" class="form-control" autocomplete="new-password" aria-required="true" placeholder="Wachtwoord" />
-                <label asp-for="Input.Password">Wachtwoord</label>
+                <label asp-for="Input.Password" class="form-label">Wachtwoord</label>
                 <span asp-validation-for="Input.Password" class="text-danger"></span>
             </div>
             <div class="form-floating mb-3">
                 <input asp-for="Input.ConfirmPassword" class="form-control" autocomplete="new-password" aria-required="true" placeholder="Bevestig wachtwoord" />
-                <label asp-for="Input.ConfirmPassword">Bevestig wachtwoord</label>
+                <label asp-for="Input.ConfirmPassword" class="form-label">Bevestig wachtwoord</label>
                 <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
             </div>
-            <button id="registerSubmit" type="submit" class="w-100 btn btn-lg btn-primary">Registreren</button>
+            <button id="registerSubmit" type="submit" class="w-100 btn btn-lg btn-primary mt-3">Registreren</button>
         </form>
-    </div>
-    <div class="col-md-6 col-md-offset-2">
-        <section>
-            <h3>Placeholder</h3>
-        </section>
     </div>
 </div>
 

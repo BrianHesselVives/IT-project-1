@@ -42,7 +42,15 @@
                             }
                             else if (SignInManager.IsSignedIn(User) && await UserManager.IsInRoleAsync(await UserManager.GetUserAsync(User), "masseur"))
                             {
-                                <a class="nav-link" asp-controller="Masseur" asp-action="Index"><i class="bi bi-clipboard-pulse"></i> Mijn Overzicht</a>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="mijnAccountDropdownKlant" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="bi bi-person-circle"></i> Mijn Account
+                                </a>
+                                <ul class="dropdown-menu" aria-labelledby="mijnAccountDropdownKlant">
+                                    <li><a class="dropdown-item" asp-controller="Klant" asp-action="Edit"><i class="bi bi-person"></i>  Mijn Profiel</a></li>
+                                    <li><a class="dropdown-item" asp-controller="Klant" asp-action="OverzichtReservaties"><i class="bi bi-calendar-event"></i>  Mijn Reservaties</a></li>
+                                </ul>
+                            </li>
                             }
                         </li>
 
@@ -63,9 +71,11 @@
             &copy; 2025 - MassageHuis - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
     </footer>
+    @section Scripts
+{
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>}
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

@@ -10,6 +10,8 @@ namespace MassageHuis.ViewModels
         public String? MasseurNaam { get; set; }
         public int IdTijdSlot { get; set; } 
         public DateTime? GeselecteerdSlot { get; set; }
+        public string? TypeMassage { get; set; }
+        public int? IdTypeMassage { get; set; }
 
     }
 }

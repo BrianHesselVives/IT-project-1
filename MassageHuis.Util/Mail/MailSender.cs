@@ -17,8 +17,7 @@ namespace MassageHuis.Util.Mail
         {
             _emailSettings = emailSettings.Value;
         }
-        public async Task SendEmailAsync(
-            string email, string subject, string message)
+        public async Task SendEmailAsync(string email, string subject, string message)
         {
             var mail = new MailMessage();  // aanmaken van een mail‐object
             mail.To.Add(new MailAddress(email));
@@ -41,6 +40,33 @@ namespace MassageHuis.Util.Mail
             }
             catch (Exception ex)
             { 
+                Console.Write(ex);
+            }
+        }
+        public async Task SendReservationEmailAsync(string email, string subject, string message,Attachment attachment)
+        {
+            var mail = new MailMessage();  // aanmaken van een mail‐object
+            mail.To.Add(new MailAddress(email));
+            mail.From = new
+                    MailAddress(_emailSettings.Sender);  // hier komt jullie Gmail‐adres
+            mail.Subject = subject;
+            mail.Body = message;
+            mail.IsBodyHtml = true;
+            mail.Attachments.Add(attachment);
+            try
+            {
+                using (var smtp = new SmtpClient(_emailSettings.MailServer))
+                {
+                    smtp.Port = _emailSettings.MailPort;
+                    smtp.EnableSsl = true;
+                    smtp.Credentials =
+                        new NetworkCredential(_emailSettings.Sender,
+                                                _emailSettings.Password);
+                    await smtp.SendMailAsync(mail);
+                }
+            }
+            catch (Exception ex)
+            {
                 Console.Write(ex);
             }
         }

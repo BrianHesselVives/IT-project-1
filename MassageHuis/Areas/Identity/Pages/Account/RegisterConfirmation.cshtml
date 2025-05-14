@@ -1,22 +1,21 @@
 ﻿@page
 @model RegisterConfirmationModel
 @{
-    ViewData["Title"] = "Register confirmation";
+    ViewData["Title"] = "Registratie bevestiging";
 }
 
 <h1>@ViewData["Title"]</h1>
 @{
     if (@Model.DisplayConfirmAccountLink)
     {
-<p>
-    Gelieve uw email te bevestigen.
-</p>
+        <p>
+            Gelieve uw email te bevestigen.
+        </p>
     }
     else
     {
-<p>
-        Please check your email to confirm your account.
-</p>
+        <p>
+            Controleer alstublieft uw email om uw account te bevestigen.
+        </p>
     }
 }
-
