@@ -1,0 +1,31 @@
+﻿@using MassageHuis.ViewModels
+@model MassageHuis.ViewModels.MasseurVM
+
+<div class="row justify-content-center">
+    @foreach (var masseur in Model.Masseurs)
+    {
+        <div class="col-sm-6 col-md-4 col-lg-3 d-flex justify-content-center">
+            <div class="card" style="width: 18rem;">
+                <img class="card-img-top" src="https://placehold.co/150x150/png" alt="Placeholder Foto Masseur">
+                <div class="card-body">
+                    <form asp-controller="Klant" asp-action="Kalender" method="post">
+                        @{
+                            var user = Model.Gebruikers.FirstOrDefault(b => b.Id == masseur.IdAspNetUsers);
+                        }
+                        <h5 class="card-title">@user.Voornaam @user.Naam</h5>
+                        <p class="card-text">
+                            @masseur.Beschrijving
+                        </p>
+                        <input type="hidden" name="Id" value="@masseur.Id" />
+                        <input type="hidden" name="IdAspNetUsers" value="@masseur.IdAspNetUsers" />
+                        <input type="hidden" name="Actief" value="@masseur.Actief" />
+                        <input type="hidden" name="Einddienstverband" value="@masseur.Einddienstverband" />
+                        <input type="hidden" name="Beschrijving" value="@masseur.Beschrijving" />
+                        <input type="hidden" name="Naam" value="@user.Voornaam @user.Naam" />
+                        <button type="submit" class="btn btn-primary">Bekijk Kalender</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    }
+</div>

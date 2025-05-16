@@ -1,0 +1,161 @@
+﻿@model MassageHuis.ViewModels.KalenderVM
+@using System.Globalization
+
+@{
+    var year = DateTime.Now.Year;
+    var month = DateTime.Now.Month;
+    var culture = new CultureInfo("nl-BE");
+
+    var today = DateTime.Today;
+    var firstDayOfCurrentMonth = new DateTime(today.Year, today.Month, 1);
+    var firstDayOfMonth = new DateTime(year, month, 1);
+
+    var prevMonthDateTime = firstDayOfMonth.AddMonths(-1);
+    var nextMonthDateTime = firstDayOfMonth.AddMonths(1);
+
+    var daysInMonth = DateTime.DaysInMonth(year, month);
+    int startDayOfWeek = (int)firstDayOfMonth.DayOfWeek;
+    int startOffset = (startDayOfWeek == 0) ? 6 : startDayOfWeek - 1;
+    var slotsGroupedByDate = Model.SlotsPerDag.OrderBy(b => b.Key).ToList();
+    var availableDates = Model.SlotsPerDag.Keys.ToHashSet();
+
+    var currentMonthName = culture.DateTimeFormat.GetMonthName(month);
+    var prevMonth = (prevMonthDateTime >= firstDayOfCurrentMonth) ? prevMonthDateTime : firstDayOfCurrentMonth;
+    var nextMonth = nextMonthDateTime;
+}
+
+<div class='container pb-5'>
+    <h2 class="mb-3">Plaats een afspraak bij: @Model.NaamMasseur</h2>
+    <div class="mt-5">
+        <div class="d-flex justify-content-between align-items-center mb-3 calendar-nav">
+            @if (firstDayOfMonth >= firstDayOfCurrentMonth)
+            {
+                <a asp-action="Kalender"
+                   asp-route-year="@prevMonth.Year"
+                   asp-route-month="@prevMonth.Month"
+                   class="btn btn-outline-primary">&lt; Vorige</a>
+            }
+            else
+            {
+                <span class="invisible">&lt; Vorige</span>
+            }
+
+            <h3 class="mb-0 text-center">@currentMonthName @year</h3>
+            <a asp-action="Kalender"
+               asp-route-year="@nextMonth.Year"
+               asp-route-month="@nextMonth.Month"
+               class="btn btn-outline-primary">Volgende &gt;</a>
+        </div>
+
+        <table class="table table-bordered text-center shadow-sm">
+            <thead class="table-dark">
+                <tr>
+                    <th>Ma</th>
+                    <th>Di</th>
+                    <th>Wo</th>
+                    <th>Do</th>
+                    <th>Vr</th>
+                    <th>Za</th>
+                    <th>Zo</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    int dayCounter = 1;
+                    for (int week = 0; week < 6; week++)
+                    {
+                        if (dayCounter > daysInMonth && week > 0 && startOffset == 0) break;
+                        if (week > 0 && (dayCounter > daysInMonth)) break;
+
+                        <tr>
+                            @for (int dayOfWeek = 0; dayOfWeek < 7; dayOfWeek++)
+                            {
+                                if ((week == 0 && dayOfWeek < startOffset) || dayCounter > daysInMonth)
+                                {
+                                    <td class="other-month"></td>
+                                }
+                                else
+                                {
+                                    var currentDate = new DateTime(year, month, dayCounter);
+                                    bool hasSlots = availableDates.Contains(currentDate.Date);
+                                    string cellClass = hasSlots ? "bg-success-subtle text-success-emphasis" : "";
+                                    string dateString = currentDate.ToString("yyyy-MM-dd");
+                                    string modalId = $"modal-date-{dateString}";
+
+                                    <td class="@(hasSlots ? "" : "")">
+                                        @if (hasSlots)
+                                        {
+                                            <a href="#" class="available-date-link"
+                                               data-bs-toggle="modal"
+                                               data-bs-target="#@modalId"
+                                               title="Bekijk tijden voor @currentDate.ToString("d MMM", culture)">
+                                                <div class="available-date-highlight @cellClass">
+                                                    @dayCounter
+                                                </div>
+                                            </a>
+                                        }
+                                        else
+                                        {
+                                            @dayCounter
+                                        }
+                                    </td>
+                                    dayCounter++;
+                                }
+                            }
+                        </tr>
+                        if (week == 0) startOffset = 0;
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+
+    @foreach (var dateGroup in slotsGroupedByDate)
+    {
+        var slotsForThisDate = dateGroup.Value;
+        string modalDateString = dateGroup.Key.ToString("yyyy-MM-dd");
+        string modalUniqueId = $"modal-date-{modalDateString}";
+        string formattedModalDate = dateGroup.Key.ToString("dddd dd MMMM", culture);
+        <div class="modal fade" id="@modalUniqueId" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="@(modalUniqueId)Label" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="@(modalUniqueId)Label">Beschikbare tijden op @formattedModalDate</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Selecteer een tijd:</p>
+                        <div class="list-group">
+                            @if (slotsForThisDate.Any())
+                            {
+                                @foreach (var slot in slotsForThisDate)
+                                {
+                                    <div class="list-group-item list-group-item-action">
+                                        <form method="post" asp-controller="Reservatie" asp-action="OverzichtReservatie" class="m-0 p-0">
+                                            @Html.AntiForgeryToken()
+                                            <input type="hidden" name="GeselecteerdSlot" value="@slot.starttijd" />
+                                            <input type="hidden" name="IdTijdSlot" value="@slot.Id" />
+                                            <input type="hidden" name="MasseurId" value="@Model.IdMasseur" />
+                                            <input type="hidden" name="MasseurNaam" value="@Model.NaamMasseur" />
+
+                                            <button type="submit" class="list-group-button">
+                                                @slot.starttijd
+                                            </button>
+                                        </form>
+                                    </div>
+                                }
+                            }
+                            else
+                            {
+                                <div class="list-group-item">Geen tijden gevonden voor deze datum.</div>
+                            }
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Sluiten</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
