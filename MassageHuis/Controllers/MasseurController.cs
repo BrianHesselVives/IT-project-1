@@ -13,5 +13,10 @@ namespace MassageHuis.Controllers
             VerlofVM model = new VerlofVM();
             return View(model);
         }
+        public IActionResult SchemaWijzigen()
+        {
+
+            return View();
+        }
     }
 }

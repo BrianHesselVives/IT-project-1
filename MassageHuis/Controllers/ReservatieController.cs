@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
 using System.Data;
+using System.Globalization;
 using System.Net.Mail;
 using System.Net.Sockets;
 using System.Text;
@@ -264,8 +265,12 @@ namespace MassageHuis.Controllers
             return str.ToString();
         }
         [Authorize(Roles = "uitbater, administrator, klant, masseur")]
-        public async Task<IActionResult> KlantReservatieOverzicht(IEnumerable<ReservatieVM> reservatieData) {
-
+        public async Task<IActionResult> KlantReservatieOverzicht(IEnumerable<ReservatieVM> reservatieData, int weekOffset) {
+            DateTime basisDatumVoorWeek = DateTime.Today.AddDays(weekOffset * 7);
+            // Bepaal het begin en einde van de week op basis van de basisdatum
+            DayOfWeek eersteDagVanDeWeek = CultureInfo.CurrentCulture.DateTimeFormat.FirstDayOfWeek;
+            DateTime beginVanDeWeek = basisDatumVoorWeek.AddDays(-(int)basisDatumVoorWeek.DayOfWeek).AddDays((int)eersteDagVanDeWeek);
+            DateTime eindeVanDeWeek = beginVanDeWeek.AddDays(7).AddSeconds(-1);
             var user = await _userManager.GetUserAsync(User);
 
             var reservatieVMs = new List<ReservatieVM>();
@@ -284,7 +289,7 @@ namespace MassageHuis.Controllers
             if (await _userManager.IsInRoleAsync(user, "uitbater")) 
             {
                 var klantReservaties = await _reservatieService.GetAllAsync();
-                var userReservaties = klantReservaties.OrderBy(b => b.DatumReservatie);
+                var userReservaties = klantReservaties.OrderBy(b => b.DatumReservatie).Where(b => b.DatumReservatie >= beginVanDeWeek && b.DatumReservatie<=eindeVanDeWeek);
 
                 foreach (var Res in userReservaties)
                 {
@@ -292,8 +297,11 @@ namespace MassageHuis.Controllers
                     reservatieVMs.Add(reservatieVM);
                 }
             }
-
-                return View("OverzichtReservaties",reservatieVMs);
+           
+            ViewData["WeekOffset"] = weekOffset;
+            ViewData["BeginVanDeWeek"] = beginVanDeWeek;
+            ViewData["EindeVanDeWeek"] = eindeVanDeWeek;
+            return View("OverzichtReservaties",reservatieVMs);
         }
         [Authorize(Roles = "uitbater, administrator, klant, masseur")]
         public async Task<IActionResult> AnnuleerReservatie(int id) {
