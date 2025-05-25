@@ -227,6 +227,7 @@ maar mogen NIET overlappen met met de reserevatie sloten en moeten een offset he
     <partial name="_ValidationScriptsPartial" />
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
+
         document.addEventListener('DOMContentLoaded', function () {
             const dayCheckboxes = document.querySelectorAll('.top-day-checkbox');
             const addTimeSlotButtons = document.querySelectorAll('.add-time-slot');
@@ -238,18 +239,66 @@ maar mogen NIET overlappen met met de reserevatie sloten en moeten een offset he
             const startDateInput = document.getElementById('startDate');
             const endDateInput = document.getElementById('endDate');
 
-            function addTimeSlot(dayId, startTime = '09:00', endTime = '17:00') {
-                const container = document.getElementById(`${dayId}TimeSlots`);
-                const newSlot = document.createElement('div');
+            function TijslotenControle(vorigTimeslot, sMinOffset, eMinOffset){
+                        let tempTime = vorigTimeslot.split(":");
+                        let dt = new Date();
+                        dt.setHours(tempTime[0]);
+                        dt.setMinutes(tempTime[1]);
+                        dtS= new Date(dt.getTime() + sMinOffset*60000);
+                        dtE= new Date(dt.getTime() + eMinOffset*60000);
+                        if(dtS.getMinutes() < 10){
+                            startTime = dtS.getHours()+":0"+dtS.getMinutes()
+
+                        }
+                        startTime = dtS.getHours().toString().padStart(2, "0")+":"+dtS.getMinutes().toString().padStart(2, "0")
+                        endTime = dtE.getHours().toString().padStart(2, "0")+":"+dtE.getMinutes().toString().padStart(2, "0")
+                        return [startTime, endTime]
+                    }
+            
+            function addTimeSlot(dayId, startTime = '05:00', endTime = '06:00') {
+                let container = document.getElementById(`${dayId}TimeSlots`);
+                let slotNumber = document.getElementsByClassName(`${dayId}TimeSlots`);
+                let newSlot = document.createElement('div');
+                newSlot.className = `${dayId}TimeSlots`
+                newSlot.id = dayId+ "TimeSlot" + slotNumber.length++
                 newSlot.classList.add('input-group', 'mb-3');
+                if(slotNumber.length != 0){
+                    [startTime,endTime] =TijslotenControle(slotNumber[slotNumber.length - 1].getElementsByTagName("input")[1].value,15,75);
+                }  
                 newSlot.innerHTML = `
-                    <input type="time"  steps="15" class="form-control" value="${startTime}" />
-                    <input type="time"  steps="15" class="form-control" value="${endTime}" />
+                    <input type="text" class="form-control time-input" value="${startTime}" />
+                    <input type="text" class="form-control time-input" disabled value="${endTime}" />
                     <button class="btn btn-danger" type="button" onclick="removeTimeSlot(this)"><i class="bi bi-trash"></i></button>
                 `;
                 container.appendChild(newSlot);
-            }
-            specificDateInput.valueAsDate = new Date();
+                flatpickr(newSlot.querySelectorAll('.time-input'), {
+                    enableTime: true,
+                    noCalendar: true,
+                    dateFormat: "H:i", // 24-hour format
+                    time_24hr: true,    // Explicitly enforce 24-hour mode
+                    minuteIncrement: 15, // Dit is de setting voor 15-minuten intervallen
+                    minTime: endTime,
+                    onOpen: function(selectedDates, dateStr, instance) {
+                        const vorigeTijd = instance.input.parentElement.getElementsByTagName("input")[0].value;
+                        if(instance.input.parentElement.parentElement.getElementsByTagName("div").length > 1){ // kijken naar het 
+                            const nieuweMinTime = vorigeTijd;
+                            instance.set('minTime', nieuweMinTime);
+                        }
+                        else{
+                            instance.set('minTime', "00:00");
+                        }
+                    },
+                    onChange: function(selectedDates, dateStr, instance) {
+                        // 'instance' is het Flatpickr object, en 'instance.input' is het DOM-element
+                        const changedInput = instance.input;
+                        console.log("Flatpickr input gewijzigd:", changedInput.id || changedInput.name || changedInput.className);
+                        console.log("Nieuwe waarde (dateStr):", dateStr); // dateStr is de geformatteerde tijdstring
+                        [startTime,endTime] =TijslotenControle(instance.input.parentElement.getElementsByTagName("input")[0].value,15,60);
+                        instance.input.parentElement.getElementsByTagName("input")[1].value = endTime;
+                    }
+                });
+                }
+                specificDateInput.valueAsDate = new Date();
 
             function toggleDateInputs() {
                 if (singleDateRadio.checked) {
@@ -273,7 +322,16 @@ maar mogen NIET overlappen met met de reserevatie sloten en moeten een offset he
             toggleDateInputs();
             // Tijdslot verwijderen
             window.removeTimeSlot = function(button) {
+                let laatsteItem = button.parentElement.parentElement.getElementsByTagName("div").length-1;
+                console.log(laatsteItem);
+                if(laatsteItem != 0){
+                    let laatsteDiv = button.parentElement.parentElement.getElementsByTagName("div")[laatsteItem-1];
+                    console.log(laatsteDiv.getElementsByTagName("input")[0]);
+                    laatsteDiv.getElementsByTagName("input")[0].disabled = false;
+                    laatsteDiv.getElementsByTagName("button")[0].disabled = false;
+                }
                 button.closest('.input-group').remove();
+                
             }
 
             // Voeg standaard tijdslots toe aan elke dag
@@ -284,7 +342,16 @@ maar mogen NIET overlappen met met de reserevatie sloten en moeten een offset he
             addTimeSlotButtons.forEach(button => {
                 button.addEventListener('click', function() {
                     const day = button.getAttribute('data-day');
-                    addTimeSlot(day);
+                    if(button.parentElement.getElementsByTagName("div").length > 1){
+                        let laatsteItem = button.parentElement.getElementsByTagName("div").length-1;
+                        let laatsteDiv = button.parentElement.getElementsByTagName("div")[laatsteItem];
+                        laatsteDiv.getElementsByTagName("input")[0].disabled = true;
+                        laatsteDiv.getElementsByTagName("button")[0].disabled = true;
+                        addTimeSlot(day);
+                    }
+                    else{
+                        addTimeSlot(day);
+                    }
                 });
             });
 
@@ -301,6 +368,7 @@ maar mogen NIET overlappen met met de reserevatie sloten en moeten een offset he
                 });
             });
         });
+
     </script>
 
 }
