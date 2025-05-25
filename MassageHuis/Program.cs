@@ -76,7 +76,8 @@ else
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
-
+//om files uit de wwwroot te kunnen gebruiken dit moet voor routing staan.
+app.UseStaticFiles();
 app.UseHttpsRedirection();
 app.UseRouting();
 
