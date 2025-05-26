@@ -9,6 +9,10 @@ namespace MassageHuis.Automapper
     {
         public AutoMapperProfile()
         {
+            CreateMap<RegulierTijdslot, RegulierTijdslotVM>();
+            CreateMap<RegulierTijdslotVM, RegulierTijdslot>();
+            CreateMap<Schema, SchemaVM>();
+            CreateMap<SchemaVM, Schema>();
             CreateMap<Masseur,MasseurVM >();
             CreateMap<MasseurVM, Masseur>();
             CreateMap<ReservatieVM, Reservatie>();

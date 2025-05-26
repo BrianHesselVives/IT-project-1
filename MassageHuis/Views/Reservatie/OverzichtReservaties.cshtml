@@ -12,7 +12,7 @@
 }
 
 <div class="container py-5">
-    @if (SignInManager.IsSignedIn(User) && (await UserManager.IsInRoleAsync(await UserManager.GetUserAsync(User), "uitbater")) || SignInManager.IsSignedIn(User) && (await UserManager.IsInRoleAsync(await UserManager.GetUserAsync(User), "administrator")))
+    @if (SignInManager.IsSignedIn(User) && (await UserManager.IsInRoleAsync(await UserManager.GetUserAsync(User), "uitbater")) || SignInManager.IsSignedIn(User) && (await UserManager.IsInRoleAsync(await UserManager.GetUserAsync(User), "masseur")))
     {
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb mb-0">
@@ -21,16 +21,16 @@
                 {
                     <li class="breadcrumb-item"><a asp-controller="Uitbater" asp-action="Index">Uitbater Overzicht</a></li>
                 }
-                @if (SignInManager.IsSignedIn(User) && (await UserManager.IsInRoleAsync(await UserManager.GetUserAsync(User), "administrator")))
+                @if (SignInManager.IsSignedIn(User) && (await UserManager.IsInRoleAsync(await UserManager.GetUserAsync(User), "masseur")))
                 {
-                    <li class="breadcrumb-item"><a asp-controller="Admin" asp-action="Index">Admin Overzicht</a></li>
+                    <li class="breadcrumb-item"><a asp-controller="Masseur" asp-action="Index">Overzicht</a></li>
                 }
 
                 <li class="breadcrumb-item active" aria-current="page">Week Overzicht</li>
             </ol>
         </nav>
     }
-    @if (SignInManager.IsSignedIn(User) && (await UserManager.IsInRoleAsync(await UserManager.GetUserAsync(User), "uitbater")))
+    @if (SignInManager.IsSignedIn(User) && (await UserManager.IsInRoleAsync(await UserManager.GetUserAsync(User), "uitbater")) || SignInManager.IsSignedIn(User) && (await UserManager.IsInRoleAsync(await UserManager.GetUserAsync(User), "masseur")) )
     {
         <h1 class="text-2xl font-semibold text-primary text-center mb-4">
             Overzicht Reservaties Week: @beginVanDeWeek.ToString("d", CultureInfo.CreateSpecificCulture("be-NL")) - @eindeVanDeWeek.ToString("d", CultureInfo.CreateSpecificCulture("be-NL"))
@@ -63,6 +63,15 @@
                             <th scope="col" class="text-gray-700">Klant</th>
                             <th scope="col" class="text-gray-700">Datum Creatie</th>
                             <th scope="col" class="text-gray-700">Masseur/Masseuse</th>
+                            <th scope="col" class="text-gray-700">Behandeling</th>
+                            <th scope="col" calss="text-gray-700">Datum En Tijd</th>
+                            <th scope="col" class="text-gray-700"></th>
+                        }
+                        @if (SignInManager.IsSignedIn(User) && (await UserManager.IsInRoleAsync(await UserManager.GetUserAsync(User), "masseur")))
+                        {
+                            <th scope="col" class="text-gray-700">Reservatie ID</th>
+                            <th scope="col" class="text-gray-700">Klant</th>
+                            <th scope="col" class="text-gray-700">Datum Creatie</th>
                             <th scope="col" class="text-gray-700">Behandeling</th>
                             <th scope="col" calss="text-gray-700">Datum En Tijd</th>
                             <th scope="col" class="text-gray-700"></th>
@@ -144,6 +153,71 @@
                     }
                     }
 
+                    @if (SignInManager.IsSignedIn(User) && (await UserManager.IsInRoleAsync(await UserManager.GetUserAsync(User), "masseur")))
+                    {
+
+                        @foreach (var reservatie in Model)
+                        {
+                                <tr>
+                                    <td><span class="fst-italic text-muted">@reservatie.Id</span></td>
+                                    <td><span>@reservatie.KlantNaam</span></td>
+                                    <td><span>@reservatie.DatumCreatie</span></td>
+                                    <td><span>@reservatie.TypeMassage</span></td>
+                                    <td><span>@reservatie.DatumReservatie</span></td>
+                                    <td>
+                                        @if (reservatie.Status == "Gereserveerd" & reservatie.DatumReservatie >= DateTime.Today)
+                                        {
+                                            <span class="badge bg-success text-white">@reservatie.Status</span>
+                                        }
+                                        else if (reservatie.Status == "Geannuleerd")
+                                        {
+                                            <span class="badge bg-danger text-white">@reservatie.Status</span>
+                                        }
+                                        else if (reservatie.Status != "Geannuleerd" && reservatie.DatumReservatie < DateTime.Today)
+                                        {
+                                            <span class="badge bg-secondary text-white">Voltooid</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-warning text-dark">@reservatie.Status</span>
+                                        }
+                                    </td>
+                                    @if (reservatie.Status == "Gereserveerd" && reservatie.DatumReservatie > DateTime.Today.AddDays(4))// controle annulatie niet mogelijk indien minder dan 4 dagen tot massage
+                                    {
+                                        <td>
+                                            <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#annuleerModal-@reservatie.Id">
+                                                Annuleren
+                                            </button>
+
+                                            <div class="modal fade" id="annuleerModal-@reservatie.Id" tabindex="-1" aria-labelledby="annuleerModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title" id="annuleerModalLabel">Bevestiging Annulering</h5>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            Weet je zeker dat je deze reservering wilt annuleren?  Dit kan niet ongedaan gemaakt worden.
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Sluiten</button>
+                                                            <form method="post" asp-action="AnnuleerReservatie" asp-route-id="@reservatie.Id">
+                                                                <button type="submit" class="btn btn-danger">Bevestigen Annulering</button>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    }
+                                    else
+                                    {
+                                        <td></td>
+                                    }
+                                </tr>
+                        }
+                    }
+        
                     @if (SignInManager.IsSignedIn(User) && (await UserManager.IsInRoleAsync(await UserManager.GetUserAsync(User), "uitbater")))
                     {
 
@@ -210,6 +284,7 @@
                                 </tr>
                         }
                     }
+                
                 </tbody>
             </table>
         </div>

@@ -1,4 +1,5 @@
-﻿const dayCheckboxes = document.querySelectorAll('.top-day-checkbox');
+﻿const confirmSaveModal = new bootstrap.Modal(document.getElementById('confirmSaveModal'));
+const dayCheckboxes = document.querySelectorAll('.top-day-checkbox');
 const addTimeSlotButtons = document.querySelectorAll('.add-time-slot');
 const singleDateRadio = document.getElementById('singleDate');
 const dateRangeRadio = document.getElementById('dateRange');
@@ -9,12 +10,38 @@ const startDateInput = document.getElementById('startDate'); // Dit is de input 
 const dagOverzicht = document.getElementById('dagOverzicht');
 const timeSlotsAccordion = document.getElementById('timeSlotsAccordion');
 const saveScheduleBtn = document.getElementById('saveScheduleBtn'); // De opslaan knop
+const schemaNameInput = document.getElementById('schemaNameInput');
+const errorMessageElement = document.getElementById('errorMessage');
+const modalTimeSlotsSummary = document.getElementById('modalTimeSlotsSummary'); 
+const noTimeSlotsMessage = document.getElementById('noTimeSlotsMessage'); 
+const modalSchemaName = document.getElementById('modalSchemaName'); 
+const modalDates = document.getElementById('modalDates'); 
+const confirmSaveBtn = document.getElementById('confirmSaveBtn'); 
 
+
+function showErrorMessage(message) {
+    if (errorMessageElement) {
+        errorMessageElement.textContent = message;
+        errorMessageElement.classList.remove('d-none'); 
+        errorMessageElement.classList.add('alert', 'alert-danger'); 
+    } else {
+        
+        alert("Fout: " + message);
+    }
+}
+function hideErrorMessage() {
+    if (errorMessageElement) {
+        errorMessageElement.textContent = '';
+        errorMessageElement.classList.add('d-none'); 
+        errorMessageElement.classList.remove('alert', 'alert-danger');
+    }
+}
 // Flatpickr initialisatie voor de datumvelden
 const specificDatePicker = flatpickr(specificDateInput, {
     locale: "nl",
     dateFormat: "Y-m-d",
     minDate: "today",
+    disableMobile: true, // <-- TOEGEVOEGD
     onChange: function (selectedDates, dateStr, instance) {
         if (singleDateRadio.checked) {
             toggleDateInputs();
@@ -23,14 +50,15 @@ const specificDatePicker = flatpickr(specificDateInput, {
     }
 });
 
-let rangeStartDatePickerInstance; 
+let rangeStartDatePickerInstance;
 
 // Initialiseer Flatpickr voor het datumbereik
 rangeStartDatePickerInstance = flatpickr(startDateInput, {
     locale: "nl",
-    mode: "range", 
+    mode: "range",
     dateFormat: "Y-m-d",
     minDate: "today",
+    disableMobile: true, // <-- TOEGEVOEGD
     onChange: function (selectedDates, dateStr, instance) {
         if (dateRangeRadio.checked) {
             toggleDateInputs();
@@ -87,6 +115,7 @@ function addTimeSlot(dayId) {
         dateFormat: "H:i",
         time_24hr: true,
         minuteIncrement: 15,
+        disableMobile: true, // <-- TOEGEVOEGD voor de tijdslots
         onChange: function (selectedDates, dateStr, instance) {
             const [calculatedStartTime, calculatedEndTime] = TijslotenControle(dateStr, 0, 60);
             endTimeInput.value = calculatedEndTime;
@@ -276,7 +305,7 @@ function toggleDateInputs() {
     toggleSaveButtonStatus(); // Controleer de knopstatus na het wisselen van weergave
 }
 
- // Toont of verbergt de 'Opslaan' knop op basis van of er minstens één tijdslot is.
+// Toont of verbergt de 'Opslaan' knop op basis van of er minstens één tijdslot is.
 function toggleSaveButtonStatus() {
     const allTimeSlotsData = collectTimeSlotsData();
     let hasAnyTimeSlots = false;
@@ -299,61 +328,145 @@ function toggleSaveButtonStatus() {
 
 // Event listener voor de "Opslaan" knop
 saveScheduleBtn.addEventListener('click', async function (event) {
-    event.preventDefault(); // Voorkom de standaard formulierindiening
+    event.preventDefault();
 
-    // Deze client-side check is een extra veiligheid, mocht de knop toch zichtbaar zijn
-    // terwijl er geen tijdsloten zijn (bijv. door handmatige DOM-manipulatie).
-    if (saveScheduleBtn.classList.contains('d-none')) {
-        alert("Selecteer alstublieft minimaal één tijdslot voordat u probeert op te slaan.");
-        return; // Stop de indiening
+    hideErrorMessage();
+
+    const schemaName = schemaNameInput.value.trim();
+    if (!schemaName) {
+        showErrorMessage("Vul alstublieft een naam in voor het schema.");
+        schemaNameInput.focus();
+        return;
     }
 
-    const payload = {}; // Het JavaScript object dat we naar de server sturen
+    let selectedStartDate = null;
+    let selectedEndDate = null;
+    let datesMode = '';
+    let datesDisplay = '';
 
-    // Bepaal de geselecteerde datummodus en voeg toe aan payload
     if (singleDateRadio.checked) {
-        payload.datesMode = 'single';
-        payload.startDate = specificDatePicker.selectedDates[0] ? specificDatePicker.selectedDates[0].toISOString().split('T')[0] : '';
-        payload.endDate = ''; // Geen einddatum voor single mode
-    } else { // dateRangeRadio.checked
-        payload.datesMode = 'range';
-        payload.startDate = rangeStartDatePickerInstance.selectedDates[0] ? rangeStartDatePickerInstance.selectedDates[0].toISOString().split('T')[0] : '';
-        payload.endDate = rangeStartDatePickerInstance.selectedDates[1] ? rangeStartDatePickerInstance.selectedDates[1].toISOString().split('T')[0] : '';
+        datesMode = 'single';
+        selectedStartDate = specificDatePicker.selectedDates[0];
+        if (!selectedStartDate || selectedStartDate.setHours(0, 0, 0, 0) < new Date().setHours(0, 0, 0, 0)) {
+            showErrorMessage("Selecteer een geldige datum in de toekomst.");
+            specificDatePicker.open();
+            return;
+        }
+        datesDisplay = selectedStartDate.toLocaleDateString('nl-NL', { year: 'numeric', month: 'long', day: 'numeric' });
+    } else if (dateRangeRadio.checked) {
+        datesMode = 'range';
+        selectedStartDate = rangeStartDatePickerInstance.selectedDates[0];
+        selectedEndDate = rangeStartDatePickerInstance.selectedDates[1];
+
+        if (!selectedStartDate || !selectedEndDate) {
+            showErrorMessage("Selecteer een start- én einddatum voor het bereik.");
+            rangeStartDatePickerInstance.open();
+            return;
+        }
+        if (selectedStartDate.setHours(0, 0, 0, 0) < new Date().setHours(0, 0, 0, 0)) {
+            showErrorMessage("De startdatum van het bereik kan niet in het verleden liggen.");
+            rangeStartDatePickerInstance.open();
+            return;
+        }
+        if (selectedEndDate.setHours(0, 0, 0, 0) < selectedStartDate.setHours(0, 0, 0, 0)) {
+            showErrorMessage("De einddatum kan niet vóór de startdatum liggen.");
+            rangeStartDatePickerInstance.open();
+            return;
+        }
+        datesDisplay = `${selectedStartDate.toLocaleDateString('nl-NL', { year: 'numeric', month: 'long', day: 'numeric' })} t.e.m. ${selectedEndDate.toLocaleDateString('nl-NL', { year: 'numeric', month: 'long', day: 'numeric' })}`;
+    } else {
+        showErrorMessage("Selecteer alstublieft of u een enkele datum of een datumbereik wilt gebruiken.");
+        return;
     }
-    // Verzamel de tijdsloten data en voeg toe aan payload
-    payload.timeSlots = collectTimeSlotsData();
+
+    const allTimeSlotsData = collectTimeSlotsData();
+    let hasAnyTimeSlots = false;
+    for (const day in allTimeSlotsData) {
+        if (allTimeSlotsData[day] && allTimeSlotsData[day].length > 0) {
+            hasAnyTimeSlots = true;
+            break;
+        }
+    }
+    if (!hasAnyTimeSlots) {
+        showErrorMessage("Selecteer alstublieft minimaal één dag en voeg minstens één tijdslot toe.");
+        return;
+    }
+
+    modalSchemaName.textContent = schemaName;
+    modalDates.textContent = datesDisplay;
+
+    modalTimeSlotsSummary.innerHTML = '';
+    if (hasAnyTimeSlots) {
+        noTimeSlotsMessage.classList.add('d-none');
+        const daysOrder = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
+        daysOrder.forEach(day => {
+            if (allTimeSlotsData[day] && allTimeSlotsData[day].length > 0) {
+                const dayNameNL = capitalizeFirstLetter(getDayNameNL(day));
+                const dayDiv = document.createElement('div');
+                dayDiv.innerHTML = `<strong>${dayNameNL}:</strong>`;
+                const ul = document.createElement('ul');
+                ul.classList.add('list-unstyled', 'ms-3');
+                allTimeSlotsData[day].forEach(slot => {
+                    const li = document.createElement('li');
+                    li.textContent = `${slot.start} - ${slot.end}`;
+                    ul.appendChild(li);
+                });
+                dayDiv.appendChild(ul);
+                modalTimeSlotsSummary.appendChild(dayDiv);
+            }
+        });
+    } else {
+        noTimeSlotsMessage.classList.remove('d-none');
+    }
+
+    saveScheduleBtn.dataset.payload = JSON.stringify({
+        schemaName: schemaName,
+        datesMode: datesMode,
+        startDate: selectedStartDate.toISOString().split('T')[0],
+        endDate: selectedEndDate ? selectedEndDate.toISOString().split('T')[0] : '',
+        timeSlots: allTimeSlotsData
+    });
+
+    confirmSaveModal.show();
+});
+
+confirmSaveBtn.addEventListener('click', async function () {
+    confirmSaveModal.hide();
+
+    const payloadString = saveScheduleBtn.dataset.payload;
+    if (!payloadString) {
+        showErrorMessage("Fout: Geen schema gegevens gevonden voor opslag.");
+        return;
+    }
+    const payload = JSON.parse(payloadString);
+
     try {
         const response = await fetch('/Masseur/SchemaOpslaan', {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json', // Zeer belangrijk: JSON versturen
-                'Accept': 'application/json'         // Optioneel:  verwacht JSON terug
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
             },
-            body: JSON.stringify(payload) // Converteer het JavaScript object naar een JSON string
+            body: JSON.stringify(payload)
         });
 
         if (!response.ok) {
-            // Als de server een fout heeft teruggestuurd (bijv. 400, 500), gooi een error
-            const errorData = await response.json(); // Probeer de foutmelding van de server te parsen als JSON
+            const errorData = await response.json();
             throw new Error(errorData.message || 'Netwerk reactie was niet OK: ' + response.status);
         }
 
-        const data = await response.json(); // Parseer de JSON response van de server
-        alert(data.message || 'Schema succesvol gewijzigd!'); // Geef feedback aan de gebruiker
-
+        const data = await response.json();
+        alert(data.message || 'Schema succesvol gewijzigd!');
+        window.location.href = '/Masseur/SchemaOverzicht';
     } catch (error) {
-        // Er is een fout opgetreden (netwerkfout, JSON parse fout)
-        console.error('Fout bij wijzigen schema:', error);
-        alert('Fout bij wijzigen schema: ' + error.message); // Toon een foutbericht
+        console.error('Fout bij opslaan schema:', error);
+        showErrorMessage('Fout bij opslaan schema: ' + error.message);
     }
 });
-
-
 // Event listeners voor radio knoppen (Enkele datum / Datumbereik)
 singleDateRadio.addEventListener('change', toggleDateInputs);
 dateRangeRadio.addEventListener('change', toggleDateInputs);
 specificDateInput.addEventListener('change', toggleDateInputs); // Re-trigger bij datumwijziging voor "enkele datum"
-
 
 // Klikken op de knop om tijdslots toe te voegen per dag
 addTimeSlotButtons.forEach(button => {
@@ -392,7 +505,21 @@ dayCheckboxes.forEach(checkbox => {
     });
 });
 
-
 // Initialiseer bij het laden van de pagina
 toggleDateInputs();
 toggleSaveButtonStatus(); // Initialiseer de knopstatus bij het laden van de pagina
+function capitalizeFirstLetter(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+}
+function getDayNameNL(dayNameEn) {
+    const daysMap = {
+        'monday': 'Maandag',
+        'tuesday': 'Dinsdag',
+        'wednesday': 'Woensdag',
+        'thursday': 'Donderdag',
+        'friday': 'Vrijdag',
+        'saturday': 'Zaterdag',
+        'sunday': 'Zondag'
+    };
+    return daysMap[dayNameEn] || dayNameEn;
+}

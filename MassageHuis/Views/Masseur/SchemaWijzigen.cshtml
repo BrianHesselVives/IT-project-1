@@ -1,10 +1,30 @@
-﻿<div class="container py-5">
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+@using MassageHuis.ViewModels
+@using System.Globalization
+@if (SignInManager.IsSignedIn(User) && (await UserManager.IsInRoleAsync(await UserManager.GetUserAsync(User), "masseur")))
+    {
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Home</a></li>
+                @if (SignInManager.IsSignedIn(User) && (await UserManager.IsInRoleAsync(await UserManager.GetUserAsync(User), "masseur")))
+                {
+                    <li class="breadcrumb-item"><a asp-controller="Masseur" asp-action="Index">Overzicht</a></li>
+                }
+                
+                <li class="breadcrumb-item active" aria-current="page">Nieuw Schema</li>
+            </ol>
+        </nav>
+    }
+<div class="container py-5">
         <h1 class="mb-4 text-primary">Nieuw schema</h1>
-
+        <div id="errorMessage" class="alert alert-danger d-none" role="alert"></div>
         <div class="card shadow-sm mb-4">
             <div class="card-header bg-primary text-white">
                 <h5 class="mb-0">Datum Selectie</h5>
             </div>
+
             <div class="card-body">
                 <div class="mb-3">
                     <label class="form-label">Type datumselectie:</label>
@@ -17,7 +37,13 @@
                         <label class="form-check-label" for="dateRange">Datumbereik (vanaf - t.e.m.)</label>
                     </div>
                 </div>
-
+                <div class="mb-3">
+                    <label for="schemaNameInput" class="form-label">Naam van het schema:</label>
+                    <input type="text" class="form-control" id="schemaNameInput" name="SchemaName" placeholder="Bijv. 'Zomerschema 20__'" required>
+                    <div class="invalid-feedback">
+                        Voer een naam in voor het schema.
+                    </div>
+                </div>
                 <div id="singleDateFields" class="mb-3">
                     <label for="specificDate" class="form-label">Kies datum:</label>
                     <input type="date" class="form-control" id="specificDate" name="specificDate" required>
@@ -188,6 +214,35 @@
             </div>
         </div>
 
+        <div class="modal fade" id="confirmSaveModal" tabindex="-1" aria-labelledby="confirmSaveModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header bg-primary text-white">
+                        <h5 class="modal-title" id="confirmSaveModalLabel">Schema Opslaan Bevestigen</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Controleer de onderstaande gegevens voordat u het schema opslaat:</p>
+                        <div class="mb-3">
+                            <strong>Schema Naam:</strong> <span id="modalSchemaName"></span>
+                        </div>
+                        <div class="mb-3">
+                            <strong>Datum(s):</strong> <span id="modalDates"></span>
+                        </div>
+                        <hr />
+                        <h5>Geselecteerde Tijdsloten:</h5>
+                        <div id="modalTimeSlotsSummary">
+                            <p class="text-muted" id="noTimeSlotsMessage">Geen tijdsloten geselecteerd.</p>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuleren</button>
+                        <button type="button" class="btn btn-primary" id="confirmSaveBtn">Opslaan</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="text-center mt-4">
             <button type="submit" class="btn btn-primary btn-lg" id="saveScheduleBtn">Schema Opslaan</button>
         </div>
@@ -195,7 +250,6 @@
 
 @section Scripts {
         <partial name="_ValidationScriptsPartial" />
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
         <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/nl.js"></script>
         <script src="~/js/time-slot-management.js"></script>

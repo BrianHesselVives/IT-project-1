@@ -1,5 +1,29 @@
 ﻿@using MassageHuis.ViewModels
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+@using System.Globalization
 @model MassageHuis.ViewModels.VerlofVM
+
+@if (SignInManager.IsSignedIn(User) && (await UserManager.IsInRoleAsync(await UserManager.GetUserAsync(User), "masseur")) || SignInManager.IsSignedIn(User) && (await UserManager.IsInRoleAsync(await UserManager.GetUserAsync(User), "uitbater")))
+{
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb mb-0">
+            <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Home</a></li>
+            @if (SignInManager.IsSignedIn(User) && (await UserManager.IsInRoleAsync(await UserManager.GetUserAsync(User), "masseur")))
+            {
+                <li class="breadcrumb-item"><a asp-controller="Masseur" asp-action="Index">Overzicht</a></li>
+            }
+            @if (SignInManager.IsSignedIn(User) && (await UserManager.IsInRoleAsync(await UserManager.GetUserAsync(User), "uitbater")))
+            {
+                <li class="breadcrumb-item"><a asp-controller="Uitbater" asp-action="Index">Uitbater Overzicht</a></li>
+            }
+
+            <li class="breadcrumb-item active" aria-current="page">Overzicht Verlof </li>
+        </ol>
+    </nav>
+}
+
 
 <div class="container mt-5">
     <div class="card shadow-sm p-4">

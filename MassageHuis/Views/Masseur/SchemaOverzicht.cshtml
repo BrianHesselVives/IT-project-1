@@ -1,0 +1,129 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+@using MassageHuis.ViewModels
+@using System.Globalization
+@model List<SchemaVM>
+
+@if (SignInManager.IsSignedIn(User) && (await UserManager.IsInRoleAsync(await UserManager.GetUserAsync(User), "masseur")))
+{
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb mb-0">
+            <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Home</a></li>
+            @if (SignInManager.IsSignedIn(User) && (await UserManager.IsInRoleAsync(await UserManager.GetUserAsync(User), "masseur")))
+            {
+                <li class="breadcrumb-item"><a asp-controller="Masseur" asp-action="Index">Overzicht</a></li>
+            }
+            <li class="breadcrumb-item active" aria-current="page">Schema Overzicht</li>
+        </ol>
+    </nav>
+}
+
+<div class="container mt-4">
+    <h2>Beschikbare Schema's</h2>
+
+    @if (Model == null || !Model.Any())
+    {
+        <div class="alert alert-info" role="alert">
+            Er zijn momenteel geen schema's ingesteld.
+        </div>
+    }
+    else
+    {
+        <div class="accordion" id="allSchedulesAccordion">
+            @foreach (var schema in Model)
+            {
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="heading_@schema.Id">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse_@schema.Id" aria-expanded="false" aria-controls="collapse_@schema.Id">
+                            <span class="fw-bold">@schema.Naam</span>
+                            <span class="ms-3 text-muted">
+                                (@schema.StartDatum.ToString("dd-MM-yyyy")
+                                @if (schema.EindDatum.HasValue)
+                                {
+                                    <span> t.e.m. @schema.EindDatum.Value.ToString("dd-MM-yyyy")</span>
+                                }
+                                )
+                            </span>
+                        </button>
+                    </h2>
+
+                    <div id="collapse_@schema.Id" class="accordion-collapse collapse" aria-labelledby="heading_@schema.Id" data-bs-parent="#allSchedulesAccordion">
+                        <div class="accordion-body">
+                            <h5>Details voor @schema.Naam:</h5>
+
+                            @{
+                                var orderedDayNames = new List<string> { "monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday" };
+
+                                Func<int, string> getDutchDayName = (dayInt) =>
+                                {
+                                    switch (dayInt)
+                                    {
+                                        case 1: return "Maandag";
+                                        case 2: return "Dinsdag";
+                                        case 3: return "Woensdag";
+                                        case 4: return "Donderdag";
+                                        case 5: return "Vrijdag";
+                                        case 6: return "Zaterdag";
+                                        case 0: return "Zondag"; // DayOfWeek.Sunday is 0
+                                        default: return "Onbekende Dag";
+                                    }
+                                };
+                            }
+
+                            @{
+                                var groupedSlots = schema.ReguliereTijdsloten
+                                .GroupBy(s => s.Dag) 
+                                .ToDictionary(g => g.Key, g => g.OrderBy(s => s.StartTijd).ToList()); 
+                            }
+
+                            @foreach (var dayInt in orderedDayNames.Select(d => (int)Enum.Parse(typeof(DayOfWeek), d, true))) 
+                            {
+                                var currentDayName = getDutchDayName(dayInt);
+                                var dayKeyString = ((DayOfWeek)dayInt).ToString().ToLower(); 
+
+                                if (groupedSlots.ContainsKey(dayInt) && groupedSlots[dayInt].Any())
+                                {
+                                    <div class="card mb-2">
+                                        <div class="card-header bg-light">
+                                            <strong>@currentDayName</strong>
+                                        </div>
+                                        <ul class="list-group list-group-flush">
+                                            @foreach (var slot in groupedSlots[dayInt])
+                                            {
+                                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                    <span>@slot.StartTijd - @slot.EindTijd</span>
+                                                </li>
+                                            }
+                                        </ul>
+                                    </div>
+                                }
+                                else
+                                {
+                                    @* Toon een bericht als er geen tijdslots zijn voor deze dag in dit schema *@
+                                    <div class="card mb-2">
+                                        <div class="card-header bg-light">
+                                            <strong>@currentDayName</strong>
+                                        </div>
+                                        <ul class="list-group list-group-flush">
+                                            <li class="list-group-item text-muted">Geen tijdslots ingesteld voor @currentDayName.</li>
+                                        </ul>
+                                    </div>
+                                }
+                            }
+
+                            <div class="mt-3 text-end">
+                                <button class="btn btn-danger delete-schedule-btn" data-schema-id="@schema.Id">Schema Eindigen</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script src="~/js/schedule-overview-actions.js"></script>
+}

@@ -297,7 +297,21 @@ namespace MassageHuis.Controllers
                     reservatieVMs.Add(reservatieVM);
                 }
             }
-           
+            if (await _userManager.IsInRoleAsync(user, "masseur"))
+            {
+                var klantReservaties = await _reservatieService.GetAllAsync();
+                var masseurId = await _masseurService.GetAllAsync();
+                masseurId = masseurId.Where(b => b.IdAspNetUsers == user.Id);
+                klantReservaties = klantReservaties.Where(b => b.IdMasseur == masseurId.FirstOrDefault().Id);
+                var userReservaties = klantReservaties.OrderBy(b => b.DatumReservatie).Where(b => b.DatumReservatie >= beginVanDeWeek && b.DatumReservatie <= eindeVanDeWeek);
+
+                foreach (var Res in userReservaties)
+                {
+                    var reservatieVM = _mapper.Map<ReservatieVM>(Res); // Map de Reservatie naar ReservatieVM
+                    reservatieVMs.Add(reservatieVM);
+                }
+            }
+
             ViewData["WeekOffset"] = weekOffset;
             ViewData["BeginVanDeWeek"] = beginVanDeWeek;
             ViewData["EindeVanDeWeek"] = eindeVanDeWeek;
@@ -316,8 +330,10 @@ namespace MassageHuis.Controllers
             {
                 return NotFound();
             }
-
-            if (reservatie.IdAspNetUsers != user.Id) 
+            bool isOwner = reservatie.IdAspNetUsers == user.Id;
+            bool isUitbater = await _userManager.IsInRoleAsync(user, "uitbater");
+            bool isMasseur = await _userManager.IsInRoleAsync(user, "masseur");
+            if (!isOwner && !isUitbater && !isMasseur) // Als NIET de eigenaar EN NIET uitbater EN NIET masseur
             {
                 return Forbid();
             }
