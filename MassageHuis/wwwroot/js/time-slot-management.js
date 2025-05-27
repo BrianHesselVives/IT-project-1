@@ -456,7 +456,7 @@ confirmSaveBtn.addEventListener('click', async function () {
         }
 
         const data = await response.json();
-        alert(data.message || 'Schema succesvol gewijzigd!');
+        //alert(data.message || 'Schema succesvol gewijzigd!');
         window.location.href = '/Masseur/SchemaOverzicht';
     } catch (error) {
         console.error('Fout bij opslaan schema:', error);

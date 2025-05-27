@@ -9,7 +9,11 @@ namespace MassageHuis.ViewModels
 
         public string Type { get; set; } = null!;
 
+        [Required(ErrorMessage = "Een naam voor het schema is verplicht.")]
+        [StringLength(100, ErrorMessage = "De naam mag maximaal {1} karakters lang zijn.")]
         public string Naam { get; set; } = null!;
+
+        public string DatesMode { get; set; }
 
         public DateOnly StartDatum { get; set; }
 

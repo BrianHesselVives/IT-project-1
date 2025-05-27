@@ -20,7 +20,7 @@ namespace MassageHuis.Services
         }
         public async Task AddAsync(Schema entity)
         {
-            throw new NotImplementedException();
+            await _schemaDAO.AddAsync(entity);
         }
 
         public Task AddRangeAsync(IEnumerable<Schema> entities)

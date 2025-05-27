@@ -37,9 +37,18 @@ namespace MassageHuis.Repositories
         }
         
 
-        Task IDAO<Schema>.AddAsync(Schema entity)
+        async Task IDAO<Schema>.AddAsync(Schema entity)
         {
-            throw new NotImplementedException();
+            _dbContext.Entry(entity).State = EntityState.Added;
+            try
+            {
+                await _dbContext.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                throw;
+            }
         }
 
         Task IDAO<Schema>.DeleteAsync(Schema entity)

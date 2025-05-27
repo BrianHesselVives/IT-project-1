@@ -78,10 +78,13 @@ namespace MassageHuis.Controllers
         }
 
         [HttpPost("SchemaOpslaan")]
-        public IActionResult SchemaOpslaan([FromBody] ScheduleSaveRequest request)
+        public async Task<IActionResult> SchemaOpslaanAsync([FromBody] ScheduleSaveRequest request)
         {
             try
             {
+                var user = await _userManager.GetUserAsync(User);
+                var masseurId = await _masseurService.GetAllAsync();
+                masseurId = masseurId.Where(b => b.IdAspNetUsers == user.Id);
                 //validatie met server
                 if (request == null)
                 {
@@ -106,17 +109,17 @@ namespace MassageHuis.Controllers
                 {
                     return BadRequest(new { success = false, message = "Voor een datumbereik is een einddatum (EndDate) vereist." });
                 }
-                DateTime parsedStartDate;
-                if (!DateTime.TryParse(request.StartDate, out parsedStartDate))
+                DateOnly parsedStartDate;
+                if (!DateOnly.TryParse(request.StartDate, out parsedStartDate))
                 {
                     return BadRequest(new { success = false, message = "Ongeldig startdatumformaat. Verwacht JJJJ-MM-DD." });
                 }
 
-                DateTime? parsedEndDate = null;
+                DateOnly? parsedEndDate = null;
                 if (request.DatesMode == "range" && !string.IsNullOrEmpty(request.EndDate))
                 {
-                    DateTime tempEndDate;
-                    if (!DateTime.TryParse(request.EndDate, out tempEndDate))
+                    DateOnly tempEndDate;
+                    if (!DateOnly.TryParse(request.EndDate, out tempEndDate))
                     {
                         return BadRequest(new { success = false, message = "Ongeldig einddatumformaat. Verwacht JJJJ-MM-DD." });
                     }
@@ -131,29 +134,41 @@ namespace MassageHuis.Controllers
                 //verwerk en sla data's op
                 if (request.TimeSlots != null && request.TimeSlots.Any())
                 {
-                    foreach (var dayEntry in request.TimeSlots)
+                    if (request.DatesMode == "single")
                     {
-                        string dayName = dayEntry.Key;
-                        List<TimeSlot> slotsForDay = dayEntry.Value;
-
-                        if (slotsForDay != null)
-                        {
-                            foreach (var slot in slotsForDay)
-                            {
-                                Console.WriteLine($"    Slot: {slot.Start} - {slot.End}");
-
-                                // Hier zal ik de database contacteren
-                                
-                            }
-                        }
+                        parsedEndDate = parsedStartDate;
                     }
+                    var newSchema = new Schema() {
+                        Naam = request.SchemaName,
+                        IdMasseur = masseurId.FirstOrDefault().Id,
+                        StartDatum = parsedStartDate,
+                        EindDatum = parsedEndDate,
+                        Type  = "standaard"
+                    };
+                    await _schemaService.AddAsync(newSchema);
+
+
+
+                    //foreach (var dayEntry in request.TimeSlots)
+                    //{
+                    //    string dayName = dayEntry.Key;
+                    //    List<TimeSlot> slotsForDay = dayEntry.Value;
+
+                    //    if (slotsForDay != null)
+                    //    {
+                    //        foreach (var slot in slotsForDay)
+                    //        {
+
+                    //            // Hier zal ik de database contacteren
+                                
+                    //        }
+                    //    }
+                    //}
                 }
                 else
                 {
                     Console.WriteLine("Geen tijdsloten ingediend.");
                 }
-
-                // stuur Success Response
                 return Ok(new { success = true, message = "Schema succesvol gewijzigd!" });
             }
             catch (Exception ex)
