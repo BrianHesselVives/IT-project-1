@@ -30,7 +30,7 @@ public partial class MassageHuisDbContext : DbContext
 
     public virtual DbSet<Betaling> Betalingen { get; set; }
 
-    public virtual DbSet<KostPrijs> KostPrijzen { get; set; }
+    public virtual DbSet<KostPrijs> KostPrijzen{ get; set; }
 
     public virtual DbSet<Masseur> Masseurs { get; set; }
 
@@ -243,10 +243,11 @@ public partial class MassageHuisDbContext : DbContext
 
             entity.Property(e => e.IdSchema).HasColumnName("Id_Schema");
 
-            entity.HasOne(d => d.IdSchemaNavigation).WithMany(p => p.RegulierTijdslots)
-                .HasForeignKey(d => d.IdSchema)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FKRegulierTi511075");
+            entity.HasOne(d => d.IdSchemaNavigation)
+                  .WithMany(p => p.RegulierTijdslots)
+                  .HasForeignKey(d => d.IdSchema)
+                  .OnDelete(DeleteBehavior.Cascade) 
+                  .HasConstraintName("FKRegulierTi511075");
         });
 
         modelBuilder.Entity<ReservatiePromotieCode>(entity =>

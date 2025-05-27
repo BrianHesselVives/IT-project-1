@@ -1,12 +1,13 @@
-﻿using MassageHuis.Services.Interfaces;
+﻿using MassageHuis.Entities;
+using MassageHuis.Repositories;
+using MassageHuis.Repositories.Interfaces;
+using MassageHuis.Services.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using MassageHuis.Entities;
-using MassageHuis.Repositories.Interfaces;
-using MassageHuis.Repositories;
+using System.Transactions;
 
 namespace MassageHuis.Services
 {
@@ -20,7 +21,12 @@ namespace MassageHuis.Services
         }
         public async Task AddAsync(Schema entity)
         {
-            await _schemaDAO.AddAsync(entity);
+            using (var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+            {
+                await _schemaDAO.AddAsync(entity);
+
+                scope.Complete(); 
+            }
         }
 
         public Task AddRangeAsync(IEnumerable<Schema> entities)

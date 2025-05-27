@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MassageHuis.Entities;
+using MassageHuis.Models;
 using MassageHuis.ViewModels;
 using NuGet.Protocol.Plugins;
 
@@ -9,6 +10,8 @@ namespace MassageHuis.Automapper
     {
         public AutoMapperProfile()
         {
+            CreateMap<KostPrijs, KostPrijsVM>();
+            CreateMap<KostPrijsVM, KostPrijs>();
             CreateMap<RegulierTijdslot, RegulierTijdslotVM>();
             CreateMap<RegulierTijdslotVM, RegulierTijdslot>();
             CreateMap<Schema, SchemaVM>();

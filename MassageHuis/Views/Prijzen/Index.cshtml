@@ -1,0 +1,140 @@
+﻿@model MassageHuis.Models.KostPrijsVM
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+@{
+    ViewData["Title"] = "Wijzigen van prijs";
+}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb mb-0">
+            <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Home</a></li>
+            @if (SignInManager.IsSignedIn(User) && (await UserManager.IsInRoleAsync(await UserManager.GetUserAsync(User), "uitbater")))
+            {
+                <li class="breadcrumb-item"><a asp-controller="Uitbater" asp-action="Index">Uitbater Overzicht</a></li>
+            }
+            @if (SignInManager.IsSignedIn(User) && (await UserManager.IsInRoleAsync(await UserManager.GetUserAsync(User), "administrator")))
+            {
+                <li class="breadcrumb-item"><a asp-controller="Admin" asp-action="Index">Admin Overzicht</a></li>
+            }
+            <li class="breadcrumb-item active" aria-current="page">Wijzigen Prijzen</li>
+        </ol>
+    </nav>
+    <a asp-controller="Admin" asp-action="Index" class="btn btn-outline-secondary">
+        <i class="bi bi-arrow-return-left me-2"></i> Terug naar Overzicht
+    </a>
+</div>
+@if (TempData["Errormessage"] != null)
+{
+    <div class="alert alert alert-danger alert-dismissible fade show" role="alert">
+        Er liep iets fout, probeer opnieuw. (2x zelfde startdatum is niet mogelijk)
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">Nieuwe Kostprijs Toevoegen</h4>
+                </div>
+                <div class="card-body">
+                    @if (!string.IsNullOrEmpty(ViewBag.SuccessMessage))
+                    {
+                        <div class="alert alert-success" role="alert">
+                            @ViewBag.SuccessMessage
+                        </div>
+                    }
+                    @if (!string.IsNullOrEmpty(ViewBag.ErrorMessage))
+                    {
+                        <div class="alert alert-danger" role="alert">
+                            @ViewBag.ErrorMessage
+                        </div>
+                    }
+
+                    <form asp-action="UpdatePrijsInfo" asp-controller="Prijzen" method="post">
+                        @Html.AntiForgeryToken()
+                        <div class="mb-3">
+                            <label asp-for="IdTypeMassage" class="form-label">Type Massage</label>
+                            <select class="form-select @(Html.ValidationMessageFor(m => m.IdTypeMassage) != null ? "is-invalid" : "")" 
+                                    asp-for="IdTypeMassage" 
+                                    id="massageTypeDropdown" 
+                                    onchange="this.form.submit()" 
+                                    required>
+                                <option value="">Kies een massagetype</option>
+                                @if (Model.TypeMassages != null)
+                                {
+                                    foreach (var type in Model.TypeMassages)
+                                    {
+                                        <option value="@type.Id">@type.Type</option>
+                                    }
+                                }
+                            </select>
+                            <div class="invalid-feedback">
+                                @Html.ValidationMessageFor(m => m.IdTypeMassage)
+                            </div>
+                        </div>
+                    </form>
+
+                    <div class="mb-3">
+                        <label asp-for="VoorgaandePrijs" class="form-label d-block">Voorgaande Prijs (€)</label>
+                        <span id="voorgaandePrijsDisplay" class="badge bg-info text-dark fs-5 p-2 rounded-pill">
+                            @(Model.VoorgaandePrijs.HasValue ? $"€ {Model.VoorgaandePrijs.Value:N2}" : "Geen prijs geselecteerd") 
+                        </span>
+                        <small class="form-text text-muted d-block mt-1">Dit is de laatst bekende actieve prijs voor het gekozen type.</small>
+                    </div>
+
+                    <form asp-action="Create" asp-controller="Prijzen" method="post">
+                        @Html.AntiForgeryToken() 
+
+                        @if (Model.IdTypeMassage != 0)
+                        {
+                            <input type="hidden" asp-for="IdTypeMassage" />
+                        }
+
+                        <div class="mb-3">
+                            <label asp-for="Prijs" class="form-label">Prijs (€)</label>
+                            <input type="number" class="form-control @(Html.ValidationMessageFor(m => m.Prijs) != null ? "is-invalid" : "")" 
+                                    asp-for="Prijs" 
+                                    id="prijsInput" 
+                                    min="0.01" step="0.01" required>
+                            <div class="invalid-feedback">
+                                @Html.ValidationMessageFor(m => m.Prijs)
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="StartDatum" class="form-label">Startdatum Nieuwe Prijs</label>
+                            <input type="date" class="form-control flatpickr-input @(Html.ValidationMessageFor(m => m.StartDatum) != null ? "is-invalid" : "")" 
+                                    asp-for="StartDatum" id="startDatum" required>
+
+                            <div class="invalid-feedback">
+                                @Html.ValidationMessageFor(m => m.StartDatum)
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-100">Opslaan</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            flatpickr("#startDatum", {
+                dateFormat: "Y-m-d",
+                locale: "nl",
+                altInput: true,
+                altFormat: "d-m-Y",
+                minDate: "today",
+                enableTime: false 
+            });
+        });
+    </script>
+}

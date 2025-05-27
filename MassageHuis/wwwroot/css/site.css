@@ -34,3 +34,47 @@ body {
     background-color: #f8f9fa;
     cursor: pointer;
 }
+.admin-tile {
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.admin-tile.disabled-tile {
+    filter: grayscale(100%);
+    opacity: 0.7;
+    pointer-events: none;
+    cursor: not-allowed;
+}
+
+.admin-tile.disabled-tile::after {
+    content: "Niet beschikbaar in ontwikkeling";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.2rem;
+    font-weight: bold;
+    text-align: center;
+    padding: 10px;
+    box-sizing: border-box;
+    z-index: 10;
+}
+
+.admin-tile.disabled-tile .admin-tile-link {
+    pointer-events: none;
+    text-decoration: none;
+    color: inherit;
+}
+
+.admin-tile:not(.disabled-tile):hover {
+transform: translateY(-5px);
+box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+}

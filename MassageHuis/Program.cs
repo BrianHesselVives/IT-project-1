@@ -49,12 +49,16 @@ builder.Services.AddTransient<IService<Schema>, SchemaService>();
 builder.Services.AddTransient<IService<RegulierTijdslot>, RegulierTijdslotService>();
 builder.Services.AddTransient<IService<Reservatie>, ReservatieService>();
 builder.Services.AddTransient<IService<UitzonderingTijdslot>, UitzonderingTijdslotService>();
+builder.Services.AddTransient<IService<KostPrijs>, KostPrijsService>();
+builder.Services.AddTransient<IService<TypeMassage>, TypeMassageService>();
 
 builder.Services.AddTransient<IDAO<Masseur>, MasseurDAO>();
 builder.Services.AddTransient<IDAO<Schema>, SchemaDAO>();
 builder.Services.AddTransient<IDAO<RegulierTijdslot>, RegulierTijdslotDAO>();
 builder.Services.AddTransient<IDAO<Reservatie>, ReservatieDAO>();
 builder.Services.AddTransient<IDAO<UitzonderingTijdslot>, UitzonderingTijdslotDAO>();
+builder.Services.AddTransient<IDAO<KostPrijs>, KostPrijsDAO>();
+builder.Services.AddTransient<IDAO<TypeMassage>, TypeMassageDAO>();
 
 // session
 builder.Services.AddSession(options =>

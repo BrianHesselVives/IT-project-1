@@ -35,11 +35,19 @@ namespace MassageHuis.Repositories
                 throw new Exception("error DAO Masseur"); 
             }
         }
-        
+
 
         async Task IDAO<Schema>.AddAsync(Schema entity)
         {
-            _dbContext.Entry(entity).State = EntityState.Added;
+            _dbContext.Schemas.Add(entity); 
+            if (entity.RegulierTijdslots != null && entity.RegulierTijdslots.Any())
+            {
+                foreach (var tijdslot in entity.RegulierTijdslots)
+                {
+                    _dbContext.Entry(tijdslot).State = EntityState.Added;
+                }
+            }
+
             try
             {
                 await _dbContext.SaveChangesAsync();
@@ -47,6 +55,7 @@ namespace MassageHuis.Repositories
             catch (Exception ex)
             {
                 Console.WriteLine(ex);
+                
                 throw;
             }
         }

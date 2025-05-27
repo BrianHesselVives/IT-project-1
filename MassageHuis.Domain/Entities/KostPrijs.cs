@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MassageHuis.Entities;
-
+[Table("KostPrijs")]
 public partial class KostPrijs
 {
+
     public int Id { get; set; }
 
     public float Prijs { get; set; }
