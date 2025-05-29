@@ -1,0 +1,25 @@
+﻿@{
+    Layout = "/Views/Shared/_Layout.cshtml"; // Zorg ervoor dat dit naar je hoofdlayout wijst
+}
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+
+<div class="container py-4"> 
+    <h2 class="text-center mb-4">Beheer uw accountinstellingen</h2>
+    <div class="card shadow p-4 mx-auto" style="max-width: 900px;"> 
+        <h4 class="mb-3">Wijzig uw accountinstellingen</h4>
+        <hr />
+        <div class="row justify-content-center"> 
+            <div class="col-md-3"> 
+                <partial name="_ManageNav" />
+            </div>
+            <div class="col-md-6"> 
+                @RenderBody()
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @RenderSection("Scripts", required: false)
+}

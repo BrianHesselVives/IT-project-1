@@ -5,38 +5,55 @@
 @using System.Globalization
 @model MassageHuis.ViewModels.VerlofVM
 
-@if (SignInManager.IsSignedIn(User) && (await UserManager.IsInRoleAsync(await UserManager.GetUserAsync(User), "masseur")) || SignInManager.IsSignedIn(User) && (await UserManager.IsInRoleAsync(await UserManager.GetUserAsync(User), "uitbater")))
-{
-    <nav aria-label="breadcrumb">
-        <ol class="breadcrumb mb-0">
-            <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Home</a></li>
-            @if (SignInManager.IsSignedIn(User) && (await UserManager.IsInRoleAsync(await UserManager.GetUserAsync(User), "masseur")))
-            {
-                <li class="breadcrumb-item"><a asp-controller="Masseur" asp-action="Index">Overzicht</a></li>
-            }
-            @if (SignInManager.IsSignedIn(User) && (await UserManager.IsInRoleAsync(await UserManager.GetUserAsync(User), "uitbater")))
-            {
-                <li class="breadcrumb-item"><a asp-controller="Uitbater" asp-action="Index">Uitbater Overzicht</a></li>
-            }
-
-            <li class="breadcrumb-item active" aria-current="page">Overzicht Verlof </li>
-        </ol>
-    </nav>
-}
-
-
 <div class="container mt-5">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        @if (SignInManager.IsSignedIn(User) && (await UserManager.IsInRoleAsync(await UserManager.GetUserAsync(User), "masseur")) || SignInManager.IsSignedIn(User) && (await UserManager.IsInRoleAsync(await UserManager.GetUserAsync(User), "uitbater")))
+        {
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb mb-0">
+                    @if (SignInManager.IsSignedIn(User) && (await UserManager.IsInRoleAsync(await UserManager.GetUserAsync(User), "masseur")))
+                    {
+                        <li class="breadcrumb-item"><a asp-controller="Masseur" asp-action="Index">Overzicht</a></li>
+                    }
+                    @if (SignInManager.IsSignedIn(User) && (await UserManager.IsInRoleAsync(await UserManager.GetUserAsync(User), "uitbater")))
+                    {
+                        <li class="breadcrumb-item"><a asp-controller="Uitbater" asp-action="Index">Uitbater Overzicht</a></li>
+                    }
+                    <li class="breadcrumb-item active" aria-current="page">Verlof Aanvragen</li>
+                </ol>
+            </nav>
+        }
+        @if (SignInManager.IsSignedIn(User) && (await UserManager.IsInRoleAsync(await UserManager.GetUserAsync(User), "administrator")))
+        {
+            <a asp-controller="Admin" asp-action="Index" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-return-left me-2"></i> Terug naar Overzicht
+            </a>
+        }
+        else if (SignInManager.IsSignedIn(User) && await UserManager.IsInRoleAsync(await UserManager.GetUserAsync(User), "masseur"))
+        {
+            <a asp-controller="Masseur" asp-action="Index" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-return-left me-2"></i> Terug naar Overzicht
+            </a>
+        }
+        else if (SignInManager.IsSignedIn(User) && await UserManager.IsInRoleAsync(await UserManager.GetUserAsync(User), "uitbater"))
+        {
+            <a asp-controller="Uitbater" asp-action="Index" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-return-left me-2"></i> Terug naar Overzicht
+            </a>
+        }
+    </div> 
+
     <div class="card shadow-sm p-4">
         <h2 class="mb-4"><i class="bi bi-calendar-plus mr-2"></i> Verlof / Periode </h2>
         <form method="post" asp-controller="Uitbater" asp-action="BevestigVerlof">
             <div class="form-group">
                 <label for="startDate"><i class="bi bi-calendar-date mr-2"></i> Startdatum</label>
-                <input type="date" class="datepicker form-control" id="startDate" placeholder="Kies een startdatum" min="@DateTime.Now" asp-for="StartDatum">
+                <input type="date" class="datepicker form-control" id="startDate" placeholder="Kies een startdatum" min="@DateTime.Now.ToString("yyyy-MM-dd")" asp-for="StartDatum">
                 <span asp-validation-for="StartDatum" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label for="endDate"><i class="bi bi-calendar-range mr-2"></i> Einddatum (optioneel voor periode)</label>
-                <input type="date" class="datepicker form-control" id="endDate" placeholder="Kies een einddatum" min="@DateTime.Now.AddDays(1)" asp-for="EindDatum">
+                <input type="date" class="datepicker form-control" id="endDate" placeholder="Kies een einddatum" min="@DateTime.Now.AddDays(1).ToString("yyyy-MM-dd")" asp-for="EindDatum">
                 <small class="form-text text-muted"><i class="bi bi-info-circle mr-2"></i> Laat leeg voor een enkele dag verlof.</small>
                 <span asp-validation-for="EindDatum" class="text-danger"></span>
             </div>
@@ -65,30 +82,3 @@
             <button type="submit" class="btn btn-primary">Verlof Bevestigen</button>
         </form>
     </div>
-</div>
-
-@if (!ViewData.ModelState.IsValid)
-{
-    <div class="alert alert-danger mt-3">
-        <strong>Er zijn fouten opgetreden:</strong>
-        <ul>
-            @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
-            {
-                <li>@error.ErrorMessage</li>
-            }
-        </ul>
-    </div>
-}
-
-@if (Model != null && Model.VerlofGeregistreerd == true)
-{
-    <div class="alert alert-success mt-3">
-        <i class="bi bi-check-circle mr-2"></i> Verlof succesvol geregistreerd.
-    </div>
-}
-@if (Model != null && Model.VerlofGeregistreerd == false && ViewData.ModelState["VerlofRegistratie"]?.Errors.Any() == true)
-{
-    <div class="alert alert-danger mt-3">
-        <strong>Fout bij registratie:</strong> @ViewData.ModelState["VerlofRegistratie"]?.Errors.FirstOrDefault()?.ErrorMessage
-    </div>
-}

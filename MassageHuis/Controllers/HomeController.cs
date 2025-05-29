@@ -1,6 +1,12 @@
-using System.Diagnostics;
-using Microsoft.AspNetCore.Mvc;
+using Azure.Core;
+using MassageHuis.Entities;
 using MassageHuis.Models;
+using MassageHuis.Services.Interfaces;
+using MassageHuis.ViewModels;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis.Operations;
+using System.Diagnostics;
 
 namespace MassageHuis.Controllers;
 
@@ -8,22 +14,65 @@ public class HomeController : Controller
 {
     private readonly ILogger<HomeController> _logger;
 
-    public HomeController(ILogger<HomeController> logger)
+    private IService<KostPrijs> _kostprijsService;
+
+    public HomeController(ILogger<HomeController> logger, IService<KostPrijs> kostprijsservice)
     {
         _logger = logger;
+        _kostprijsService = kostprijsservice;
     }
-
-    public IActionResult Index()
+    [AllowAnonymous]
+    async public Task<IActionResult> Index()
     {
-        return View();
+        
+        if (User.Identity.IsAuthenticated)
+        {
+            
+            if (!User.IsInRole("klant"))
+            {
+                if (User.IsInRole("uitbater"))
+                {
+                    return RedirectToAction("Index", "Uitbater"); // Redirect naar de Index actie van de UitbaterController
+                }
+                else if (User.IsInRole("masseur"))
+                {
+                    return RedirectToAction("Index", "Masseur"); // Redirect naar de Index actie van de MasseurController
+                }
+                else if (User.IsInRole("administrator"))
+                {
+                    return RedirectToAction("Index", "Admin"); // Redirect naar de Index actie van de AdminController
+                }
+                else
+                {
+                    return Forbid(); 
+                }
+            }
+        }
+        
+        var massages = await _kostprijsService.GetAllAsync();
+        massages = massages.Where(b=> b.IdTypeMassageNavigation.Actief == true);
+        massages = massages.OrderByDescending(b => b.Startdatum);
+        massages = massages.DistinctBy(b => b.IdTypeMassage);
+        var typeMassages = new List<TypeMassageVM>();
+        foreach (var item in massages)
+        {
+            var type = new TypeMassageVM()
+            {
+                Id = item.Id,
+                Prijs = item.Prijs,
+                Type = item.IdTypeMassageNavigation.Type,
+                Beschrijving = item.IdTypeMassageNavigation.Beschrijving
+            };
+            typeMassages.Add(type);
+        }
+        var modelHome = new ReservatieVM()
+        {
+            TypeMassages = typeMassages
+        };
+
+        return View(modelHome);
     }
 
-    public IActionResult Privacy()
-    {
-
-        return View();
-
-    }
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error()

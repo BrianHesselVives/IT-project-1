@@ -11,6 +11,8 @@ public partial class TypeMassage
 
     public bool Actief { get; set; }
 
+    public string? Beschrijving { get; set; }
+
     public virtual ICollection<KostPrijs> KostPrijs { get; set; } = new List<KostPrijs>();
 
     public virtual ICollection<MasseurTypeMassage> MasseurTypeMassages { get; set; } = new List<MasseurTypeMassage>();

@@ -28,9 +28,9 @@ public partial class MassageHuisDbContext : DbContext
 
     public virtual DbSet<AspNetUserToken> AspNetUserTokens { get; set; }
 
-    public virtual DbSet<Betaling> Betalingen { get; set; }
+    public virtual DbSet<Betaling> Betalings { get; set; }
 
-    public virtual DbSet<KostPrijs> KostPrijzen{ get; set; }
+    public virtual DbSet<KostPrijs> KostPrijs { get; set; }
 
     public virtual DbSet<Masseur> Masseurs { get; set; }
 
@@ -50,8 +50,10 @@ public partial class MassageHuisDbContext : DbContext
 
     public virtual DbSet<UitzonderingTijdslot> UitzonderingTijdslots { get; set; }
 
-   // protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)=> optionsBuilder.UseSqlServer("Server=.\\SQL24_VIVES; Database=MassageHuis;Trusted_Connection=True; TrustServerCertificate=True;MultipleActiveResultSets=true;");
-    //Server=.\\SQL24_VIVES; Database=MassageHuis;Trusted_Connection=True; TrustServerCertificate=True;MultipleActiveResultSets=true;
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
+        => optionsBuilder.UseSqlServer("Server=.\\SQL24_VIVES; Database=Massagehuis; Trusted_Connection=True; TrustServerCertificate=True; MultipleActiveResultSets=true;");
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<AspNetRole>(entity =>
@@ -243,11 +245,10 @@ public partial class MassageHuisDbContext : DbContext
 
             entity.Property(e => e.IdSchema).HasColumnName("Id_Schema");
 
-            entity.HasOne(d => d.IdSchemaNavigation)
-                  .WithMany(p => p.RegulierTijdslots)
-                  .HasForeignKey(d => d.IdSchema)
-                  .OnDelete(DeleteBehavior.Cascade) 
-                  .HasConstraintName("FKRegulierTi511075");
+            entity.HasOne(d => d.IdSchemaNavigation).WithMany(p => p.RegulierTijdslots)
+                .HasForeignKey(d => d.IdSchema)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FKRegulierTi511075");
         });
 
         modelBuilder.Entity<ReservatiePromotieCode>(entity =>
@@ -344,6 +345,7 @@ public partial class MassageHuisDbContext : DbContext
 
             entity.ToTable("TypeMassage");
 
+            entity.Property(e => e.Beschrijving).HasMaxLength(255);
             entity.Property(e => e.Type)
                 .HasMaxLength(50)
                 .IsUnicode(false);

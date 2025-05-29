@@ -1,31 +1,55 @@
 ﻿@using MassageHuis.ViewModels
 @model MassageHuis.ViewModels.MasseurVM
 
-<div class="row justify-content-center">
-    @foreach (var masseur in Model.Masseurs)
-    {
-        <div class="col-sm-6 col-md-4 col-lg-3 d-flex justify-content-center">
-            <div class="card" style="width: 18rem;">
-                <img class="card-img-top" src="https://placehold.co/150x150/png" alt="Placeholder Foto Masseur">
-                <div class="card-body">
-                    <form asp-controller="Klant" asp-action="Kalender" method="post">
-                        @{
-                            var user = Model.Gebruikers.FirstOrDefault(b => b.Id == masseur.IdAspNetUsers);
-                        }
-                        <h5 class="card-title">@user.Voornaam @user.Naam</h5>
-                        <p class="card-text">
-                            @masseur.Beschrijving
-                        </p>
-                        <input type="hidden" name="Id" value="@masseur.Id" />
-                        <input type="hidden" name="IdAspNetUsers" value="@masseur.IdAspNetUsers" />
-                        <input type="hidden" name="Actief" value="@masseur.Actief" />
-                        <input type="hidden" name="Einddienstverband" value="@masseur.Einddienstverband" />
-                        <input type="hidden" name="Beschrijving" value="@masseur.Beschrijving" />
-                        <input type="hidden" name="Naam" value="@user.Voornaam @user.Naam" />
-                        <button type="submit" class="btn btn-primary">Bekijk Kalender</button>
-                    </form>
+<style>
+    .masseur-card-hover {
+        transition: transform 0.25s ease-out, box-shadow 0.25s ease-out;
+        will-change: transform, box-shadow;
+    }
+
+        .masseur-card-hover:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.15) !important;
+        }
+
+        .masseur-card-hover .card-img-top {
+            border-radius: var(--bs-card-border-radius) var(--bs-card-border-radius) 0 0;
+        }
+</style>
+
+<div class="container">
+    <div class="row justify-content-center g-4 mt-5">
+        @foreach (var masseur in Model.Masseurs)
+        {
+            <div class="col-sm-6 col-md-4 col-lg-4 d-flex">
+                <div class="card h-100 shadow-sm border-0 rounded-3 masseur-card-hover">
+                    <img class="card-img-top rounded-top-3" src="https://placehold.co/400x250/E9ECEF/495057?text=Masseur+Foto"
+                         alt="Foto van @(Model.Gebruikers.FirstOrDefault(b => b.Id == masseur.IdAspNetUsers)?.Voornaam ?? "Masseur")"
+                         style="object-fit: cover; height: 200px;">
+
+                    <div class="card-body d-flex flex-column">
+                        <form asp-controller="Klant" asp-action="Kalender" method="post" class="h-100 d-flex flex-column">
+                            @{
+                                var user = Model.Gebruikers.FirstOrDefault(b => b.Id == masseur.IdAspNetUsers);
+                            }
+                            <h5 class="card-title text-primary mb-2">@user.Voornaam @user.Naam</h5>
+
+                            <p class="card-text text-muted flex-grow-1">
+                                @masseur.Beschrijving
+                            </p>
+
+                            <input type="hidden" name="Id" value="@masseur.Id" />
+                            <input type="hidden" name="IdAspNetUsers" value="@masseur.IdAspNetUsers" />
+                            <input type="hidden" name="Actief" value="@masseur.Actief" />
+                            <input type="hidden" name="Einddienstverband" value="@masseur.Einddienstverband" />
+                            <input type="hidden" name="Beschrijving" value="@masseur.Beschrijving" />
+                            <input type="hidden" name="Naam" value="@user.Voornaam @user.Naam" />
+                            <input type="hidden" name="IdTypeMassage" value="@Model.IdTypeMassage" />
+                            <button type="submit" class="btn btn-primary mt-3">Bekijk Kalender</button>
+                        </form>
+                    </div>
                 </div>
             </div>
-        </div>
-    }
+        }
+    </div>
 </div>

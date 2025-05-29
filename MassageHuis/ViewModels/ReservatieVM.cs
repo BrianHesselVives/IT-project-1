@@ -27,5 +27,6 @@ namespace MassageHuis.ViewModels
 
         public float TeBetalenBedrag { get; set; }
 
+        public  List<TypeMassageVM> TypeMassages { get; set; }
     }
 }

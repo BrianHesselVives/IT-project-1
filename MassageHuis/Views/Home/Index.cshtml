@@ -1,9 +1,59 @@
 ﻿@using MassageHuis.ViewModels
 @model MassageHuis.ViewModels.ReservatieVM
-@if (Model != null)
-{
-    <div class="alert alert alert-success alert-dismissible fade show" role="alert">
-        Massage succesvol gereserveerd op @Model.GeselecteerdSlot
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+
+<div class="container">
+    @if (Model != null && Model.GeselecteerdSlot != null)
+    {
+        <div id="razorSuccessAlert" class="alert alert-success alert-dismissible fade show" role="alert">
+            <strong class="font-weight-bold">Succes!</strong>
+            <span class="ms-2">Massage succesvol gereserveerd op @Model.GeselecteerdSlot</span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+</div>
+
+<div class="hero-gradient d-flex align-items-center justify-content-center py-5">
+    <div class="text-center mx-auto" style="max-width: 800px;">
+        <h1 class="display-4 fw-bold text-dark mb-4">
+            Ervaar Ultieme <span class="text-primary">Ontspanning</span> bij MassageHuis
+        </h1>
+        <p class="mt-3 fs-5 text-secondary mx-auto mb-4">
+            Duik in de wereld van pure ontspanning met onze premium massages. Speciaal ontworpen om uw lichaam te verjongen en uw geest tot rust te brengen. Boek vandaag nog uw persoonlijk verwenmoment!
+        </p>
+        <div class="mt-4 d-flex flex-column flex-sm-row justify-content-center gap-3">
+            <a href="#services" class="btn btn-primary btn-primary-custom fs-5 fw-semibold py-3 px-5 rounded-lg shadow-lg">
+                Boek nu een afspraak
+            </a>
+            <a href="#services" class="btn btn-outline-primary btn-secondary-custom fs-5 fw-semibold py-3 px-5 rounded-lg shadow-lg">
+                Bekijk aanbod
+            </a>
+        </div>
     </div>
-}
+</div>
+
+<section id="services" class="section-padding bg-white">
+    <div class="container px-3">
+        <div class="text-center mb-5">
+            <h2 class="display-5 fw-bold text-dark mb-3">Onze Massagediensten</h2>
+            <p class="text-secondary mx-auto" style="max-width: 600px;">Kies uit ons aanbod van professionele massagetherapieën, afgestemd op uw specifieke behoeften.</p>
+        </div>
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+            @foreach (var item in Model.TypeMassages)
+            {
+                <div class="col">
+                    <div class="card h-100 shadow-sm border-0 bg-info bg-opacity-10">
+                        <div class="card-body d-flex flex-column">
+                            <h3 class="card-title h4 fw-semibold text-dark mb-2">@item.Type</h3>
+                            <p class="card-subtitle text-muted mb-3">60 minuten</p>
+                            <p class="card-text text-secondary flex-grow-1 mb-4">@item.Beschrijving</p>
+                            <div class="d-flex justify-content-between align-items-center mt-auto">
+                                <p class="card-text fs-5 fw-semibold text-primary mb-0">€@item.Prijs</p>
+                                <a asp-action="Index" asp-controller="Klant" asp-route-IdTypeMassage="@item.Id" class="btn btn-primary btn-primary-custom btn-sm">Boek Nu</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</section>

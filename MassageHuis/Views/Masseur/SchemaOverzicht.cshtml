@@ -5,21 +5,40 @@
 @using System.Globalization
 @model List<SchemaVM>
 
-@if (SignInManager.IsSignedIn(User) && (await UserManager.IsInRoleAsync(await UserManager.GetUserAsync(User), "masseur")))
-{
-    <nav aria-label="breadcrumb">
-        <ol class="breadcrumb mb-0">
-            <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Home</a></li>
-            @if (SignInManager.IsSignedIn(User) && (await UserManager.IsInRoleAsync(await UserManager.GetUserAsync(User), "masseur")))
-            {
-                <li class="breadcrumb-item"><a asp-controller="Masseur" asp-action="Index">Overzicht</a></li>
-            }
-            <li class="breadcrumb-item active" aria-current="page">Schema Overzicht</li>
-        </ol>
-    </nav>
-}
-
 <div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        @if (SignInManager.IsSignedIn(User) && (await UserManager.IsInRoleAsync(await UserManager.GetUserAsync(User), "masseur")))
+        {
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb mb-0">
+                    @if (SignInManager.IsSignedIn(User) && (await UserManager.IsInRoleAsync(await UserManager.GetUserAsync(User), "masseur")))
+                    {
+                        <li class="breadcrumb-item"><a asp-controller="Masseur" asp-action="Index">Overzicht</a></li>
+                    }
+                    <li class="breadcrumb-item active" aria-current="page">Schema Overzicht</li>
+                </ol>
+            </nav>
+        }
+        @if (SignInManager.IsSignedIn(User) && (await UserManager.IsInRoleAsync(await UserManager.GetUserAsync(User), "administrator")))
+        {
+            <a asp-controller="Admin" asp-action="Index" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-return-left me-2"></i> Terug naar Overzicht
+            </a>
+        }
+        else if (SignInManager.IsSignedIn(User) && await UserManager.IsInRoleAsync(await UserManager.GetUserAsync(User), "masseur"))
+        {
+            <a asp-controller="Masseur" asp-action="Index" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-return-left me-2"></i> Terug naar Overzicht
+            </a>
+        }
+        else if (SignInManager.IsSignedIn(User) && await UserManager.IsInRoleAsync(await UserManager.GetUserAsync(User), "uitbater"))
+        {
+            <a asp-controller="Uitbater" asp-action="Index" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-return-left me-2"></i> Terug naar Overzicht
+            </a>
+        }
+    </div> 
+
     <h2>Beschikbare Schema's</h2>
 
     @if (Model == null || !Model.Any())
@@ -73,14 +92,14 @@
 
                             @{
                                 var groupedSlots = schema.ReguliereTijdsloten
-                                .GroupBy(s => s.Dag) 
-                                .ToDictionary(g => g.Key, g => g.OrderBy(s => s.StartTijd).ToList()); 
+                                .GroupBy(s => s.Dag)
+                                .ToDictionary(g => g.Key, g => g.OrderBy(s => s.StartTijd).ToList());
                             }
 
-                            @foreach (var dayInt in orderedDayNames.Select(d => (int)Enum.Parse(typeof(DayOfWeek), d, true))) 
+                            @foreach (var dayInt in orderedDayNames.Select(d => (int)Enum.Parse(typeof(DayOfWeek), d, true)))
                             {
                                 var currentDayName = getDutchDayName(dayInt);
-                                var dayKeyString = ((DayOfWeek)dayInt).ToString().ToLower(); 
+                                var dayKeyString = ((DayOfWeek)dayInt).ToString().ToLower();
 
                                 if (groupedSlots.ContainsKey(dayInt) && groupedSlots[dayInt].Any())
                                 {
@@ -100,7 +119,6 @@
                                 }
                                 else
                                 {
-                                    @* Toon een bericht als er geen tijdslots zijn voor deze dag in dit schema *@
                                     <div class="card mb-2">
                                         <div class="card-header bg-light">
                                             <strong>@currentDayName</strong>

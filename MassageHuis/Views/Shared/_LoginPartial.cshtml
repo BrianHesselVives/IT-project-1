@@ -28,11 +28,11 @@
     }
     else
     {
-        <li class="nav-item">
-            <a class="nav-link" asp-area="Identity" asp-page="/Account/Register"><i class="bi bi-person-add me-1 "></i> Registreren</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" asp-area="Identity" asp-page="/Account/Login"><i class="bi bi-box-arrow-in-right me-1 "></i> Login</a>
+        <li class="nav-item ms-lg-2">
+            <a class="nav-link text-dark px-3 py-2 btn-login-animated" id="login" asp-area="Identity" asp-page="/Account/Login">
+                <span class="icon-only"><i class="bi bi-person"></i></span>
+                <span class="full-text">Aanmelden</span>
+            </a>
         </li>
     }
 </ul>

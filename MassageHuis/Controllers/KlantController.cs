@@ -1,24 +1,27 @@
 ﻿using AutoMapper;
 using MassageHuis.Entities;
-using MassageHuis.Models;
 using MassageHuis.Extensions;
+using MassageHuis.Models;
+using MassageHuis.Repositories;
 using MassageHuis.Services.Interfaces;
 using MassageHuis.Util.Mail.Interfaces;
 using MassageHuis.ViewModels;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using System.Data;
 using System.Net.Sockets;
-using Microsoft.AspNetCore.Http;
 using System.Text.Json;
-using MassageHuis.Repositories;
 
 namespace MassageHuis.Controllers
 {
     public class KlantController : Controller
     {
         private IService<Masseur> _masseurService;
+        private IService<TypeMassage> _typemassageService;
+        private IService<KostPrijs> _kostprijsService;
         private IService<Schema> _schemaService;
         private IService<Reservatie> _reservatieService;
         private IService<UitzonderingTijdslot> _uitzonderingTijdslotService;
@@ -35,6 +38,8 @@ namespace MassageHuis.Controllers
             IService<Schema> schemaservice,
             IService<UitzonderingTijdslot> uitzonderingTijdslotservice,
             IService<Reservatie> reservatieservice,
+            IService<TypeMassage> typemassageservice,
+            IService<KostPrijs> kostprijsservice,
 
             IService<RegulierTijdslot> regulierTijdslotservice,
             IEmailSend emailSender)
@@ -45,24 +50,31 @@ namespace MassageHuis.Controllers
             _uitzonderingTijdslotService = uitzonderingTijdslotservice;
             _reservatieService = reservatieservice;
             _userManager = usermanager;
+            _kostprijsService = kostprijsservice;
+            _typemassageService = typemassageservice;
             _mapper = mapper;
             _emailSender = emailSender;
         }
-
+        [Authorize]
+        [Authorize(Roles = "klant")]
         public async Task<IActionResult> Index()
         {
             MasseurVM masseursvm = new MasseurVM();
             masseursvm.Masseurs = await _masseurService.GetAllAsync();
             masseursvm.Gebruikers = await _userManager.GetUsersInRoleAsync("masseur");
+            
             return View(masseursvm);
         }
+        [Authorize(Roles = "klant")]
         public async Task<IActionResult> SoortenMassages()
         {
             return View();
         }
         [HttpPost]
+        [Authorize(Roles = "klant")]
         public async Task<IActionResult> Kalender(MasseurVM masseurdata)
         {
+
             var schemas = await _schemaService.GetAllAsync();
             var schema = schemas.Where(b => b.IdMasseur == masseurdata.Id);
 
@@ -130,11 +142,16 @@ namespace MassageHuis.Controllers
             var slotsPerDag = vrijeSlots
                 .GroupBy(s => s.starttijd.Date)
                 .ToDictionary(g => g.Key, g => g.ToList());
+            var idTypeMassage = await _typemassageService.GetAllAsync();
+            idTypeMassage = idTypeMassage.Where(b => b.Id == masseurdata.IdTypeMassage);
+            //var type = idTypeMassage.FirstOrDefault().Type;
             var kalenderVM = new KalenderVM
             {
                 NaamMasseur = masseurdata.Naam,
                 IdMasseur = masseurdata.Id,
-                SlotsPerDag = slotsPerDag
+                SlotsPerDag = slotsPerDag,
+                IdTypeMassage = masseurdata.IdTypeMassage,
+                //TypeMassage = idTypeMassage.FirstOrDefault().Type,
             };
             return View(kalenderVM);
         }

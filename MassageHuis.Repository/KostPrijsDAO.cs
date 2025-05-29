@@ -54,7 +54,7 @@ namespace MassageHuis.Repositories
         {
             try
             {
-                return await _dbContext.KostPrijzen.Include(r => r.IdTypeMassageNavigation).ToListAsync();
+                return await _dbContext.KostPrijs.Include(r => r.IdTypeMassageNavigation).ToListAsync();
             }
 
             catch (Microsoft.Data.SqlClient.SqlException ex)

@@ -1,0 +1,51 @@
+﻿@page
+@model EmailModel
+@using System.Globalization 
+@using Microsoft.AspNetCore.Mvc.Localization 
+@inject IViewLocalizer Localizer 
+@{
+    ViewData["Title"] = "Wijzig e-mailadres"; 
+    ViewData["ActivePage"] = ManageNavPages.Email;
+}
+
+<h3>@ViewData["Title"]</h3> 
+<partial name="_StatusMessage" for="StatusMessage" />
+@using System.Globalization
+
+<div class="d-flex justify-content-center">
+    <div style="max-width: 700px; width: 100%;">
+        <form id="email-form" method="post">
+            <div asp-validation-summary="All" class="text-danger" role="alert"></div>
+
+            <div class="form-floating mb-3">
+                <input asp-for="Email" class="form-control" placeholder="Vul je e-mailadres in." disabled />
+                <label asp-for="Email" class="form-label"></label>
+            </div>
+
+            @if (Model.IsEmailConfirmed)
+            {
+                <div class="mb-3">
+                    <input asp-for="Input.NewEmail" class="form-control" placeholder="Nieuw e-mailadres" />
+                </div>
+                <div class="mb-3">
+                    <button id="email-verification" type="submit" asp-page-handler="SendVerificationEmail" class="w-100 btn btn-secondary">Verificatie e-mail verzenden</button>
+                </div>
+            }
+            else
+            {
+                <div class="mb-3">
+                    <input asp-for="Input.NewEmail" class="form-control" placeholder="Nieuw e-mailadres" />
+                </div>
+                <div class="mb-3">
+                    <button id="email-verification" type="submit" asp-page-handler="SendVerificationEmail" class="w-100 btn btn-secondary">Verificatie e-mail verzenden</button>
+                </div>
+            }
+            <span asp-validation-for="Input.NewEmail" class="text-danger"></span>
+            <button id="change-email-button" type="submit" asp-page-handler="ChangeEmail" class="w-100 btn btn-lg btn-primary">E-mailadres wijzigen</button>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -24,6 +24,7 @@ namespace MassageHuis.ViewModels
         public int CalendarYear { get; set; }
         public int CalendarMonth { get; set; }
 
+        public int IdTypeMassage { get; set; }
         public MasseurVM()
         {
             vrijeSlots = new List<DateTime>();

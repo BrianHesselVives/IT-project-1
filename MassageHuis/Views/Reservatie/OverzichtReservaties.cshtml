@@ -16,7 +16,6 @@
     {
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb mb-0">
-                <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Home</a></li>
                 @if (SignInManager.IsSignedIn(User) && (await UserManager.IsInRoleAsync(await UserManager.GetUserAsync(User), "uitbater")))
                 {
                     <li class="breadcrumb-item"><a asp-controller="Uitbater" asp-action="Index">Uitbater Overzicht</a></li>

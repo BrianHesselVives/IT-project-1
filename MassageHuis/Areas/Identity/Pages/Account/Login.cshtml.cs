@@ -21,12 +21,15 @@ namespace MassageHuis.Areas.Identity.Pages.Account
     public class LoginModel : PageModel
     {
         private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly UserManager<ApplicationUser> _userManager;
         private readonly ILogger<LoginModel> _logger;
 
-        public LoginModel(SignInManager<ApplicationUser> signInManager, ILogger<LoginModel> logger)
+        public LoginModel(SignInManager<ApplicationUser> signInManager, ILogger<LoginModel> logger, UserManager<ApplicationUser> userManager)
         {
             _signInManager = signInManager;
             _logger = logger;
+            _userManager = userManager;
+
         }
 
         /// <summary>
@@ -104,7 +107,27 @@ namespace MassageHuis.Areas.Identity.Pages.Account
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
-            returnUrl ??= Url.Content("~/");
+            // redirect wanneer ingelogd als masseur
+            var user = await _userManager.FindByEmailAsync(Input.Email);
+            if (user != null)
+            {
+                if (await _userManager.IsInRoleAsync(user, "klant"))
+                {
+                    returnUrl ??= Url.Content("~/"); // Redirect naar home 
+                }
+                else if (await _userManager.IsInRoleAsync(user, "masseur"))
+                {
+                    returnUrl ??= Url.Content("~/Masseur"); // Redirect naar Masseur's overzicht
+                }
+                else if (await _userManager.IsInRoleAsync(user, "uitbater"))
+                {
+                    returnUrl ??= Url.Content("~/Uitbater");// Redirect naar Uitbater's overzicht
+                }
+                else if (await _userManager.IsInRoleAsync(user, "administrator"))
+                {
+                    returnUrl ??= Url.Content("~/Admin"); // Redirect naar Admin's Overzicht
+                }
+            }
 
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
 

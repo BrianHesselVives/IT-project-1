@@ -22,6 +22,7 @@ namespace MassageHuis.Controllers
     public class ReservatieController : Controller
     {
         private IService<Masseur> _masseurService;
+        private IService<KostPrijs> _kostprijsService;
         private IService<Schema> _schemaService;
         private IService<Reservatie> _reservatieService;
         private IService<UitzonderingTijdslot> _uitzonderingTijdslotService;
@@ -38,7 +39,7 @@ namespace MassageHuis.Controllers
             IService<Schema> schemaservice,
             IService<UitzonderingTijdslot> uitzonderingTijdslotservice,
             IService<Reservatie> reservatieservice,
-
+            IService<KostPrijs> kostprijsservice,
             IService<RegulierTijdslot> regulierTijdslotservice,
             IEmailSend emailSender)
         {
@@ -47,6 +48,7 @@ namespace MassageHuis.Controllers
             _regulierTijdslotService = regulierTijdslotservice;
             _uitzonderingTijdslotService = uitzonderingTijdslotservice;
             _reservatieService = reservatieservice;
+            _kostprijsService = kostprijsservice;
             _userManager = usermanager;
             _mapper = mapper;
             _emailSender = emailSender;
@@ -214,6 +216,25 @@ namespace MassageHuis.Controllers
                 // Bijlage genereren
                 Attachment calendarAttachment = new Attachment(new MemoryStream(calendarBytes), "Reservatie.ics", "text/calendar");
                 _emailSender.SendReservationEmailAsync(email.ToString(), $"Massagehuis: Uw reservatie op {geselecteerdSlot.Value.Date.ToString("dd-MM-yyyy")}" , EmailTextBuilder.ToString(),calendarAttachment);
+
+                var massages = await  _kostprijsService.GetAllAsync();
+                massages = massages.Where(b => b.IdTypeMassageNavigation.Actief == true);
+                massages = massages.OrderByDescending(b => b.Startdatum);
+                massages = massages.DistinctBy(b => b.IdTypeMassage);
+                var typeMassages = new List<TypeMassageVM>();
+                foreach (var item in massages)
+                {
+                    var type = new TypeMassageVM()
+                    {
+                        Id = item.Id,
+                        Prijs = item.Prijs,
+                        Type = item.IdTypeMassageNavigation.Type,
+                        Beschrijving = item.IdTypeMassageNavigation.Beschrijving
+                    };
+                    typeMassages.Add(type);
+                }
+                reservatieData.TypeMassages = typeMassages;
+
                 return View("../Home/Index",reservatieData); 
             }
             else

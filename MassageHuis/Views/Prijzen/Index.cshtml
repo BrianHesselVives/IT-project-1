@@ -5,33 +5,49 @@
 @{
     ViewData["Title"] = "Wijzigen van prijs";
 }
-<div class="d-flex justify-content-between align-items-center mb-3">
-    <nav aria-label="breadcrumb">
-        <ol class="breadcrumb mb-0">
-            <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Home</a></li>
-            @if (SignInManager.IsSignedIn(User) && (await UserManager.IsInRoleAsync(await UserManager.GetUserAsync(User), "uitbater")))
-            {
-                <li class="breadcrumb-item"><a asp-controller="Uitbater" asp-action="Index">Uitbater Overzicht</a></li>
-            }
-            @if (SignInManager.IsSignedIn(User) && (await UserManager.IsInRoleAsync(await UserManager.GetUserAsync(User), "administrator")))
-            {
-                <li class="breadcrumb-item"><a asp-controller="Admin" asp-action="Index">Admin Overzicht</a></li>
-            }
-            <li class="breadcrumb-item active" aria-current="page">Wijzigen Prijzen</li>
-        </ol>
-    </nav>
-    <a asp-controller="Admin" asp-action="Index" class="btn btn-outline-secondary">
-        <i class="bi bi-arrow-return-left me-2"></i> Terug naar Overzicht
-    </a>
-</div>
-@if (TempData["Errormessage"] != null)
-{
-    <div class="alert alert alert-danger alert-dismissible fade show" role="alert">
-        Er liep iets fout, probeer opnieuw. (2x zelfde startdatum is niet mogelijk)
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-}
+
 <div class="container mt-5">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0">
+                @if (SignInManager.IsSignedIn(User) && (await UserManager.IsInRoleAsync(await UserManager.GetUserAsync(User), "uitbater")))
+                {
+                    <li class="breadcrumb-item"><a asp-controller="Uitbater" asp-action="Index">Uitbater Overzicht</a></li>
+                }
+                @if (SignInManager.IsSignedIn(User) && (await UserManager.IsInRoleAsync(await UserManager.GetUserAsync(User), "administrator")))
+                {
+                    <li class="breadcrumb-item"><a asp-controller="Admin" asp-action="Index">Admin Overzicht</a></li>
+                }
+                <li class="breadcrumb-item active" aria-current="page">Wijzigen Prijzen</li>
+            </ol>
+        </nav>
+        @if (SignInManager.IsSignedIn(User) && (await UserManager.IsInRoleAsync(await UserManager.GetUserAsync(User), "administrator")))
+        {
+            <a asp-controller="Admin" asp-action="Index" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-return-left me-2"></i> Terug naar Overzicht
+            </a>
+        }
+        else if (SignInManager.IsSignedIn(User) && await UserManager.IsInRoleAsync(await UserManager.GetUserAsync(User), "masseur"))
+        {
+            <a asp-controller="Masseur" asp-action="Index" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-return-left me-2"></i> Terug naar Overzicht
+            </a>
+        }
+        else if (SignInManager.IsSignedIn(User) && await UserManager.IsInRoleAsync(await UserManager.GetUserAsync(User), "uitbater"))
+        {
+            <a asp-controller="Uitbater" asp-action="Index" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-return-left me-2"></i> Terug naar Overzicht
+            </a>
+        }
+    </div>
+
+    @if (TempData["Errormessage"] != null)
+    {
+        <div class="alert alert alert-danger alert-dismissible fade show" role="alert">
+            Er liep iets fout, probeer opnieuw. (2x zelfde startdatum is niet mogelijk)
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
     <div class="row justify-content-center">
         <div class="col-md-6">
             <div class="card shadow-sm">
@@ -56,10 +72,10 @@
                         @Html.AntiForgeryToken()
                         <div class="mb-3">
                             <label asp-for="IdTypeMassage" class="form-label">Type Massage</label>
-                            <select class="form-select @(Html.ValidationMessageFor(m => m.IdTypeMassage) != null ? "is-invalid" : "")" 
-                                    asp-for="IdTypeMassage" 
-                                    id="massageTypeDropdown" 
-                                    onchange="this.form.submit()" 
+                            <select class="form-select @(Html.ValidationMessageFor(m => m.IdTypeMassage) != null ? "is-invalid" : "")"
+                                    asp-for="IdTypeMassage"
+                                    id="massageTypeDropdown"
+                                    onchange="this.form.submit()"
                                     required>
                                 <option value="">Kies een massagetype</option>
                                 @if (Model.TypeMassages != null)
@@ -79,13 +95,13 @@
                     <div class="mb-3">
                         <label asp-for="VoorgaandePrijs" class="form-label d-block">Voorgaande Prijs (€)</label>
                         <span id="voorgaandePrijsDisplay" class="badge bg-info text-dark fs-5 p-2 rounded-pill">
-                            @(Model.VoorgaandePrijs.HasValue ? $"€ {Model.VoorgaandePrijs.Value:N2}" : "Geen prijs geselecteerd") 
+                            @(Model.VoorgaandePrijs.HasValue ? $"€ {Model.VoorgaandePrijs.Value:N2}" : "Geen prijs geselecteerd")
                         </span>
                         <small class="form-text text-muted d-block mt-1">Dit is de laatst bekende actieve prijs voor het gekozen type.</small>
                     </div>
 
                     <form asp-action="Create" asp-controller="Prijzen" method="post">
-                        @Html.AntiForgeryToken() 
+                        @Html.AntiForgeryToken()
 
                         @if (Model.IdTypeMassage != 0)
                         {
@@ -94,10 +110,10 @@
 
                         <div class="mb-3">
                             <label asp-for="Prijs" class="form-label">Prijs (€)</label>
-                            <input type="number" class="form-control @(Html.ValidationMessageFor(m => m.Prijs) != null ? "is-invalid" : "")" 
-                                    asp-for="Prijs" 
-                                    id="prijsInput" 
-                                    min="0.01" step="0.01" required>
+                            <input type="number" class="form-control @(Html.ValidationMessageFor(m => m.Prijs) != null ? "is-invalid" : "")"
+                                   asp-for="Prijs"
+                                   id="prijsInput"
+                                   min="0.01" step="0.01" required>
                             <div class="invalid-feedback">
                                 @Html.ValidationMessageFor(m => m.Prijs)
                             </div>
@@ -105,8 +121,8 @@
 
                         <div class="mb-3">
                             <label asp-for="StartDatum" class="form-label">Startdatum Nieuwe Prijs</label>
-                            <input type="date" class="form-control flatpickr-input @(Html.ValidationMessageFor(m => m.StartDatum) != null ? "is-invalid" : "")" 
-                                    asp-for="StartDatum" id="startDatum" required>
+                            <input type="date" class="form-control flatpickr-input @(Html.ValidationMessageFor(m => m.StartDatum) != null ? "is-invalid" : "")"
+                                   asp-for="StartDatum" id="startDatum" required>
 
                             <div class="invalid-feedback">
                                 @Html.ValidationMessageFor(m => m.StartDatum)
@@ -133,7 +149,7 @@
                 altInput: true,
                 altFormat: "d-m-Y",
                 minDate: "today",
-                enableTime: false 
+                enableTime: false
             });
         });
     </script>

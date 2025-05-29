@@ -1,26 +1,31 @@
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using MassageHuis.Data;
 using MassageHuis.Domains.Configuration;
-using Microsoft.Extensions.Options;
-using MassageHuis.Util;
-using MassageHuis.Util.Mail.Interfaces;
-using MassageHuis.Util.Mail;
-using NuGet.Configuration;
-using EmailSettings = MassageHuis.Util.Mail.EmailSettings;
-using MassageHuis.Models;
-using MassageHuis.Repositories.Interfaces;
-using System.Net.Sockets;
-using MassageHuis.Services.Interfaces;
 using MassageHuis.Entities;
+using MassageHuis.Models;
 using MassageHuis.Repositories;
+using MassageHuis.Repositories.Interfaces;
 using MassageHuis.Services;
+using MassageHuis.Services.Interfaces;
+using MassageHuis.Util;
+using MassageHuis.Util.Mail;
+using MassageHuis.Util.Mail.Interfaces;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Localization;
+using Microsoft.AspNetCore.Mvc.Razor;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
+using Microsoft.Extensions.Options;
+using NuGet.Configuration;
+using System.Globalization;
+using System.Net.Sockets;
+using EmailSettings = MassageHuis.Util.Mail.EmailSettings;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
 if (builder.Environment.IsDevelopment())
 {
-    builder.Configuration.AddUserSecrets<Program>(); // Of een andere klasse in je project
+    builder.Configuration.AddUserSecrets<Program>();
 }
 // Add services to the container.
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
@@ -33,10 +38,17 @@ builder.Services.AddDbContext<MassageHuisDbContext>(options =>
 builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
-    
-builder.Services.AddControllersWithViews();
 
-//toevoegen van de automapper
+builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
+
+builder.Services.AddControllersWithViews()
+    .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
+    .AddDataAnnotationsLocalization();
+
+builder.Services.AddRazorPages()
+    .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
+    .AddDataAnnotationsLocalization();
+
 builder.Services.AddAutoMapper(typeof(Program));
 
 builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
@@ -60,7 +72,6 @@ builder.Services.AddTransient<IDAO<UitzonderingTijdslot>, UitzonderingTijdslotDA
 builder.Services.AddTransient<IDAO<KostPrijs>, KostPrijsDAO>();
 builder.Services.AddTransient<IDAO<TypeMassage>, TypeMassageDAO>();
 
-// session
 builder.Services.AddSession(options =>
 {
     options.Cookie.Name = "be.shop.Session";
@@ -69,7 +80,24 @@ builder.Services.AddSession(options =>
 
 
 var app = builder.Build();
-// Configure the HTTP request pipeline.
+
+var supportedCultures = new[]
+{
+    new CultureInfo("nl-BE"),
+    new CultureInfo("nl-NL"),
+    new CultureInfo("en-US"),
+};
+
+var localizationOptions = new RequestLocalizationOptions
+{
+    DefaultRequestCulture = new RequestCulture("nl-BE"),
+    SupportedCultures = supportedCultures,
+    SupportedUICultures = supportedCultures
+};
+
+app.UseRequestLocalization(localizationOptions);
+
+
 if (app.Environment.IsDevelopment())
 {
     app.UseMigrationsEndPoint();
@@ -77,10 +105,8 @@ if (app.Environment.IsDevelopment())
 else
 {
     app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
-//om files uit de wwwroot te kunnen gebruiken dit moet voor routing staan.
 app.UseStaticFiles();
 app.UseHttpsRedirection();
 app.UseRouting();
@@ -100,7 +126,5 @@ app.MapControllerRoute(
 
 app.MapRazorPages()
    .WithStaticAssets();
-
-
 
 app.Run();
