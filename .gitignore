@@ -1,9 +1,9 @@
 .vs
-**/bin/Debug/
+**/bin/
 **/obj/
-MassageHuis/obj/Release
-MassageHuis/obj/Debug
-MassageHuis.Repository/obj/Debug
-MassageHuis.Repository/obj/Release
-MassageHuis.Domain/obj/Debug
-MassageHuis.Domain/obj/Release
+# /MassageHuis/obj/Release
+# /MassageHuis/obj/Debug
+# /MassageHuis.Repository/obj/Debug
+# /MassageHuis.Repository/obj/Release
+# /MassageHuis.Domain/obj/Debug
+# /MassageHuis.Domain/obj/Release
