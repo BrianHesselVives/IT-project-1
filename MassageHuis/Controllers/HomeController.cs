@@ -58,7 +58,7 @@ public class HomeController : Controller
         {
             var type = new TypeMassageVM()
             {
-                Id = item.Id,
+                Id = item.IdTypeMassageNavigation.Id,
                 Prijs = item.Prijs,
                 Type = item.IdTypeMassageNavigation.Type,
                 Beschrijving = item.IdTypeMassageNavigation.Beschrijving

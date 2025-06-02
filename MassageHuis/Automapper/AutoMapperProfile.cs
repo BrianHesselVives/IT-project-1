@@ -60,7 +60,7 @@ namespace MassageHuis.Automapper
                     opts => opts.MapFrom(
                         src => src.IdTypeMassage
                     ))
-                .ForMember(dest => dest.TeBetalenBedrag,
+                .ForMember(dest => dest.Prijs,
                     opts => opts.MapFrom(
                         src => src.TeBetalenBedrag
                     ))

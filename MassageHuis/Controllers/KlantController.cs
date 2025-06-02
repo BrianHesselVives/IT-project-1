@@ -57,19 +57,20 @@ namespace MassageHuis.Controllers
         }
         [Authorize]
         [Authorize(Roles = "klant")]
-        public async Task<IActionResult> Index()
+        [HttpGet]
+        public async Task<IActionResult> Index(int IdTypeMassage)
         {
             MasseurVM masseursvm = new MasseurVM();
             masseursvm.Masseurs = await _masseurService.GetAllAsync();
             masseursvm.Gebruikers = await _userManager.GetUsersInRoleAsync("masseur");
-            
+            masseursvm.IdTypeMassage = IdTypeMassage;
             return View(masseursvm);
         }
-        [Authorize(Roles = "klant")]
-        public async Task<IActionResult> SoortenMassages()
-        {
-            return View();
-        }
+        //[Authorize(Roles = "klant")]
+        //public async Task<IActionResult> SoortenMassages()
+        //{
+        //    return View();
+        //}
         [HttpPost]
         [Authorize(Roles = "klant")]
         public async Task<IActionResult> Kalender(MasseurVM masseurdata)
@@ -80,8 +81,11 @@ namespace MassageHuis.Controllers
 
             var reservaties = await _reservatieService.GetAllAsync();
             var datumvandaag = DateOnly.FromDateTime(DateTime.Today);
-            var toekomstiseReservaties = reservaties.Where(b =>DateOnly.FromDateTime((DateTime)b.DatumReservatie) >= datumvandaag);
+            var toekomstigeReservaties = reservaties.Where(b =>DateOnly.FromDateTime((DateTime)b.DatumReservatie) >= datumvandaag);
             var vrijeSlots = new List<VrijSlotVM>();
+            //haalt de schemas op, op basis van startdatum en einddatum. startdatum moet kleiner of gelijk zijn aan vandaag en einddatum groter of gelijk aan vandaag
+            //hiervan wordt het laatste schema opgehaald. Dit zorgt voor problemen want er wordt enkel maar gekeken naar vandaag.
+            //een week kan meerdere schema's hebben.
             var actieveSchemas = schemas.Where(s => s.IdMasseur == masseurdata.Id && s.StartDatum <= datumvandaag && s.EindDatum >= datumvandaag)
             .OrderByDescending(s => s.StartDatum)
             .FirstOrDefault();
@@ -123,8 +127,12 @@ namespace MassageHuis.Controllers
 
                                 if (isGereserveerd.FirstOrDefault() == null)
                                 {
-                                    VrijSlotVM newSlot = new VrijSlotVM { Id = slot.Id, IdSchema = actieveSchemas.Id, starttijd = slotTijd };
-                                    vrijeSlots.Add(newSlot);
+                                    if (slotTijd > DateTime.Now.AddMinutes(75))
+                                    {
+                                        VrijSlotVM newSlot = new VrijSlotVM { Id = slot.Id, IdSchema = actieveSchemas.Id, starttijd = slotTijd };
+                                        vrijeSlots.Add(newSlot);
+                                    }
+                                    
                                 }
                             }
                         }
@@ -138,20 +146,20 @@ namespace MassageHuis.Controllers
             ReservatieVM reservatieSessie = new ReservatieVM();
             reservatieSessie.MasseurId = masseurdata.Id;
             reservatieSessie.MasseurNaam = masseurdata.Naam;
-            HttpContext.Session.SetObject("Reservatie", reservatieSessie);
+            //HttpContext.Session.SetObject("Reservatie", reservatieSessie);
             var slotsPerDag = vrijeSlots
                 .GroupBy(s => s.starttijd.Date)
                 .ToDictionary(g => g.Key, g => g.ToList());
             var idTypeMassage = await _typemassageService.GetAllAsync();
             idTypeMassage = idTypeMassage.Where(b => b.Id == masseurdata.IdTypeMassage);
-            //var type = idTypeMassage.FirstOrDefault().Type;
+            var type = idTypeMassage.FirstOrDefault().Type;
             var kalenderVM = new KalenderVM
             {
                 NaamMasseur = masseurdata.Naam,
                 IdMasseur = masseurdata.Id,
                 SlotsPerDag = slotsPerDag,
                 IdTypeMassage = masseurdata.IdTypeMassage,
-                //TypeMassage = idTypeMassage.FirstOrDefault().Type,
+                TypeMassage = type
             };
             return View(kalenderVM);
         }

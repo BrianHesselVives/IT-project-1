@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
 using System.Data;
 using System.Globalization;
+using System.Linq;
 using System.Net.Mail;
 using System.Net.Sockets;
 using System.Text;
@@ -57,6 +58,11 @@ namespace MassageHuis.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> OverzichtReservatie(ReservatieVM reservatieData)
         {
+            var prijsMassages = await _kostprijsService.GetAllAsync();
+            prijsMassages = prijsMassages.Where(b => b.IdTypeMassage == reservatieData.IdTypeMassage && b.Startdatum <= DateOnly.FromDateTime((DateTime)reservatieData.GeselecteerdSlot))
+                .OrderByDescending(b => b.Startdatum);
+            var prijsMassage = prijsMassages.FirstOrDefault();
+            reservatieData.Prijs = prijsMassage.Prijs;
             return View("BevestigReservatie", reservatieData);
         }
         [HttpPost]
@@ -120,21 +126,25 @@ namespace MassageHuis.Controllers
 
                 // 4. Controleer of het tijdslot al gereserveerd is
                 var isGereserveerd = reservaties.Where(b => DateOnly.FromDateTime((DateTime)b.DatumReservatie) == geselecteerdeDatum && b.Status == "Gereserveerd" && b.IdRegulierTijdslot == reservatieData.IdTijdSlot);
-
+                var prijsMassageDetail = new float();
                 if (isGereserveerd.FirstOrDefault() == null)
                 {
-
+                    var prijsMassages = await _kostprijsService.GetAllAsync();
+                    prijsMassages = prijsMassages.Where(b => b.IdTypeMassage == reservatieData.IdTypeMassage && b.Startdatum <= DateOnly.FromDateTime((DateTime)geselecteerdSlot))
+                        .OrderByDescending(b=>b.Startdatum);
+                    var prijsMassage = prijsMassages.FirstOrDefault();
+                    prijsMassageDetail = prijsMassage.Prijs;
                     Reservatie reservatie = new Reservatie()
                     {
                         DatumCreatie = DateTime.Now,
                         DatumReservatie = geselecteerdSlot,// zorgt ervoor dat er een tijd ingevuld is bij de reservatie, 00:00:00
                         IdAspNetUsers = _userManager.GetUserId(User),
                         IdMasseur = (int)reservatieData.MasseurId,
-                        IdTypeMassage = 3,//id massage dient nog meegegeven te worden.
-                        IdRegulierTijdslot = reservatieData.IdTijdSlot,//tijdelijke waarde
-                        IdPrijs = 4,//prijs moet nog opgehaald worden via dao een het type massage
+                        IdTypeMassage = (int)reservatieData.IdTypeMassage,
+                        IdRegulierTijdslot = reservatieData.IdTijdSlot,
+                        IdPrijs = prijsMassage.Id,
                         Status = "Gereserveerd",
-                        TeBetalenBedrag = 90, //dient berekend te worden aan de hand van de promocode.
+                        TeBetalenBedrag = prijsMassage.Prijs, //dient berekend te worden aan de hand van de promocode.
 
                     };
 
@@ -182,9 +192,10 @@ namespace MassageHuis.Controllers
                 EmailTextBuilder.AppendLine($"<p><strong>Naam:</strong> {user.Voornaam} {user.Naam}</p>");
                 EmailTextBuilder.AppendLine($"<p><strong>Datum:</strong> {geselecteerdSlot.Value.Date.ToString("dd-MM-yyyy")}</p>");
                 EmailTextBuilder.AppendLine($"<p><strong>Tijd:</strong> {geselecteerdSlot.Value.TimeOfDay.ToString(@"hh\:mm")}</p>");
-                EmailTextBuilder.AppendLine("<p><strong>Type massage:</strong> [Naam van het type massage, bijvoorbeeld: Ontspanningsmassage]</p>"); // Placeholder
+                EmailTextBuilder.AppendLine($"<p><strong>Type massage:</strong> {reservatieData.TypeMassage} </p>");
                 EmailTextBuilder.AppendLine($"<p><strong>Masseur:</strong> {reservatieData.MasseurNaam}</p>");
                 EmailTextBuilder.AppendLine($"<p><strong>Duur van de massage:</strong> {massageDuur.TotalMinutes} minuten</p>");
+                EmailTextBuilder.AppendLine($"<p><strong>Prijs van de massage:</strong> €{prijsMassageDetail}</p>");
 
                 EmailTextBuilder.AppendLine("</div>"); //einde details box
 
@@ -299,7 +310,7 @@ namespace MassageHuis.Controllers
             if (await _userManager.IsInRoleAsync(user, "klant"))
             {
                 var klantReservaties = await _reservatieService.GetAllAsync();
-                var userReservaties = klantReservaties.Where(b => b.IdAspNetUsers == user.Id).OrderBy(b=> b.DatumReservatie);
+                var userReservaties = klantReservaties.Where(b => b.IdAspNetUsers == user.Id).OrderBy(b=> b.DatumReservatie).OrderByDescending(b=>b.DatumReservatie);
 
                 foreach (var Res in userReservaties)
                 {
@@ -310,7 +321,7 @@ namespace MassageHuis.Controllers
             if (await _userManager.IsInRoleAsync(user, "uitbater")) 
             {
                 var klantReservaties = await _reservatieService.GetAllAsync();
-                var userReservaties = klantReservaties.OrderBy(b => b.DatumReservatie).Where(b => b.DatumReservatie >= beginVanDeWeek && b.DatumReservatie<=eindeVanDeWeek);
+                var userReservaties = klantReservaties.OrderBy(b => b.DatumReservatie).Where(b => b.DatumReservatie >= beginVanDeWeek && b.DatumReservatie<=eindeVanDeWeek).OrderByDescending(b => b.DatumReservatie);
 
                 foreach (var Res in userReservaties)
                 {
@@ -324,7 +335,7 @@ namespace MassageHuis.Controllers
                 var masseurId = await _masseurService.GetAllAsync();
                 masseurId = masseurId.Where(b => b.IdAspNetUsers == user.Id);
                 klantReservaties = klantReservaties.Where(b => b.IdMasseur == masseurId.FirstOrDefault().Id);
-                var userReservaties = klantReservaties.OrderBy(b => b.DatumReservatie).Where(b => b.DatumReservatie >= beginVanDeWeek && b.DatumReservatie <= eindeVanDeWeek);
+                var userReservaties = klantReservaties.OrderBy(b => b.DatumReservatie).Where(b => b.DatumReservatie >= beginVanDeWeek && b.DatumReservatie <= eindeVanDeWeek).OrderByDescending(b => b.DatumReservatie);
 
                 foreach (var Res in userReservaties)
                 {

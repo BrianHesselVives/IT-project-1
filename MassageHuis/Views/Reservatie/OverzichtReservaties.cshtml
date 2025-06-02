@@ -81,6 +81,7 @@
                             <th scope="col" class="text-gray-700">Masseur/Masseuse</th>
                             <th scope="col" class="text-gray-700">Behandeling</th>
                             <th scope="col" calss="text-gray-700">Datum En Tijd</th>
+                            <th scope="col" calss="text-gray-700">Prijs</th>
                             <th scope="col" class="text-gray-700"></th>
                         }
 
@@ -97,6 +98,7 @@
                                 <td><span class="fw-medium">@reservatie.MasseurNaam</span></td>
                                 <td><span>@reservatie.TypeMassage</span></td>
                                 <td><span>@reservatie.DatumReservatie</span></td>
+                                <td><span>€@reservatie.Prijs</span></td>
                                 <td>
                                     @if (reservatie.Status == "Gereserveerd"& reservatie.DatumReservatie>= DateTime.Today)
                                     {
