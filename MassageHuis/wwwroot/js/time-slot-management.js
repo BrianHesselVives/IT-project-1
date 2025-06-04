@@ -12,27 +12,27 @@ const timeSlotsAccordion = document.getElementById('timeSlotsAccordion');
 const saveScheduleBtn = document.getElementById('saveScheduleBtn'); // De opslaan knop
 const schemaNameInput = document.getElementById('schemaNameInput');
 const errorMessageElement = document.getElementById('errorMessage');
-const modalTimeSlotsSummary = document.getElementById('modalTimeSlotsSummary'); 
-const noTimeSlotsMessage = document.getElementById('noTimeSlotsMessage'); 
-const modalSchemaName = document.getElementById('modalSchemaName'); 
-const modalDates = document.getElementById('modalDates'); 
-const confirmSaveBtn = document.getElementById('confirmSaveBtn'); 
+const modalTimeSlotsSummary = document.getElementById('modalTimeSlotsSummary');
+const noTimeSlotsMessage = document.getElementById('noTimeSlotsMessage');
+const modalSchemaName = document.getElementById('modalSchemaName');
+const modalDates = document.getElementById('modalDates');
+const confirmSaveBtn = document.getElementById('confirmSaveBtn');
 
 
 function showErrorMessage(message) {
     if (errorMessageElement) {
         errorMessageElement.textContent = message;
-        errorMessageElement.classList.remove('d-none'); 
-        errorMessageElement.classList.add('alert', 'alert-danger'); 
+        errorMessageElement.classList.remove('d-none');
+        errorMessageElement.classList.add('alert', 'alert-danger');
     } else {
-        
+
         alert("Fout: " + message);
     }
 }
 function hideErrorMessage() {
     if (errorMessageElement) {
         errorMessageElement.textContent = '';
-        errorMessageElement.classList.add('d-none'); 
+        errorMessageElement.classList.add('d-none');
         errorMessageElement.classList.remove('alert', 'alert-danger');
     }
 }
@@ -41,7 +41,8 @@ const specificDatePicker = flatpickr(specificDateInput, {
     locale: "nl",
     dateFormat: "Y-m-d",
     minDate: "today",
-    disableMobile: true, // <-- TOEGEVOEGD
+    disable: ["today"],
+    disableMobile: true,
     onChange: function (selectedDates, dateStr, instance) {
         if (singleDateRadio.checked) {
             toggleDateInputs();
@@ -58,7 +59,8 @@ rangeStartDatePickerInstance = flatpickr(startDateInput, {
     mode: "range",
     dateFormat: "Y-m-d",
     minDate: "today",
-    disableMobile: true, // <-- TOEGEVOEGD
+    disable: ["today"],
+    disableMobile: true,
     onChange: function (selectedDates, dateStr, instance) {
         if (dateRangeRadio.checked) {
             toggleDateInputs();
@@ -95,7 +97,7 @@ function addTimeSlot(dayId) {
 
     if (timeSlotsInContainer.length > 0) {
         const lastEndTimeInput = timeSlotsInContainer[timeSlotsInContainer.length - 1].querySelector('.end-time-input');
-        [startTime, endTime] = TijslotenControle(lastEndTimeInput.value, 0, 60);
+        [startTime, endTime] = TijslotenControle(lastEndTimeInput.value, 15, 75);
     }
 
     newSlot.innerHTML = `
@@ -115,7 +117,7 @@ function addTimeSlot(dayId) {
         dateFormat: "H:i",
         time_24hr: true,
         minuteIncrement: 15,
-        disableMobile: true, // <-- TOEGEVOEGD voor de tijdslots
+        disableMobile: true,
         onChange: function (selectedDates, dateStr, instance) {
             const [calculatedStartTime, calculatedEndTime] = TijslotenControle(dateStr, 0, 60);
             endTimeInput.value = calculatedEndTime;
@@ -148,7 +150,12 @@ function updateTimeSlotInteractions(dayId) {
 
             if (index > 0) {
                 const previousEndTimeInput = timeSlotsInContainer[index - 1].querySelector('.end-time-input');
-                minTimeForCurrentSlot = previousEndTimeInput.value;
+                const [prevEndHour, prevEndMinute] = previousEndTimeInput.value.split(':').map(Number);
+                const prevEndDate = new Date();
+                prevEndDate.setHours(prevEndHour, prevEndMinute, 0, 0);
+
+                const nextStartTime = new Date(prevEndDate.getTime() + 15 * 60 * 1000); // voeg 15 minuten toe
+                minTimeForCurrentSlot = nextStartTime.getHours().toString().padStart(2, '0') + ':' + nextStartTime.getMinutes().toString().padStart(2, '0');
             }
             startTimeInput._flatpickr.set('minTime', minTimeForCurrentSlot);
 
@@ -347,6 +354,7 @@ saveScheduleBtn.addEventListener('click', async function (event) {
     if (singleDateRadio.checked) {
         datesMode = 'single';
         selectedStartDate = specificDatePicker.selectedDates[0];
+        selectedEndDate = specificDatePicker.selectedDates[0];
         if (!selectedStartDate || selectedStartDate.setHours(0, 0, 0, 0) < new Date().setHours(0, 0, 0, 0)) {
             showErrorMessage("Selecteer een geldige datum in de toekomst.");
             specificDatePicker.open();
@@ -418,12 +426,17 @@ saveScheduleBtn.addEventListener('click', async function (event) {
     } else {
         noTimeSlotsMessage.classList.remove('d-none');
     }
-
+    function formatDateToLocalString(date) {
+        const year = date.getFullYear();
+        const month = (date.getMonth() + 1).toString().padStart(2, '0'); // maanden 0-11
+        const day = date.getDate().toString().padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    }
     saveScheduleBtn.dataset.payload = JSON.stringify({
         schemaName: schemaName,
         datesMode: datesMode,
-        startDate: selectedStartDate.toISOString().split('T')[0],
-        endDate: selectedEndDate ? selectedEndDate.toISOString().split('T')[0] : '',
+        startDate: formatDateToLocalString(selectedStartDate),
+        endDate: formatDateToLocalString(selectedEndDate),
         timeSlots: allTimeSlotsData
     });
 

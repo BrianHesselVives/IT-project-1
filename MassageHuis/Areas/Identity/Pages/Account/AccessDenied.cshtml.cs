@@ -1,23 +1,45 @@
-﻿// Licensed to the .NET Foundation under one or more agreements.
-// The .NET Foundation licenses this file to you under the MIT license.
-#nullable disable
-
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.Threading.Tasks;
+using MassageHuis.Models; 
 
 namespace MassageHuis.Areas.Identity.Pages.Account
 {
-    /// <summary>
-    ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-    ///     directly from your code. This API may change or be removed in future releases.
-    /// </summary>
     public class AccessDeniedModel : PageModel
     {
-        /// <summary>
-        ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-        ///     directly from your code. This API may change or be removed in future releases.
-        /// </summary>
-        public void OnGet()
+        private readonly UserManager<ApplicationUser> _userManager;
+
+        public AccessDeniedModel(UserManager<ApplicationUser> userManager)
         {
+            _userManager = userManager;
+        }
+
+        public async Task<IActionResult> OnGetAsync()
+        {
+            
+            var user = await _userManager.GetUserAsync(User);
+
+            if (user == null)
+            {
+                return Page();
+            }
+
+            if (await _userManager.IsInRoleAsync(user, "admin"))
+            {
+                return RedirectToPage("/Admin/Dashboard"); 
+            }
+            else if (await _userManager.IsInRoleAsync(user, "uitbater"))
+            {
+                return RedirectToPage("/Uitbater/Overzicht"); 
+            }
+            else if (await _userManager.IsInRoleAsync(user, "masseur"))
+            {
+                return RedirectToPage("/Masseur/Overzicht"); 
+            }
+
+            
+            return Page();
         }
     }
 }

@@ -69,7 +69,7 @@ namespace MassageHuis.Controllers
                 masseurs = masseurs.Where(p => p.IdAspNetUsers == userId);
                 var actieveMasseur = masseurs.FirstOrDefault();
                 var schemas = await _schemaService.GetAllAsync();
-                Schema actiefSchema = null; // Declareer actiefSchema buiten de if-lus
+                Schema actiefSchema = null; 
                 if (actieveMasseur != null)
                 {
                     actiefSchema = schemas
@@ -341,7 +341,7 @@ namespace MassageHuis.Controllers
             Verlof.Datum = datum;
             if (User.IsInRole("uitbater"))
             {
-                Verlof.IdSchema = 8; // schema uitbater en id masseur voor uitbater is 13
+                Verlof.IdSchema = 52; // schema uitbater en id masseur voor uitbater is 13
             }
             else
             {
@@ -361,7 +361,7 @@ namespace MassageHuis.Controllers
             int schemaId = 0;
             if (User.IsInRole("uitbater"))
             {
-                schemaId = 8;
+                schemaId = 52;
             }
             else
             {

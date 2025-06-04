@@ -56,6 +56,7 @@ namespace MassageHuis.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "klant")]
         public async Task<IActionResult> OverzichtReservatie(ReservatieVM reservatieData)
         {
             var prijsMassages = await _kostprijsService.GetAllAsync();

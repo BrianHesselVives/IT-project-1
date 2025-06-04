@@ -1,13 +1,18 @@
 ﻿@using MassageHuis.ViewModels
 @model MassageHuis.ViewModels.ReservatieVM
 
-<div class="container">
+<div id="alertContainer" class="container py-3">
     @if (Model != null && Model.GeselecteerdSlot != null)
     {
-        <div id="razorSuccessAlert" class="alert alert-success alert-dismissible fade show" role="alert">
-            <strong class="font-weight-bold">Succes!</strong>
-            <span class="ms-2">Massage succesvol gereserveerd op @Model.GeselecteerdSlot</span>
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        <div id="razorSuccessAlert" class="alert alert-success alert-dismissible fade show shadow-lg border-0 rounded-3" role="alert">
+            <div class="d-flex align-items-center">
+                <i class="bi bi-check-circle-fill me-3 fs-4"></i> 
+                <div>
+                    <strong class="font-weight-bold d-block mb-1">Succes!</strong> 
+                    <span>Uw massage is succesvol gereserveerd op <span class="fw-semibold">@Model.GeselecteerdSlot</span></span>
+                </div>
+            </div>
+            <button type="button" class="btn-close custom-alert-close-btn" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
     }
 </div>

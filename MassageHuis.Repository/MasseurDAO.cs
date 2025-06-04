@@ -62,11 +62,23 @@ namespace MassageHuis.Repositories
         {
             try
             {
-
-                return await _dbContext.Masseurs.Where(b => b.IdAspNetUsers == id.IdAspNetUsers).FirstOrDefaultAsync();
+                if (id.IdAspNetUsers != null)
+                {
+                    return await _dbContext.Masseurs.Where(b => b.IdAspNetUsers == id.IdAspNetUsers).FirstOrDefaultAsync();
+                }
+                else if (id.Id != null)
+                {
+                    return await _dbContext.Masseurs.Where(b => b.Id == id.Id).FirstOrDefaultAsync();
+                }
+                else
+                {
+                    throw new ArgumentException("Masseur object must have either Id or IdAspNetUsers populated to find a masseur.");
+                }
             }
             catch (Exception ex)
-            { throw new Exception("error DAO Masseur"); }
+            {
+                throw new Exception("Error in MasseurDAO.FindByIdAsync: " + ex.Message, ex);
+            }
         }
 
         public async Task<IEnumerable<Masseur>?> GetAllAsync()

@@ -36,7 +36,7 @@ namespace MassageHuis.Services
 
         public async Task DeleteAsync(Schema entity)
         {
-            throw new NotImplementedException();
+            await _schemaDAO.DeleteAsync(entity);
         }
 
         public Task DeleteRangeAsync(IEnumerable<Schema> entities)
@@ -54,9 +54,9 @@ namespace MassageHuis.Services
             return await _schemaDAO.GetAllAsync();
         }
 
-        public Task UpdateAsync(Schema entity)
+        async public Task UpdateAsync(Schema entity)
         {
-            throw new NotImplementedException();
+            await _schemaDAO.UpdateAsync(entity); 
         }
     }
 }

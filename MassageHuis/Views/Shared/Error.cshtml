@@ -1,14 +1,13 @@
 ﻿<body class="bg-light">
-    <div class="container py-5">
-        <div class="row justify-content-center">
-            <div class="col-md-6 text-center">
-                <h1 class="display-4 text-danger">Er liep iets verkeerd</h1>
-                <p class="lead">Onze excuses, er is een onverwachte fout opgetreden.</p>
-                <div class="mt-4">
-                    <a href="/" class="btn btn-primary me-2">Home</a>
-                    <a href="/Klant" class="btn btn-secondary">Reserveren</a>
-                </div>
-            </div>
+    <div class="access-denied-container">
+        <div class="access-denied-card">
+            <h1 class="access-denied-title">Er liep iets verkeerd</h1>
+            <p class="access-denied-message">
+                Onze excuses, er is een onverwachte fout opgetreden.
+            </p>
+            <p class="access-denied-details">
+                <a asp-action="Index" asp-controller="Home" class="btn btn-primary me-2">Terug naar thuispagina</a>
+            </p>
         </div>
     </div>
 </body>

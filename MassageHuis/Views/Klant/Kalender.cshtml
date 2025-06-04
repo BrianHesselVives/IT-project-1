@@ -2,9 +2,9 @@
 @using System.Globalization
 
 @{
-    var year = DateTime.Now.Year;
-    var month = DateTime.Now.Month;
-    var culture = new CultureInfo("nl-BE");
+    var year = Model.CalendarYear;
+    var month = Model.CalendarMonth;
+    var culture = new CultureInfo("nl-BE"); 
 
     var today = DateTime.Today;
     var firstDayOfCurrentMonth = new DateTime(today.Year, today.Month, 1);
@@ -16,147 +16,182 @@
     var daysInMonth = DateTime.DaysInMonth(year, month);
     int startDayOfWeek = (int)firstDayOfMonth.DayOfWeek;
     int startOffset = (startDayOfWeek == 0) ? 6 : startDayOfWeek - 1;
+
     var slotsGroupedByDate = Model.SlotsPerDag.OrderBy(b => b.Key).ToList();
     var availableDates = Model.SlotsPerDag.Keys.ToHashSet();
 
     var currentMonthName = culture.DateTimeFormat.GetMonthName(month);
-    var prevMonth = (prevMonthDateTime >= firstDayOfCurrentMonth) ? prevMonthDateTime : firstDayOfCurrentMonth;
-    var nextMonth = nextMonthDateTime;
+
+    var prevMonthLinkYear = prevMonthDateTime.Year;
+    var prevMonthLinkMonth = prevMonthDateTime.Month;
 }
 
-<div class='container pb-5'>
-    <h2 class="mb-3">Plaats uw @Model.TypeMassage bij: @Model.NaamMasseur</h2>
-    <div class="mt-5">
-        <div class="d-flex justify-content-between align-items-center mb-3 calendar-nav">
-            @if (firstDayOfMonth >= firstDayOfCurrentMonth)
-            {
-                <a asp-action="Kalender"
-                   asp-route-year="@prevMonth.Year"
-                   asp-route-month="@prevMonth.Month"
-                   class="btn btn-outline-primary">&lt; Vorige</a>
-            }
-            else
-            {
-                <span class="invisible">&lt; Vorige</span>
-            }
+<div class="container py-5">
+    <h2 class="mb-4 text-center text-primary fw-bold">Plan uw @Model.TypeMassage bij: @Model.NaamMasseur</h2>
 
-            <h3 class="mb-0 text-center">@currentMonthName @year</h3>
-            <a asp-action="Kalender"
-               asp-route-year="@nextMonth.Year"
-               asp-route-month="@nextMonth.Month"
-               class="btn btn-outline-primary">Volgende &gt;</a>
-        </div>
-
-        <table class="table table-bordered text-center shadow-sm">
-            <thead class="table-dark">
-                <tr>
-                    <th>Ma</th>
-                    <th>Di</th>
-                    <th>Wo</th>
-                    <th>Do</th>
-                    <th>Vr</th>
-                    <th>Za</th>
-                    <th>Zo</th>
-                </tr>
-            </thead>
-            <tbody>
-                @{
-                    int dayCounter = 1;
-                    for (int week = 0; week < 6; week++)
-                    {
-                        if (dayCounter > daysInMonth && week > 0 && startOffset == 0) break;
-                        if (week > 0 && (dayCounter > daysInMonth)) break;
-
-                        <tr>
-                            @for (int dayOfWeek = 0; dayOfWeek < 7; dayOfWeek++)
-                            {
-                                if ((week == 0 && dayOfWeek < startOffset) || dayCounter > daysInMonth)
-                                {
-                                    <td class="other-month"></td>
-                                }
-                                else
-                                {
-                                    var currentDate = new DateTime(year, month, dayCounter);
-                                    bool hasSlots = availableDates.Contains(currentDate.Date);
-                                    string cellClass = hasSlots ? "bg-success-subtle text-success-emphasis" : "";
-                                    string dateString = currentDate.ToString("yyyy-MM-dd");
-                                    string modalId = $"modal-date-{dateString}";
-
-                                    <td class="@(hasSlots ? "" : "")">
-                                        @if (hasSlots)
-                                        {
-                                            <a href="#" class="available-date-link"
-                                               data-bs-toggle="modal"
-                                               data-bs-target="#@modalId"
-                                               title="Bekijk tijden voor @currentDate.ToString("d MMM", culture)">
-                                                <div class="available-date-highlight @cellClass">
-                                                    @dayCounter
-                                                </div>
-                                            </a>
-                                        }
-                                        else
-                                        {
-                                            @dayCounter
-                                        }
-                                    </td>
-                                    dayCounter++;
-                                }
-                            }
-                        </tr>
-                        if (week == 0) startOffset = 0;
-                    }
+    <div class="card shadow-lg border-0 rounded-4">
+        <div class="card-body p-4 p-md-5">
+            <div class="d-flex justify-content-between align-items-center mb-4 calendar-nav">
+                @if (firstDayOfMonth > firstDayOfCurrentMonth)
+                {
+                    <a asp-action="Kalender"
+                       asp-route-IdMasseur="@Model.IdMasseur"
+                       asp-route-MasseurNaam="@Model.NaamMasseur"
+                       asp-route-IdTypeMassage="@Model.IdTypeMassage"
+                       asp-route-year="@prevMonthLinkYear"
+                       asp-route-month="@prevMonthLinkMonth"
+                       class="btn btn-outline-primary px-4 py-2 rounded-pill d-flex align-items-center fw-medium">
+                        <i class="bi bi-arrow-left-circle-fill me-2"></i> Vorige
+                    </a>
                 }
-            </tbody>
-        </table>
+                else
+                {
+                    <span class="btn btn-outline-secondary px-4 py-2 rounded-pill d-flex align-items-center fw-medium disabled opacity-50 cursor-not-allowed">
+                        <i class="bi bi-arrow-left-circle-fill me-2"></i> Vorige
+                    </span>
+                }
+
+                <h3 class="mb-0 text-center text-secondary text-capitalize fw-bold">@currentMonthName @year</h3>
+
+                <a asp-action="Kalender"
+                   asp-route-IdMasseur="@Model.IdMasseur"
+                   asp-route-MasseurNaam="@Model.NaamMasseur"
+                   asp-route-IdTypeMassage="@Model.IdTypeMassage"
+                   asp-route-year="@nextMonthDateTime.Year"
+                   asp-route-month="@nextMonthDateTime.Month"
+                   class="btn btn-outline-primary px-4 py-2 rounded-pill d-flex align-items-center fw-medium">
+                    Volgende <i class="bi bi-arrow-right-circle-fill ms-2"></i>
+                </a>
+            </div>
+
+            <table class="table table-bordered text-center calendar-table mb-0">
+                <thead class="table-dark">
+                    <tr>
+                        <th scope="col">Ma</th>
+                        <th scope="col">Di</th>
+                        <th scope="col">Wo</th>
+                        <th scope="col">Do</th>
+                        <th scope="col">Vr</th>
+                        <th scope="col">Za</th>
+                        <th scope="col">Zo</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        int dayCounter = 1;
+                        for (int week = 0; week < 6; week++)
+                        {
+                            if (week > 0 && dayCounter > daysInMonth) break;
+
+                            <tr>
+                                @for (int dayOfWeek = 0; dayOfWeek < 7; dayOfWeek++)
+                                {
+                                    if ((week == 0 && dayOfWeek < startOffset) || dayCounter > daysInMonth)
+                                    {
+                                        <td class="bg-light text-muted-50"></td>
+                                    }
+                                    else
+                                    {
+                                        var currentDate = new DateTime(year, month, dayCounter);
+                                        bool hasSlots = availableDates.Contains(currentDate.Date);
+                                        string dateString = currentDate.ToString("yyyy-MM-dd");
+                                        string modalId = $"modal-date-{dateString}";
+
+                                        <td class="@(currentDate.Date == today.Date ? "today-cell" : "")">
+                                            @if (hasSlots && currentDate.Date >= today.Date)
+                                            {
+                                                <a href="#" class="available-date-link d-block p-2 rounded-3 text-decoration-none h-100 d-flex flex-column justify-content-center align-items-center"
+                                                   data-bs-toggle="modal"
+                                                   data-bs-target="#@modalId"
+                                                   title="Bekijk tijden voor @currentDate.ToString("dd MMMM", culture)">
+                                                    <strong class="fs-4 d-block">@dayCounter</strong>
+                                                    <span class="badge bg-success-subtle text-success-emphasis rounded-pill mt-1">Beschikbaar</span>
+                                                </a>
+                                            }
+                                            else if (currentDate.Date < today.Date)
+                                            {
+                                                <div class="past-date text-muted p-2 h-100 d-flex flex-column justify-content-center align-items-center">
+                                                    <strong class="fs-4 d-block">@dayCounter</strong>
+                                                </div>
+                                            }
+                                            else 
+                                            {
+                                                <div class="no-slots-date text-muted p-2 h-100 d-flex flex-column justify-content-center align-items-center">
+                                                    <strong class="fs-4 d-block">@dayCounter</strong>
+                                                </div>
+                                            }
+                                        </td>
+                                        dayCounter++;
+                                    }
+                                }
+                            </tr>
+                            if (week == 0) startOffset = 0;
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
     </div>
 
     @foreach (var dateGroup in slotsGroupedByDate)
     {
-        var slotsForThisDate = dateGroup.Value;
+        var slotsForThisDate = dateGroup.Value.OrderBy(s => s.starttijd).ToList();
         string modalDateString = dateGroup.Key.ToString("yyyy-MM-dd");
         string modalUniqueId = $"modal-date-{modalDateString}";
         string formattedModalDate = dateGroup.Key.ToString("dddd dd MMMM", culture);
-        <div class="modal fade" id="@modalUniqueId" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="@(modalUniqueId)Label" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="@(modalUniqueId)Label">Beschikbare tijden op @formattedModalDate</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <p>Selecteer een tijd:</p>
-                        <div class="list-group">
-                            @if (slotsForThisDate.Any())
-                            {
-                                @foreach (var slot in slotsForThisDate)
-                                {
-                                    <div class="list-group-item list-group-item-action">
-                                        <form method="post" asp-controller="Reservatie" asp-action="OverzichtReservatie" class="m-0 p-0">
-                                            @Html.AntiForgeryToken()
-                                            <input type="hidden" name="GeselecteerdSlot" value="@slot.starttijd" />
-                                            <input type="hidden" name="IdTijdSlot" value="@slot.Id" />
-                                            <input type="hidden" name="MasseurId" value="@Model.IdMasseur" />
-                                            <input type="hidden" name="MasseurNaam" value="@Model.NaamMasseur" />
-                                            <input type="hidden" name="TypeMassage" value="@Model.TypeMassage" />
-                                            <input type="hidden" name="IdTypeMassage" value="@Model.IdTypeMassage" />
-                                            <button type="submit" class="list-group-button">
-                                                @slot.starttijd
-                                            </button>
-                                        </form>
-                                    </div>
-                                }
-                            }
-                            else
-                            {
-                                <div class="list-group-item">Geen tijden gevonden voor deze datum.</div>
-                            }
+
+        if (dateGroup.Key.Date >= today.Date)
+        {
+            <div class="modal fade" id="@modalUniqueId" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="@(modalUniqueId)Label" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-sm">
+                    <div class="modal-content rounded-3 shadow">
+                        <div class="modal-header bg-primary text-white border-bottom-0 rounded-top-3">
+                            <h5 class="modal-title fw-bold" id="@(modalUniqueId)Label">@formattedModalDate</h5>
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Sluiten"></button>
                         </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Sluiten</button>
+                        <div class="modal-body p-4">
+                            <p class="lead text-center mb-3">Selecteer een tijd:</p>
+                            <div class="list-group list-group-flush">
+                                @if (slotsForThisDate.Any())
+                                {
+                                    bool hasFutureSlots = false;
+                                    @foreach (var slot in slotsForThisDate)
+                                    {
+                                        if (slot.starttijd > DateTime.Now.AddMinutes(75))
+                                        {
+                                            hasFutureSlots = true;
+                                            <div class="list-group-item list-group-item-action py-3 d-flex justify-content-between align-items-center border-bottom">
+                                                <form method="post" asp-controller="Reservatie" asp-action="OverzichtReservatie" class="w-100 d-flex justify-content-between align-items-center">
+                                                    @Html.AntiForgeryToken()
+                                                    <input type="hidden" name="GeselecteerdSlot" value="@slot.starttijd" />
+                                                    <input type="hidden" name="IdTijdSlot" value="@slot.Id" />
+                                                    <input type="hidden" name="MasseurId" value="@Model.IdMasseur" />
+                                                    <input type="hidden" name="MasseurNaam" value="@Model.NaamMasseur" />
+                                                    <input type="hidden" name="TypeMassage" value="@Model.TypeMassage" />
+                                                    <input type="hidden" name="IdTypeMassage" value="@Model.IdTypeMassage" />
+                                                    <span class="fs-5 text-primary fw-semibold">@slot.starttijd.ToString("HH:mm", culture)</span>
+                                                    <button type="submit" class="btn btn-primary btn-sm px-4 rounded-pill">Boek</button>
+                                                </form>
+                                            </div>
+                                        }
+                                    }
+                                    @if (!hasFutureSlots)
+                                    {
+                                        <div class="list-group-item text-center text-muted py-4 border-0">Geen beschikbare tijden meer voor deze datum.</div>
+                                    }
+                                }
+                                else
+                                {
+                                    <div class="list-group-item text-center text-muted py-4 border-0">Geen tijden gevonden voor deze datum.</div>
+                                }
+                            </div>
+                        </div>
+                        <div class="modal-footer justify-content-center border-top-0 pt-0">
+                            <button type="button" class="btn btn-secondary rounded-pill px-4" data-bs-dismiss="modal">Sluiten</button>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        }
     }
 </div>

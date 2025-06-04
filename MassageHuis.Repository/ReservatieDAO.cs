@@ -78,6 +78,7 @@ namespace MassageHuis.Repositories
                     .ThenInclude(m => m.IdAspNetUsersNavigation)
                     .Include(n=>n.IdTypeMassageNavigation)
                     .Include(o=> o.IdAspNetUsersNavigation)
+                    .Include(o => o.IdRegulierTijdslotNavigation)
                     .ToListAsync();
             }
             catch (Microsoft.Data.SqlClient.SqlException ex)

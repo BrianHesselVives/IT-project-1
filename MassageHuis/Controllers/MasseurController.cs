@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Globalization;
+using System.IO.Compression;
 
 namespace MassageHuis.Controllers
 {
@@ -241,7 +242,7 @@ namespace MassageHuis.Controllers
                 IdMasseur = masseur.Id,
                 StartDatum = parsedStartDate,
                 EindDatum = parsedEndDate,
-                Type = "standaard", 
+                Type = "Standaard", 
                 RegulierTijdslots = reguliereTijdslots // Wijs de tijdsloten toe
             };
 
@@ -263,6 +264,55 @@ namespace MassageHuis.Controllers
             return Ok(new { success = true, message = "Schema succesvol opgeslagen!" });
         }
 
+        [HttpPost]
+        public async Task<IActionResult> SchemaVerwijderen(SchemaVM beeindigdSchema)
+        {
+            // eerst wijzeien van oud schema met nodige controle van reservaties
+            var BeeindigdSchema = new Schema()
+            {
+                Id = beeindigdSchema.Id
+            };
+            BeeindigdSchema = await _schemaService.FindByIdAsync(BeeindigdSchema);
 
+            var reservaties = await _reservatieService.GetAllAsync();
+            reservaties = reservaties.Where(b => b.IdRegulierTijdslotNavigation.IdSchema == beeindigdSchema.Id && b.Status!= "Geannuleerd");
+            if (reservaties.Any()) {
+                var LaatsteReservatie = reservaties.Where(b=>b.DatumReservatie > DateTime.Today).OrderByDescending(b => b.DatumReservatie).FirstOrDefault();
+                BeeindigdSchema.EindDatum = DateOnly.FromDateTime((DateTime)LaatsteReservatie.DatumReservatie);
+                BeeindigdSchema.Type = "Beëindigd";
+                await _schemaService.UpdateAsync(BeeindigdSchema);
+            }
+            else
+            {
+                BeeindigdSchema.EindDatum = DateOnly.FromDateTime(DateTime.Today.AddDays(-1));
+                BeeindigdSchema.Type = "Beëindigd";
+                await _schemaService.UpdateAsync(BeeindigdSchema);
+            }
+
+
+
+
+                //schema's opnieuw ophalen met het upgedate schema (beeindigdSchema)
+                var masseurId = await _masseurService.GetAllAsync();
+            masseurId = masseurId.Where(b => b.IdAspNetUsers == _userManager.GetUserId(User));
+            var masseurSchemas = await _schemaService.GetAllAsync();
+            masseurSchemas = masseurSchemas.Where(b => b.IdMasseur == masseurId.FirstOrDefault().Id);
+            var schemaVMs = new List<SchemaVM>();
+            foreach (var item in masseurSchemas)
+            {
+                var reguliereTijdsloten = await _regulierTijdslotService.GetAllAsync();
+                reguliereTijdsloten = reguliereTijdsloten.Where(b => b.IdSchema == item.Id);
+                var reguliereTijdslotenVMs = new List<RegulierTijdslotVM>();
+                foreach (var slot in reguliereTijdsloten)
+                {
+                    var reguliertijdslotVM = _mapper.Map<RegulierTijdslotVM>(slot);
+                    reguliereTijdslotenVMs.Add(reguliertijdslotVM);
+                }
+                var schemaVM = _mapper.Map<SchemaVM>(item);
+                schemaVM.ReguliereTijdsloten = reguliereTijdslotenVMs;
+                schemaVMs.Add(schemaVM);
+            }
+            return View("SchemaOverzicht",schemaVMs);
+        }
     }
 }

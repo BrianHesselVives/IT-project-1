@@ -47,7 +47,13 @@ namespace MassageHuis.Repositories
 
         public async Task<TypeMassage?> FindByIdAsync(TypeMassage id)
         {
-            throw new NotImplementedException();
+            try
+            {
+
+                return await _dbContext.TypeMassages.Where(b => b.Id == id.Id).FirstOrDefaultAsync();
+            }
+            catch (Exception ex)
+            { throw new Exception("error DAO Masseur"); }
         }
 
         public async Task<IEnumerable<TypeMassage>?> GetAllAsync()

@@ -448,8 +448,6 @@ html {
     }
 }
 
-/* NIEUWE STIJLEN VOOR DE ACCESS DENIED PAGINA */
-
 .access-denied-container {
     background: linear-gradient(135deg, #f0f4f8, #d9e2ec);
     min-height: 100vh;
@@ -488,4 +486,349 @@ html {
 .access-denied-details {
     font-size: 0.95rem;
     color: #6c757d;
+}
+
+.calendar-table {
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+    .calendar-table th,
+    .calendar-table td {
+        height: 90px;
+        vertical-align: top;
+        padding: 0;
+        border: 1px solid #e0e0e0;
+    }
+
+    .calendar-table th {
+        background-color: #34495e;
+        color: white;
+        padding: 1rem 0.5rem;
+        font-weight: bold;
+    }
+
+    .calendar-table thead tr th:first-child {
+        border-top-left-radius: 0.5rem;
+    }
+
+    .calendar-table thead tr th:last-child {
+        border-top-right-radius: 0.5rem;
+    }
+
+.today-cell {
+    background-color: #fff3cd;
+    border: 2px solid #ffc107;
+}
+
+.available-date-link {
+    transition: background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+    background-color: #e6ffed;
+    color: #198754;
+}
+
+    .available-date-link:hover {
+        background-color: #d1ffe1 !important;
+        transform: translateY(-3px);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    }
+
+.past-date,
+.no-slots-date {
+    background-color: #f8f9fa;
+    color: #6c757d;
+    opacity: 0.7;
+    cursor: default;
+}
+
+    .available-date-link .badge,
+    .past-date .badge,
+    .no-slots-date .badge {
+        font-size: 0.75em;
+        padding: 0.3em 0.6em;
+        white-space: nowrap;
+    }
+
+.modal-header {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.modal-body .list-group-item {
+    border-left: 0;
+    border-right: 0;
+    border-color: #f0f0f0;
+}
+
+    .modal-body .list-group-item:first-child {
+        border-top: 0;
+    }
+
+    .modal-body .list-group-item:last-child {
+        border-bottom: 0;
+    }
+
+.cursor-not-allowed {
+    cursor: not-allowed !important;
+}
+
+
+body {
+    background-color: #f0f2f5;
+}
+
+
+:root {
+    --mh-primary: #3b82f6; 
+    --mh-secondary: #6c757d; /* Bootstrap default */
+    --mh-dark: #343a40;
+}
+
+/* Hero Section Stijlen (van homepage) */
+.hero-section {
+    background: linear-gradient(135deg, #e9ecef 0%, #f8f9fa 100%);
+    padding: 8rem 0;
+    text-align: center;
+    border-bottom-left-radius: 50% 20%;
+    border-bottom-right-radius: 50% 20%;
+    margin-bottom: 5rem;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
+}
+
+    .hero-section h1 {
+        font-size: 3.5rem;
+        font-weight: 700;
+        color: var(--mh-dark);
+        margin-bottom: 1.5rem;
+    }
+
+        .hero-section h1 .highlight {
+            color: var(--mh-primary);
+        }
+
+    .hero-section p.lead {
+        font-size: 1.25rem;
+        color: var(--mh-dark);
+        max-width: 800px;
+        margin: 0 auto 3rem auto;
+        line-height: 1.7;
+    }
+
+.hero-buttons .btn {
+    font-size: 1.1rem;
+    padding: 0.8rem 2.5rem;
+    border-radius: 50px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.hero-buttons .btn-primary {
+    background-color: var(--mh-primary);
+    border-color: var(--mh-primary);
+}
+
+.hero-buttons .btn-outline-primary {
+    color: var(--mh-primary);
+    border-color: var(--mh-primary);
+}
+
+    .hero-buttons .btn-outline-primary:hover {
+        background-color: var(--mh-primary);
+        color: white;
+    }
+
+/* Service Cards Stijlen (van homepage) */
+.services-section h2 {
+    font-size: 2.75rem;
+    font-weight: 700;
+    color: var(--mh-dark);
+    margin-bottom: 3.5rem;
+    text-align: center;
+}
+
+    .services-section h2 .highlight {
+        color: var(--mh-primary);
+    }
+
+.service-card {
+    border: none;
+    border-radius: 0.75rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    transition: transform 0.3s ease-out, box-shadow 0.3s ease-out;
+    will-change: transform, box-shadow;
+    padding: 2rem;
+    text-align: left;
+    background-color: white;
+}
+
+    .service-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.15);
+    }
+
+    .service-card h5 {
+        font-size: 1.4rem;
+        font-weight: 600;
+        color: var(--mh-primary);
+        margin-bottom: 0.5rem;
+    }
+
+    .service-card p.text-muted {
+        font-size: 0.9rem;
+        color: var(--bs-gray-600) !important;
+        margin-bottom: 1rem;
+    }
+
+    .service-card p.description {
+        font-size: 1rem;
+        color: var(--bs-gray-700);
+        line-height: 1.6;
+        flex-grow: 1;
+    }
+
+    .service-card .btn {
+        font-size: 1rem;
+        padding: 0.75rem 2rem;
+        border-radius: 50px;
+        font-weight: 600;
+        background-color: var(--mh-primary);
+        border-color: var(--mh-primary);
+        width: 100%;
+        margin-top: 1.5rem;
+    }
+
+/* Masseur Selectie Pagina Stijlen */
+.masseur-card {
+    border: none;
+    border-radius: 0.75rem;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    transition: transform 0.3s ease-out, box-shadow 0.3s ease-out;
+    will-change: transform, box-shadow;
+}
+
+    .masseur-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.15) !important;
+    }
+
+
+.masseur-profile-circle {
+    width: 160px;
+    height: 160px;
+    border-radius: 50%; 
+    object-fit: cover;
+    object-position: center;
+    display: block;
+    margin: 0 auto 1.5rem auto; 
+    border: 4px solid var(--mh-primary);
+    box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+}
+
+.masseur-card.with-profile-image .card-body {
+    padding-top: 1rem;
+}
+
+.masseur-card .card-body {
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.masseur-card .card-title {
+    font-size: 1.65rem;
+    font-weight: 700;
+    margin-bottom: 0.75rem;
+    color: var(--mh-primary);
+}
+
+.masseur-card .card-text {
+    font-size: 0.95rem;
+    color: var(--bs-gray-700);
+    line-height: 1.6;
+    flex-grow: 1;
+    margin-bottom: 1.5rem;
+}
+
+.masseur-card .btn {
+    font-size: 1rem;
+    padding: 0.75rem 2rem;
+    border-radius: 50px;
+    font-weight: 600;
+    background-color: var(--mh-primary);
+    border-color: var(--mh-primary);
+    width: 100%;
+    margin-top: 1.5rem;
+    transition: all 0.3s ease;
+}
+
+    .masseur-card .btn:hover {
+        filter: brightness(1.1);
+    }
+
+.page-title {
+    font-size: 2.75rem;
+    font-weight: 700;
+    color: var(--mh-dark);
+    margin-bottom: 3.5rem;
+    text-align: center;
+}
+
+    .page-title .highlight {
+        color: var(--mh-primary);
+    }
+
+#alertContainer {
+    position: fixed; 
+    top: 80px; 
+    left: 50%; 
+    transform: translateX(-50%); 
+    width: 100%; 
+    max-width: 700px; 
+    z-index: 1050; 
+    padding-left: 15px;
+    padding-right: 15px;
+    box-sizing: border-box;
+}
+
+.calendar-table td {
+    width: calc(100% / 7); 
+    vertical-align: top; 
+    padding: 0; 
+    position: relative; 
+
+    .calendar-table td > div,
+    .calendar-table td > a {
+        width: 100%;
+        height: 100%; 
+        display: flex; 
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 10px 5px; 
+        box-sizing: border-box; 
+        
+    }
+
+
+@media (max-width: 768px) {
+    .calendar-table td > div,
+    .calendar-table td > a {
+        padding: 5px 2px; 
+    }
+
+    .calendar-table td strong {
+        font-size: 1rem !important; 
+    }
+
+    .calendar-table .badge {
+        font-size: 0.7rem !important; 
+        padding: 0.2em 0.4em !important;
+    }
+}
+
+
+.past-date {
+    background: repeating-linear-gradient( 45deg, #f0f0f0, #f0f0f0 10px, #e0e0e0 10px, #e0e0e0 20px );
+    color: #6c757d !important;
+    opacity: 0.7;
 }

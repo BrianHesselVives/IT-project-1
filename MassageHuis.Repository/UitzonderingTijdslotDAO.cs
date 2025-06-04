@@ -18,7 +18,7 @@ namespace MassageHuis.Repositories
 
         public async Task<IEnumerable<UitzonderingTijdslot>?> GetAllAsync()
         {
-            return await _dbContext.UitzonderingTijdslots.ToListAsync();
+            return await _dbContext.UitzonderingTijdslots.Include(b=>b.IdSchemaNavigation).ToListAsync();
         }
 
         public async Task<UitzonderingTijdslot?> FindByIdAsync(UitzonderingTijdslot entity)

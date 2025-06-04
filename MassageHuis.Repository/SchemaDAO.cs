@@ -28,11 +28,18 @@ namespace MassageHuis.Repositories
         {
             try
             {
-                return await _dbContext.Schemas.Where(b => b.IdMasseur == entity.IdMasseur).FirstOrDefaultAsync();
+                if (entity.IdMasseur != 0)
+                {
+                    return await _dbContext.Schemas.Where(b => b.IdMasseur == entity.IdMasseur).FirstOrDefaultAsync();
+                }
+                else
+                {
+                    return await _dbContext.Schemas.Where(b => b.Id == entity.Id).FirstOrDefaultAsync();
+                }
             }
             catch (Exception ex)
-            { 
-                throw new Exception("error DAO Masseur"); 
+            {
+                throw new Exception("error DAO Masseur");
             }
         }
 

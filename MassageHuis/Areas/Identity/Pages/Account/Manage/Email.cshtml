@@ -12,8 +12,7 @@
 <partial name="_StatusMessage" for="StatusMessage" />
 @using System.Globalization
 
-<div class="d-flex justify-content-center">
-    <div style="max-width: 700px; width: 100%;">
+<div class="class=" col-md-10">
         <form id="email-form" method="post">
             <div asp-validation-summary="All" class="text-danger" role="alert"></div>
 
@@ -43,7 +42,6 @@
             <span asp-validation-for="Input.NewEmail" class="text-danger"></span>
             <button id="change-email-button" type="submit" asp-page-handler="ChangeEmail" class="w-100 btn btn-lg btn-primary">E-mailadres wijzigen</button>
         </form>
-    </div>
 </div>
 
 @section Scripts {

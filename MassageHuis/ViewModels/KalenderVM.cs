@@ -1,12 +1,25 @@
-﻿namespace MassageHuis.ViewModels
+﻿using System;
+using System.Collections.Generic;
+
+namespace MassageHuis.ViewModels
 {
     public class KalenderVM
     {
-        public string NaamMasseur { get; set; }
-        public int IdMasseur {  set; get; }
-        public  int IdTypeMassage {  set; get; }
+        public int IdMasseur { get; set; }
+        public string? NaamMasseur { get; set; }
+        public int IdTypeMassage { get; set; }
+        public string? TypeMassage { get; set; }
+        public Dictionary<DateTime, List<VrijSlotVM>> SlotsPerDag { get; set; } = new Dictionary<DateTime, List<VrijSlotVM>>();
 
-        public string TypeMassage { set; get; }
-        public Dictionary<DateTime, List<VrijSlotVM>> SlotsPerDag { get; set; } = new();
+        // These properties are crucial for calendar navigation
+        public int CalendarYear { get; set; }
+        public int CalendarMonth { get; set; }
+
+        public KalenderVM()
+        {
+            // Initialize with current year and month by default
+            CalendarYear = DateTime.Now.Year;
+            CalendarMonth = DateTime.Now.Month;
+        }
     }
 }

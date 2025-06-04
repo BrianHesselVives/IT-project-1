@@ -1,55 +1,65 @@
 ﻿@using MassageHuis.ViewModels
 @model MassageHuis.ViewModels.MasseurVM
 
-<style>
-    .masseur-card-hover {
-        transition: transform 0.25s ease-out, box-shadow 0.25s ease-out;
-        will-change: transform, box-shadow;
+<div class="container py-5">
+    <h1 class="page-title">Kies uw <span class="highlight">Massagetherapeut</span></h1>
+
+    @if (Model.Masseurs == null || !Model.Masseurs.Any())
+    {
+        <div class="alert alert-info text-center" role="alert">
+            <h4 class="alert-heading">Geen Massagetherapeuten Gevonden</h4>
+            <p>Het spijt ons, maar er zijn momenteel geen massagetherapeuten beschikbaar om weer te geven.</p>
+            <hr>
+            <p class="mb-0">Probeer het later opnieuw of neem contact op voor meer informatie.</p>
+        </div>
+        <div class="text-center mt-4">
+            <a asp-controller="Home" asp-action="Index" class="btn btn-primary btn-lg">Terug naar homepage</a>
+        </div>
     }
+    else
+    {
+        <div class="row justify-content-center g-4">
+            @foreach (var masseur in Model.Masseurs)
+            {
+                var user = Model.Gebruikers.FirstOrDefault(b => b.Id == masseur.IdAspNetUsers);
+                var masseurNaam = user?.Voornaam + " " + user?.Naam;
+                if (string.IsNullOrWhiteSpace(masseurNaam))
+                {
+                    masseurNaam = "Onbekende Masseur"; // Fallback
+                }
 
-        .masseur-card-hover:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.15) !important;
-        }
+                <div class="col-sm-6 col-md-4 col-lg-4 d-flex">
+                    <div class="card masseur-card h-100">
 
-        .masseur-card-hover .card-img-top {
-            border-radius: var(--bs-card-border-radius) var(--bs-card-border-radius) 0 0;
-        }
-</style>
+                        <img class="card-img-top" src="https://placehold.co/400x250/E9ECEF/495057?text=Masseur+Foto"
+                             alt="Foto van @masseurNaam">
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title">@masseurNaam</h5>
 
-<div class="container">
-    <div class="row justify-content-center g-4 mt-5">
-        @foreach (var masseur in Model.Masseurs)
-        {
-            <div class="col-sm-6 col-md-4 col-lg-4 d-flex">
-                <div class="card h-100 shadow-sm border-0 rounded-3 masseur-card-hover">
-                    <img class="card-img-top rounded-top-3" src="https://placehold.co/400x250/E9ECEF/495057?text=Masseur+Foto"
-                         alt="Foto van @(Model.Gebruikers.FirstOrDefault(b => b.Id == masseur.IdAspNetUsers)?.Voornaam ?? "Masseur")"
-                         style="object-fit: cover; height: 200px;">
-
-                    <div class="card-body d-flex flex-column">
-                        <form asp-controller="Klant" asp-action="Kalender" method="post" class="h-100 d-flex flex-column">
-                            @{
-                                var user = Model.Gebruikers.FirstOrDefault(b => b.Id == masseur.IdAspNetUsers);
-                            }
-                            <h5 class="card-title text-primary mb-2">@user.Voornaam @user.Naam</h5>
-
-                            <p class="card-text text-muted flex-grow-1">
-                                @masseur.Beschrijving
+                            <p class="card-text">
+                                @(string.IsNullOrEmpty(masseur.Beschrijving) ? "Geen beschrijving beschikbaar voor deze masseur." : masseur.Beschrijving)
                             </p>
 
-                            <input type="hidden" name="Id" value="@masseur.Id" />
-                            <input type="hidden" name="IdAspNetUsers" value="@masseur.IdAspNetUsers" />
-                            <input type="hidden" name="Actief" value="@masseur.Actief" />
-                            <input type="hidden" name="Einddienstverband" value="@masseur.Einddienstverband" />
-                            <input type="hidden" name="Beschrijving" value="@masseur.Beschrijving" />
-                            <input type="hidden" name="Naam" value="@user.Voornaam @user.Naam" />
-                            <input type="hidden" name="IdTypeMassage" value="@Model.IdTypeMassage" />
-                            <button type="submit" class="btn btn-primary mt-3">Bekijk Kalender</button>
-                        </form>
+                            <form asp-controller="Klant" asp-action="Kalender" method="post" class="mt-auto">
+
+                                <input type="hidden" name="Id" value="@masseur.Id" />
+                                <input type="hidden" name="IdAspNetUsers" value="@masseur.IdAspNetUsers" />
+                                <input type="hidden" name="Actief" value="@masseur.Actief" />
+                                <input type="hidden" name="Einddienstverband" value="@masseur.Einddienstverband" />
+                                <input type="hidden" name="Beschrijving" value="@masseur.Beschrijving" />
+                                <input type="hidden" name="Naam" value="@masseurNaam" />
+                                <input type="hidden" name="IdTypeMassage" value="@Model.IdTypeMassage" />
+                                <input type="hidden" name="Maand" value="@DateTime.Today.Month" />
+                                <input type="hidden" name="year" value="@DateTime.Today.Year" />
+
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="bi bi-calendar-check-fill me-2"></i> Bekijk Kalender
+                                </button>
+                            </form>
+                        </div>
                     </div>
                 </div>
-            </div>
-        }
-    </div>
+            }
+        </div>
+    }
 </div>

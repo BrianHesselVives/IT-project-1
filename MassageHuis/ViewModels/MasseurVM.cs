@@ -13,7 +13,7 @@ namespace MassageHuis.ViewModels
         public string? Beschrijving { get; set; }
         public string? IdAspNetUsers { get; set; }
         public string? Naam { get; set; }
-
+        public int Maand { get; set; }
         public IEnumerable<Masseur>? Masseurs { get; set; }
         public IEnumerable<ApplicationUser>? Gebruikers { get; set; }
         public IEnumerable<Schema>? Schemas { get; set; }
@@ -25,6 +25,7 @@ namespace MassageHuis.ViewModels
         public int CalendarMonth { get; set; }
 
         public int IdTypeMassage { get; set; }
+
         public MasseurVM()
         {
             vrijeSlots = new List<DateTime>();

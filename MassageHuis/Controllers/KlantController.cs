@@ -30,7 +30,6 @@ namespace MassageHuis.Controllers
         private readonly IEmailSend _emailSender;
         private readonly UserManager<ApplicationUser> _userManager;
 
-
         public KlantController(
             IMapper mapper,
             UserManager<ApplicationUser> usermanager,
@@ -40,7 +39,6 @@ namespace MassageHuis.Controllers
             IService<Reservatie> reservatieservice,
             IService<TypeMassage> typemassageservice,
             IService<KostPrijs> kostprijsservice,
-
             IService<RegulierTijdslot> regulierTijdslotservice,
             IEmailSend emailSender)
         {
@@ -55,114 +53,187 @@ namespace MassageHuis.Controllers
             _mapper = mapper;
             _emailSender = emailSender;
         }
+
         [Authorize]
         [Authorize(Roles = "klant")]
         [HttpGet]
         public async Task<IActionResult> Index(int IdTypeMassage)
         {
             MasseurVM masseursvm = new MasseurVM();
-            masseursvm.Masseurs = await _masseurService.GetAllAsync();
+            var allMasseurs = await _masseurService.GetAllAsync();
+            var allSchemas = await _schemaService.GetAllAsync();
+            var today = DateOnly.FromDateTime(DateTime.Today);
+
+            var masseurIdsWithActiveSchema = allSchemas
+                .Where(s =>  s.EindDatum >= today)
+                .Select(s => s.IdMasseur)
+                .Distinct()
+                .ToList();
+
+            masseursvm.Masseurs = allMasseurs
+                .Where(m => masseurIdsWithActiveSchema.Contains(m.Id))
+                .ToList();
+
             masseursvm.Gebruikers = await _userManager.GetUsersInRoleAsync("masseur");
             masseursvm.IdTypeMassage = IdTypeMassage;
+
             return View(masseursvm);
         }
-        //[Authorize(Roles = "klant")]
-        //public async Task<IActionResult> SoortenMassages()
-        //{
-        //    return View();
-        //}
-        [HttpPost]
+
+        [HttpGet]
         [Authorize(Roles = "klant")]
-        public async Task<IActionResult> Kalender(MasseurVM masseurdata)
+        public async Task<IActionResult> Kalender(int IdMasseur, string MasseurNaam, int IdTypeMassage, int? year, int? month)
         {
+            var currentYear = year ?? DateTime.Now.Year;
+            var currentMonth = month ?? DateTime.Now.Month;
 
-            var schemas = await _schemaService.GetAllAsync();
-            var schema = schemas.Where(b => b.IdMasseur == masseurdata.Id);
+            // Alles in één keer ophalen voor performance
+            var allSchemas = await _schemaService.GetAllAsync();
+            var allReservaties = await _reservatieService.GetAllAsync();
+            var allReguliereTijdsloten = await _regulierTijdslotService.GetAllAsync();
+            var allUitzonderingTijdsloten = await _uitzonderingTijdslotService.GetAllAsync();
 
-            var reservaties = await _reservatieService.GetAllAsync();
             var datumvandaag = DateOnly.FromDateTime(DateTime.Today);
-            var toekomstigeReservaties = reservaties.Where(b =>DateOnly.FromDateTime((DateTime)b.DatumReservatie) >= datumvandaag);
             var vrijeSlots = new List<VrijSlotVM>();
-            //haalt de schemas op, op basis van startdatum en einddatum. startdatum moet kleiner of gelijk zijn aan vandaag en einddatum groter of gelijk aan vandaag
-            //hiervan wordt het laatste schema opgehaald. Dit zorgt voor problemen want er wordt enkel maar gekeken naar vandaag.
-            //een week kan meerdere schema's hebben.
-            var actieveSchemas = schemas.Where(s => s.IdMasseur == masseurdata.Id && s.StartDatum <= datumvandaag && s.EindDatum >= datumvandaag)
-            .OrderByDescending(s => s.StartDatum)
-            .FirstOrDefault();
 
-            var vandaagnummeriek = (int)DateTime.Today.DayOfWeek;
-            var tijdsloten = await _regulierTijdslotService.GetAllAsync();
+            var eersteDagVanDeMaand = new DateOnly(currentYear, currentMonth, 1);
+            var laatsteDagVanDeMaand = new DateOnly(currentYear, currentMonth, DateTime.DaysInMonth(currentYear, currentMonth));
+
+            // Haal relevante schema's op, sorteer op StartDatum aflopend voor 'meest recente' schema
+            var relevanteSchemasVoorMasseur = allSchemas
+                .Where(s => s.IdMasseur == IdMasseur &&
+                            s.StartDatum <= laatsteDagVanDeMaand &&
+                            s.EindDatum >= eersteDagVanDeMaand)
+                .OrderByDescending(s => s.StartDatum) // Prioriteit: meest recent gestart schema
+                .ToList();
+
+            // Filter uitzonderingen: masseur of algemeen
+            var uitzonderingTijdslotenFilterd = allUitzonderingTijdsloten
+                .Where(b => (b.IdSchemaNavigation.IdMasseur == IdMasseur || b.IdSchema == 52) &&
+                            b.Datum >= eersteDagVanDeMaand && b.Datum <= laatsteDagVanDeMaand)// 52 is hardcoded schema van uitbater om verlof te bekijken
+                .ToList();
+
+            // Filter gereserveerde slots voor deze masseur in deze maand
+            var gereserveerdeSlotsVoorMasseurInMaand = allReservaties
+                .Where(r => r.IdMasseur == IdMasseur &&
+                            r.DatumReservatie.HasValue && // Check op nullable DateTime
+                            DateOnly.FromDateTime(r.DatumReservatie.Value) >= eersteDagVanDeMaand &&
+                            DateOnly.FromDateTime(r.DatumReservatie.Value) <= laatsteDagVanDeMaand &&
+                            r.Status == "Gereserveerd")
+                .ToList();
+
+            // Duur van elke massage is altijd 60 minuten
+            const int massageDuurInMinuten = 60;
+            TimeSpan massageDuur = TimeSpan.FromMinutes(massageDuurInMinuten);
 
 
-            if (actieveSchemas != null)
+            // Loop door elke dag van de maand
+            var lsDataMaand = GetAllDaysInMonth(currentYear, currentMonth);
+
+            // Filter dagen in het verleden
+            if (currentYear == DateTime.Now.Year && currentMonth == DateTime.Now.Month)
             {
-                var tijdslotenFilterd = tijdsloten.Where(b => b.IdSchema == actieveSchemas.Id);
-                var lsDataMaand = GetAllDaysInMonth(DateTime.Now.Year, DateTime.Now.Month);
-
                 lsDataMaand = lsDataMaand.Where(b => b.Date >= DateTime.Today.Date).ToList();
+            }
 
-                // Haal alle uitzonderingstijdsloten op, zowel voor de masseur als voor de uitbater (IdSchema 8)
-                var uitzonderingTijdsloten = await _uitzonderingTijdslotService.GetAllAsync();
-                var uitzonderingTijdslotenFilterd = uitzonderingTijdsloten.Where(b => b.IdSchema == actieveSchemas.Id || b.IdSchema == 8).ToList();
+            foreach (var dag in lsDataMaand)
+            {
+                // Bepaal het actieve schema voor deze specifieke dag
+                var geldendSchemaVoorDag = relevanteSchemasVoorMasseur
+                    .FirstOrDefault(s => DateOnly.FromDateTime(dag.Date) >= s.StartDatum &&
+                                         DateOnly.FromDateTime(dag.Date) <= s.EindDatum);
 
-                foreach (var dag in lsDataMaand)
+                if (geldendSchemaVoorDag != null)
                 {
-                    foreach (var slot in tijdslotenFilterd)
+                    // Reguliere tijdsloten voor het geldende schema van deze dag
+                    var reguliereTijdslotenVoorDezeDag = allReguliereTijdsloten
+                        .Where(b => b.IdSchema == geldendSchemaVoorDag.Id && (int)dag.DayOfWeek == b.Dag)
+                        .ToList();
+
+                    foreach (var slot in reguliereTijdslotenVoorDezeDag)
                     {
-                        if ((int)dag.DayOfWeek == slot.Dag)
+                        TimeSpan startTijdRegulierSlot = slot.StartTijd.ToTimeSpan();
+                        DateTime slotTijdStart = dag.Add(startTijdRegulierSlot);
+                        DateTime slotTijdEind = slotTijdStart.Add(massageDuur); // Gebruik de vaste duur
+
+                        // Check op uitzonderingen (verlof)
+                        bool isUitzondering = uitzonderingTijdslotenFilterd.Any(uitzondering =>
+                            DateOnly.FromDateTime(slotTijdStart.Date) == uitzondering.Datum &&
+                            slotTijdStart.TimeOfDay < uitzondering.Eindtijd.ToTimeSpan() &&
+                            slotTijdEind.TimeOfDay > uitzondering.Startijd.ToTimeSpan()
+                        );
+
+                        if (!isUitzondering)
                         {
-                            TimeSpan startTijd = slot.StartTijd.ToTimeSpan();
-                            DateTime slotTijd = dag.Add(startTijd);
-
-                            // Controleer of de slotTijd niet in een uitzonderingstijdslot valt
-                            bool isVerlofDag = uitzonderingTijdslotenFilterd.Any(uitzondering =>
-                                DateOnly.FromDateTime(slotTijd.Date) == uitzondering.Datum &&
-                                slotTijd.TimeOfDay >= uitzondering.Startijd.ToTimeSpan() &&
-                                slotTijd.TimeOfDay < uitzondering.Eindtijd.ToTimeSpan()
-                            );
-
-                            if (!isVerlofDag)
+                            // Check op bestaande reserveringen die overlappen (incl. 15 min offset)
+                            var isGereserveerd = gereserveerdeSlotsVoorMasseurInMaand.Any(gereserveerdeSlot =>
                             {
-                                var isGereserveerd = reservaties.Where(b => b.DatumReservatie == slotTijd && b.Status == "Gereserveerd" && b.IdRegulierTijdslot == slot.Id);
+                                DateTime gereserveerdeSlotStart = gereserveerdeSlot.DatumReservatie!.Value; // .Value is veilig door HasValue check eerder
+                                DateTime gereserveerdeSlotEind = gereserveerdeSlotStart.Add(massageDuur); // Gebruik de vaste duur
 
-                                if (isGereserveerd.FirstOrDefault() == null)
+                                // Werkelijke geblokkeerde tijd, inclusief 15 minuten offset
+                                DateTime gereserveerdeSlotEindMetOffset = gereserveerdeSlotEind.Add(TimeSpan.FromMinutes(15));
+
+                                // Overlap check: (StartA < EindB) EN (EindA > StartB)
+                                return slotTijdStart < gereserveerdeSlotEindMetOffset && slotTijdEind > gereserveerdeSlotStart;
+                            });
+
+                            if (!isGereserveerd)
+                            {
+                                // Slot moet minstens 75 minuten in de toekomst liggen
+                                if (slotTijdStart > DateTime.Now.AddMinutes(75))
                                 {
-                                    if (slotTijd > DateTime.Now.AddMinutes(75))
-                                    {
-                                        VrijSlotVM newSlot = new VrijSlotVM { Id = slot.Id, IdSchema = actieveSchemas.Id, starttijd = slotTijd };
-                                        vrijeSlots.Add(newSlot);
-                                    }
-                                    
+                                    VrijSlotVM newSlot = new VrijSlotVM { Id = slot.Id, IdSchema = geldendSchemaVoorDag.Id, starttijd = slotTijdStart };
+                                    vrijeSlots.Add(newSlot);
                                 }
                             }
                         }
                     }
                 }
             }
-            else
-            {
-                Console.WriteLine($"Geen actief schema gevonden voor masseur-ID: {masseurdata.Id}");
-            }
-            ReservatieVM reservatieSessie = new ReservatieVM();
-            reservatieSessie.MasseurId = masseurdata.Id;
-            reservatieSessie.MasseurNaam = masseurdata.Naam;
-            //HttpContext.Session.SetObject("Reservatie", reservatieSessie);
+
             var slotsPerDag = vrijeSlots
                 .GroupBy(s => s.starttijd.Date)
                 .ToDictionary(g => g.Key, g => g.ToList());
-            var idTypeMassage = await _typemassageService.GetAllAsync();
-            idTypeMassage = idTypeMassage.Where(b => b.Id == masseurdata.IdTypeMassage);
-            var type = idTypeMassage.FirstOrDefault().Type;
+
+            // Masseur en massagetype info voor de ViewModel
+            var masseurToFind = new Masseur { Id = IdMasseur };
+            var masseurEntity = await _masseurService.FindByIdAsync(masseurToFind);
+            if (masseurEntity == null)
+            {
+                return RedirectToPage("../Shared/Error");
+            }
+
+            // Haal TypeMassage info op voor ViewModel (nog steeds nodig voor .Type)
+            var typeMassageToFind = new TypeMassage { Id = IdTypeMassage };
+            var typeMassageEntity = await _typemassageService.FindByIdAsync(typeMassageToFind);
+            if (typeMassageEntity == null)
+            {
+                return RedirectToPage("../Shared/Error");
+            }
+
             var kalenderVM = new KalenderVM
             {
-                NaamMasseur = masseurdata.Naam,
-                IdMasseur = masseurdata.Id,
+                NaamMasseur = MasseurNaam,
+                IdMasseur = IdMasseur,
                 SlotsPerDag = slotsPerDag,
-                IdTypeMassage = masseurdata.IdTypeMassage,
-                TypeMassage = type
+                IdTypeMassage = IdTypeMassage,
+                TypeMassage = typeMassageEntity.Type, // Type blijft nodig voor de ViewModel
+                CalendarYear = currentYear,
+                CalendarMonth = currentMonth
             };
+
             return View(kalenderVM);
         }
+
+        [HttpPost]
+        [Authorize(Roles = "klant")]
+        public async Task<IActionResult> Kalender(MasseurVM masseurdata)
+        {
+            // Redirect naar GET Kalender actie met geselecteerde parameters
+            return RedirectToAction("Kalender", new { IdMasseur = masseurdata.Id, MasseurNaam = masseurdata.Naam, IdTypeMassage = masseurdata.IdTypeMassage, masseurdata.CalendarYear, masseurdata.CalendarMonth });
+        }
+
         public static List<DateTime> GetAllDaysInMonth(int year, int month)
         {
             int daysInMonth = DateTime.DaysInMonth(year, month);
