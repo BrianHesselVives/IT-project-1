@@ -126,7 +126,7 @@ namespace MassageHuis.Areas.Identity.Pages.Account
                         }
                         else if (await _userManager.IsInRoleAsync(user, "klant"))
                         {
-                            return LocalRedirect(Url.Content("~/Klant"));
+                            return LocalRedirect(returnUrl);
                         }
                     }
 

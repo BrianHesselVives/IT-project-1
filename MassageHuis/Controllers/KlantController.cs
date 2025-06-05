@@ -54,7 +54,6 @@ namespace MassageHuis.Controllers
             _emailSender = emailSender;
         }
 
-        [Authorize]
         [Authorize(Roles = "klant")]
         [HttpGet]
         public async Task<IActionResult> Index(int IdTypeMassage)
