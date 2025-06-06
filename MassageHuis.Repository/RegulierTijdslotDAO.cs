@@ -1,8 +1,8 @@
-﻿using MassageHuis.Repositories.Interfaces;
-using System.Diagnostics;
+﻿using MassageHuis.Data;
 using MassageHuis.Entities;
+using MassageHuis.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using MassageHuis.Data;
+using System.Diagnostics;
 
 
 namespace MassageHuis.Repositories

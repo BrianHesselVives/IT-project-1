@@ -4,48 +4,52 @@
     ViewData["Title"] = "Log in";
 }
 
-<div class="login-page-container">
-    <div class="row justify-content-center min-vh-100"> 
-        <div class="col-md-8 col-lg-6 col-xl-5">
-            <form id="account" method="post" class="login-form-card">
-                <h2 class="text-center mb-4 login-title">Log in op uw account</h2> 
-                <p class="text-center text-muted mb-4">Welkom terug! Log in om verder te gaan.</p>
-                
-                <div asp-validation-summary="ModelOnly" class="text-danger text-center mb-3" role="alert"></div> 
-                
-                <div class="form-floating mb-3">
-                    <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="naam@voorbeeld.com" />
-                    <label asp-for="Input.Email" class="form-label">Email</label>
-                    <span asp-validation-for="Input.Email" class="text-danger"></span>
+<div class="login-page-container d-flex align-items-start justify-content-center min-vh-100 py-5">
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+                <div class="login-form-card">
+                    <h2 class="text-center fw-bold mb-3 login-title">Log in op uw account</h2>
+                    <p class="text-center text-muted mb-4">Welkom terug! Log in om verder te gaan.</p>
+
+                    <div asp-validation-summary="ModelOnly" class="text-danger text-center mb-4" role="alert"></div>
+
+                    <form id="account" method="post">
+                        <div class="form-floating mb-3">
+                            <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="naam@voorbeeld.com" />
+                            <label asp-for="Input.Email">E-mailadres</label>
+                            <span asp-validation-for="Input.Email" class="text-danger d-block mt-1"></span>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input asp-for="Input.Password" class="form-control" autocomplete="current-password" aria-required="true" placeholder="wachtwoord" />
+                            <label asp-for="Input.Password">Wachtwoord</label>
+                            <span asp-validation-for="Input.Password" class="text-danger d-block mt-1"></span>
+                        </div>
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="checkbox" asp-for="Input.RememberMe" id="Input_RememberMe" />
+                            <label class="form-check-label" for="Input_RememberMe">
+                                Aangemeld blijven?
+                            </label>
+                        </div>
+                        <div class="d-grid gap-2">
+                            <button id="login-submit" type="submit" class="btn btn-lg btn-primary login-btn">Log in</button>
+                        </div>
+                        <div class="d-flex justify-content-between mt-4 login-links">
+                            <p class="mb-0">
+                                <a id="forgot-password" asp-page="./ForgotPassword" class="text-decoration-none small">Wachtwoord vergeten?</a>
+                            </p>
+                            <p class="mb-0">
+                                <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl" class="text-decoration-none small">Registreer hier</a>
+                            </p>
+                        </div>
+                        <div class="text-center mt-3">
+                            <p class="mb-0">
+                                <a id="resend-confirmation" asp-page="./ResendEmailConfirmation" class="text-decoration-none small">E-mailbevestiging opnieuw verzenden</a>
+                            </p>
+                        </div>
+                    </form>
                 </div>
-                <div class="form-floating mb-3">
-                    <input asp-for="Input.Password" class="form-control" autocomplete="current-password" aria-required="true" placeholder="wachtwoord" />
-                    <label asp-for="Input.Password" class="form-label">Wachtwoord</label>
-                    <span asp-validation-for="Input.Password" class="text-danger"></span>
-                </div>
-                <div class="checkbox mb-3">
-                    <label asp-for="Input.RememberMe" class="form-label d-flex align-items-center">
-                        <input class="form-check-input me-2" asp-for="Input.RememberMe" />
-                        Aangemeld blijven?
-                    </label>
-                </div>
-                <div>
-                    <button id="login-submit" type="submit" class="w-100 btn btn-lg btn-primary login-btn">Log in</button> 
-                </div>
-                <div class="d-flex justify-content-between mt-4 login-links"> 
-                    <p class="mb-0">
-                        <a id="forgot-password" asp-page="./ForgotPassword" class="text-decoration-none">Wachtwoord vergeten?</a>
-                    </p>
-                    <p class="mb-0">
-                        <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl" class="text-decoration-none">Registreer hier</a> 
-                    </p>
-                </div>
-                <div class="text-center mt-3">
-                    <p class="mb-0">
-                        <a id="resend-confirmation" asp-page="./ResendEmailConfirmation" class="text-decoration-none">E-mailbevestiging opnieuw verzenden</a>
-                    </p>
-                </div>
-            </form>
+            </div>
         </div>
     </div>
 </div>

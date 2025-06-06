@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Globalization;
-using System.IO.Compression;
 
 namespace MassageHuis.Controllers
 {
@@ -65,7 +64,7 @@ namespace MassageHuis.Controllers
             foreach (var item in masseurSchemas)
             {
                 var reguliereTijdsloten = await _regulierTijdslotService.GetAllAsync();
-                reguliereTijdsloten = reguliereTijdsloten.Where(b=>b.IdSchema == item.Id);
+                reguliereTijdsloten = reguliereTijdsloten.Where(b => b.IdSchema == item.Id);
                 var reguliereTijdslotenVMs = new List<RegulierTijdslotVM>();
                 foreach (var slot in reguliereTijdsloten)
                 {
@@ -242,7 +241,7 @@ namespace MassageHuis.Controllers
                 IdMasseur = masseur.Id,
                 StartDatum = parsedStartDate,
                 EindDatum = parsedEndDate,
-                Type = "Standaard", 
+                Type = "Standaard",
                 RegulierTijdslots = reguliereTijdslots // Wijs de tijdsloten toe
             };
 
@@ -275,9 +274,10 @@ namespace MassageHuis.Controllers
             BeeindigdSchema = await _schemaService.FindByIdAsync(BeeindigdSchema);
 
             var reservaties = await _reservatieService.GetAllAsync();
-            reservaties = reservaties.Where(b => b.IdRegulierTijdslotNavigation.IdSchema == beeindigdSchema.Id && b.Status!= "Geannuleerd");
-            if (reservaties.Any()) {
-                var LaatsteReservatie = reservaties.Where(b=>b.DatumReservatie > DateTime.Today).OrderByDescending(b => b.DatumReservatie).FirstOrDefault();
+            reservaties = reservaties.Where(b => b.IdRegulierTijdslotNavigation.IdSchema == beeindigdSchema.Id && b.Status != "Geannuleerd");
+            if (reservaties.Any())
+            {
+                var LaatsteReservatie = reservaties.Where(b => b.DatumReservatie > DateTime.Today).OrderByDescending(b => b.DatumReservatie).FirstOrDefault();
                 BeeindigdSchema.EindDatum = DateOnly.FromDateTime((DateTime)LaatsteReservatie.DatumReservatie);
                 BeeindigdSchema.Type = "Beëindigd";
                 await _schemaService.UpdateAsync(BeeindigdSchema);
@@ -292,8 +292,8 @@ namespace MassageHuis.Controllers
 
 
 
-                //schema's opnieuw ophalen met het upgedate schema (beeindigdSchema)
-                var masseurId = await _masseurService.GetAllAsync();
+            //schema's opnieuw ophalen met het upgedate schema (beeindigdSchema)
+            var masseurId = await _masseurService.GetAllAsync();
             masseurId = masseurId.Where(b => b.IdAspNetUsers == _userManager.GetUserId(User));
             var masseurSchemas = await _schemaService.GetAllAsync();
             masseurSchemas = masseurSchemas.Where(b => b.IdMasseur == masseurId.FirstOrDefault().Id);
@@ -312,7 +312,7 @@ namespace MassageHuis.Controllers
                 schemaVM.ReguliereTijdsloten = reguliereTijdslotenVMs;
                 schemaVMs.Add(schemaVM);
             }
-            return View("SchemaOverzicht",schemaVMs);
+            return View("SchemaOverzicht", schemaVMs);
         }
     }
 }

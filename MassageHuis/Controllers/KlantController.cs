@@ -1,19 +1,13 @@
 ﻿using AutoMapper;
 using MassageHuis.Entities;
-using MassageHuis.Extensions;
 using MassageHuis.Models;
-using MassageHuis.Repositories;
 using MassageHuis.Services.Interfaces;
 using MassageHuis.Util.Mail.Interfaces;
 using MassageHuis.ViewModels;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Formatters;
 using System.Data;
-using System.Net.Sockets;
-using System.Text.Json;
 
 namespace MassageHuis.Controllers
 {
@@ -64,7 +58,7 @@ namespace MassageHuis.Controllers
             var today = DateOnly.FromDateTime(DateTime.Today);
 
             var masseurIdsWithActiveSchema = allSchemas
-                .Where(s =>  s.EindDatum >= today)
+                .Where(s => s.EindDatum >= today)
                 .Select(s => s.IdMasseur)
                 .Distinct()
                 .ToList();

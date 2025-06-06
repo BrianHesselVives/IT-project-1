@@ -1,5 +1,5 @@
 ﻿namespace MassageHuis.Domains.Configuration
-{    
+{
     public class EmailSettings
     {
         public string Sender { get; set; }

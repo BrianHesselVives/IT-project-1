@@ -3,56 +3,88 @@
 @{
     ViewData["Title"] = "Registreren";
 }
-<div class="row justify-content-center">
-    <div class="col-md-8 col-lg-6">
-        <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="bg-white rounded shadow-md p-4">
-            <h2 class="text-center mb-4">Maak een account aan.</h2>
-            <hr class="mb-4" />
-            <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
-            <div class="form-floating mb-3">
-                <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="naam@voorbeeld.com" />
-                <label asp-for="Input.Email" class="form-label">Email</label>
-                <span asp-validation-for="Input.Email" class="text-danger"></span>
+
+<div class="login-page-container d-flex align-items-start justify-content-center min-vh-100 py-5">
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+                <div class="login-form-card">
+                    <h2 class="text-center fw-bold mb-3 login-title">Account aanmaken</h2>
+                    <p class="text-center text-muted mb-4">Maak een nieuw account aan om toegang te krijgen.</p>
+
+                    <div asp-validation-summary="ModelOnly" class="text-danger text-center mb-4" role="alert"></div>
+
+                    <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
+                        <div class="form-floating mb-3">
+                            <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="naam@voorbeeld.com" />
+                            <label asp-for="Input.Email">E-mailadres</label>
+                            <span asp-validation-for="Input.Email" class="text-danger d-block mt-1"></span>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input asp-for="Input.Naam" class="form-control" autocomplete="family-name" aria-required="true" placeholder="Achternaam" />
+                            <label asp-for="Input.Naam">Achternaam</label>
+                            <span asp-validation-for="Input.Naam" class="text-danger d-block mt-1"></span>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input asp-for="Input.Voornaam" class="form-control" autocomplete="given-name" aria-required="true" placeholder="Voornaam" />
+                            <label asp-for="Input.Voornaam">Voornaam</label>
+                            <span asp-validation-for="Input.Voornaam" class="text-danger d-block mt-1"></span>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <select asp-for="Input.Geslacht" class="form-select" aria-required="true">
+                                <option value="">Selecteer geslacht</option>
+                                <option value="M">M</option>
+                                <option value="V">V</option>
+                                <option value="X">X</option>
+                            </select>
+                            <label asp-for="Input.Geslacht">Geslacht</label>
+                            <span asp-validation-for="Input.Geslacht" class="text-danger d-block mt-1"></span>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input asp-for="Input.GeboorteDatum" type="date" class="form-control" aria-required="true"
+                                   placeholder="Geboortedatum"
+                                   max="@DateTime.Now.AddYears(-16).ToString("yyyy-MM-dd")" />
+                            <label asp-for="Input.GeboorteDatum">Geboortedatum</label>
+                            <span asp-validation-for="Input.GeboorteDatum" class="text-danger d-block mt-1"></span>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input asp-for="Input.Password" class="form-control" autocomplete="new-password" aria-required="true" placeholder="Wachtwoord" />
+                            <label asp-for="Input.Password">Wachtwoord</label>
+                            <span asp-validation-for="Input.Password" class="text-danger d-block mt-1"></span>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input asp-for="Input.ConfirmPassword" class="form-control" autocomplete="new-password" aria-required="true" placeholder="Bevestig wachtwoord" />
+                            <label asp-for="Input.ConfirmPassword">Bevestig wachtwoord</label>
+                            <span asp-validation-for="Input.ConfirmPassword" class="text-danger d-block mt-1"></span>
+                        </div>
+                        <div class="d-grid gap-2">
+                            <button id="registerSubmit" type="submit" class="w-100 btn btn-lg btn-primary login-btn">Registreren</button>
+                        </div>
+                        <div class="text-center mt-4">
+                            <p class="mb-0">
+                                Heeft u al een account? <a asp-page="./Login" asp-route-returnUrl="@Model.ReturnUrl" class="text-decoration-none small">Log in</a>
+                            </p>
+                        </div>
+                        @if ((Model.ExternalLogins?.Count ?? 0) != 0)
+                        {
+                            <div class="mt-4 border-top pt-3 text-center">
+                                <p class="mb-2">Of registreer met:</p>
+                                <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="form-horizontal">
+                                    <div>
+                                        @foreach (var provider in Model.ExternalLogins!)
+                                        {
+                                            <button type="submit" class="btn btn-outline-secondary" name="provider" value="@provider.Name" title="Log in met uw @provider.DisplayName account">
+                                                @provider.DisplayName
+                                            </button>
+                                        }
+                                    </div>
+                                </form>
+                            </div>
+                        }
+                    </form>
+                </div>
             </div>
-            <div class="form-floating mb-3">
-                <input asp-for="Input.Naam" class="form-control" autocomplete="family-name" aria-required="true" placeholder="@Html.DisplayNameFor(m => m.Input.Naam)" />
-                <label asp-for="Input.Naam" class="form-label">@Html.DisplayNameFor(m => m.Input.Naam)</label>
-                <span asp-validation-for="Input.Naam" class="text-danger"></span>
-            </div>
-            <div class="form-floating mb-3">
-                <input asp-for="Input.Voornaam" class="form-control" autocomplete="given-name" aria-required="true" placeholder="@Html.DisplayNameFor(m => m.Input.Voornaam)" />
-                <label asp-for="Input.Voornaam" class="form-label">@Html.DisplayNameFor(m => m.Input.Voornaam)</label>
-                <span asp-validation-for="Input.Voornaam" class="text-danger"></span>
-            </div>
-            <div class="form-floating mb-3">
-                <select asp-for="Input.Geslacht" class="form-select" aria-required="true">
-                    <option value="">Selecteer geslacht</option>
-                    <option value="M">M</option>
-                    <option value="V">V</option>
-                    <option value="">X</option>
-                </select>
-                <label asp-for="Input.Geslacht" class="form-label">@Html.DisplayNameFor(m => m.Input.Geslacht)</label>
-                <span asp-validation-for="Input.Geslacht" class="text-danger"></span>
-            </div>
-            <div class="form-floating mb-3">
-                <input asp-for="Input.GeboorteDatum" type="date" class="form-control" aria-required="true"
-                       placeholder="@Html.DisplayNameFor(m => m.Input.GeboorteDatum)"
-                       max="@DateTime.Now.AddYears(-16).ToString("yyyy-MM-dd")" />
-                <label asp-for="Input.GeboorteDatum" class="form-label"></label>
-                <span asp-validation-for="Input.GeboorteDatum" class="text-danger"></span>
-            </div>
-            <div class="form-floating mb-3">
-                <input asp-for="Input.Password" class="form-control" autocomplete="new-password" aria-required="true" placeholder="Wachtwoord" />
-                <label asp-for="Input.Password" class="form-label">Wachtwoord</label>
-                <span asp-validation-for="Input.Password" class="text-danger"></span>
-            </div>
-            <div class="form-floating mb-3">
-                <input asp-for="Input.ConfirmPassword" class="form-control" autocomplete="new-password" aria-required="true" placeholder="Bevestig wachtwoord" />
-                <label asp-for="Input.ConfirmPassword" class="form-label">Bevestig wachtwoord</label>
-                <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
-            </div>
-            <button id="registerSubmit" type="submit" class="w-100 btn btn-lg btn-primary mt-3">Registreren</button>
-        </form>
+        </div>
     </div>
 </div>
 

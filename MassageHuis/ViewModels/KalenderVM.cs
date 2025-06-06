@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace MassageHuis.ViewModels
+﻿namespace MassageHuis.ViewModels
 {
     public class KalenderVM
     {

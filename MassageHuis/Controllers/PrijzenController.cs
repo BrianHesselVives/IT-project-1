@@ -3,11 +3,8 @@ using MassageHuis.Entities;
 using MassageHuis.Models; // Zorg dat deze namespace klopt
 using MassageHuis.Services.Interfaces;
 using MassageHuis.Util.Mail.Interfaces;
-using MassageHuis.ViewModels;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using System.Globalization;
 
 
 namespace MassageHuis.Controllers
@@ -70,7 +67,7 @@ namespace MassageHuis.Controllers
             }
             else
             {
-                model.VoorgaandePrijs = null; 
+                model.VoorgaandePrijs = null;
             }
             return View("~/Views/Prijzen/Index.cshtml", model);
         }
@@ -86,7 +83,7 @@ namespace MassageHuis.Controllers
                 {
                     throw new InvalidOperationException("Er bestaat al een prijs voor dit massagetype met deze startdatum.");
                 }
-              
+
                 await _kostPrijsService.AddAsync(newKostprijs);
 
                 TempData["SuccessMessage"] = "De nieuwe kostprijs is succesvol toegevoegd!";
@@ -98,7 +95,7 @@ namespace MassageHuis.Controllers
                 TempData["ErrorMessage"] = "De nieuwe kostprijs is mislukt om toe te voegen!";
                 return View("~/Views/Prijzen/Index.cshtml", model);
             }
-            
+
         }
     }
 }

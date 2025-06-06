@@ -1,8 +1,7 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using MassageHuis.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using System.Threading.Tasks;
-using MassageHuis.Models; 
 
 namespace MassageHuis.Areas.Identity.Pages.Account
 {
@@ -17,7 +16,7 @@ namespace MassageHuis.Areas.Identity.Pages.Account
 
         public async Task<IActionResult> OnGetAsync()
         {
-            
+
             var user = await _userManager.GetUserAsync(User);
 
             if (user == null)
@@ -27,18 +26,18 @@ namespace MassageHuis.Areas.Identity.Pages.Account
 
             if (await _userManager.IsInRoleAsync(user, "admin"))
             {
-                return RedirectToPage("/Admin/Dashboard"); 
+                return RedirectToPage("/Admin/Dashboard");
             }
             else if (await _userManager.IsInRoleAsync(user, "uitbater"))
             {
-                return RedirectToPage("/Uitbater/Overzicht"); 
+                return RedirectToPage("/Uitbater/Overzicht");
             }
             else if (await _userManager.IsInRoleAsync(user, "masseur"))
             {
-                return RedirectToPage("/Masseur/Overzicht"); 
+                return RedirectToPage("/Masseur/Overzicht");
             }
 
-            
+
             return Page();
         }
     }

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace MassageHuis.Entities;
+﻿namespace MassageHuis.Entities;
 
 public partial class Reservatie
 {

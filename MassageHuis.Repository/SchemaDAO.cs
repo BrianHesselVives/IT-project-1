@@ -1,8 +1,8 @@
-﻿using MassageHuis.Repositories.Interfaces;
-using System.Diagnostics;
+﻿using MassageHuis.Data;
 using MassageHuis.Entities;
+using MassageHuis.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using MassageHuis.Data;
+using System.Diagnostics;
 
 namespace MassageHuis.Repositories
 {
@@ -46,7 +46,7 @@ namespace MassageHuis.Repositories
 
         async Task IDAO<Schema>.AddAsync(Schema entity)
         {
-            _dbContext.Schemas.Add(entity); 
+            _dbContext.Schemas.Add(entity);
             if (entity.RegulierTijdslots != null && entity.RegulierTijdslots.Any())
             {
                 foreach (var tijdslot in entity.RegulierTijdslots)
@@ -62,7 +62,7 @@ namespace MassageHuis.Repositories
             catch (Exception ex)
             {
                 Console.WriteLine(ex);
-                
+
                 throw;
             }
         }

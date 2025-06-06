@@ -4,18 +4,38 @@
     ViewData["Title"] = "Registratie bevestiging";
 }
 
-<h1>@ViewData["Title"]</h1>
-@{
-    if (@Model.DisplayConfirmAccountLink)
-    {
-        <p>
-            Gelieve uw email te bevestigen.
-        </p>
-    }
-    else
-    {
-        <p>
-            Controleer alstublieft uw email om uw account te bevestigen.
-        </p>
-    }
-}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+            <div class="card shadow-sm p-4 text-center"> 
+                <h1 class="mb-3">@ViewData["Title"]</h1>
+                <hr class="w-50 mx-auto mb-4" /> 
+
+                @{
+                    if (@Model.DisplayConfirmAccountLink)
+                    {
+                        <p class="lead text-success"> 
+                            Gelieve uw e-mail te bevestigen.
+                            <a href="@Model.EmailConfirmationUrl" class="btn btn-link p-0 text-decoration-none d-block mt-3">Klik hier om te bevestigen</a> 
+                        </p>
+                        <p class="small text-muted mt-3">
+                            Let op: Deze link is alleen voor ontwikkelingsdoeleinden. In een live omgeving wordt de bevestigingslink per e-mail verstuurd.
+                        </p>
+                    }
+                    else
+                    {
+                        <p class="lead text-muted">
+                            Controleer alstublieft uw e-mail om uw account te bevestigen.
+                        </p>
+                        <p class="small text-muted mt-3">
+                            De bevestigingslink is naar uw e-mailadres gestuurd. Als u de e-mail niet ontvangt, controleer dan uw spammap of probeer de e-mailbevestiging opnieuw te verzenden.
+                        </p>
+                        <div class="mt-4">
+                            <a asp-page="./ResendEmailConfirmation" class="btn btn-outline-primary">E-mailbevestiging opnieuw verzenden</a> 
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+    </div>
+</div>

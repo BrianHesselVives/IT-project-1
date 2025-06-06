@@ -1,23 +1,17 @@
 using MassageHuis.Data;
-using MassageHuis.Domains.Configuration;
 using MassageHuis.Entities;
 using MassageHuis.Models;
 using MassageHuis.Repositories;
 using MassageHuis.Repositories.Interfaces;
 using MassageHuis.Services;
 using MassageHuis.Services.Interfaces;
-using MassageHuis.Util;
 using MassageHuis.Util.Mail;
 using MassageHuis.Util.Mail.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Localization;
-using Microsoft.Extensions.Options;
-using NuGet.Configuration;
 using System.Globalization;
-using System.Net.Sockets;
 using EmailSettings = MassageHuis.Util.Mail.EmailSettings;
 
 

@@ -1,18 +1,12 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using MassageHuis.ViewModels;
-using System.Linq;
-using System.Threading.Tasks;
-using MassageHuis.Models;
-using Microsoft.AspNetCore.Authorization;
+﻿using AutoMapper;
 using MassageHuis.Entities;
-using MassageHuis.Services;
-using AutoMapper;
+using MassageHuis.Models;
 using MassageHuis.Services.Interfaces;
 using MassageHuis.Util.Mail.Interfaces;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using static System.Runtime.InteropServices.JavaScript.JSType;
-using System.Net.Sockets;
+using MassageHuis.ViewModels;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 
 public class AdminController : Controller
 {

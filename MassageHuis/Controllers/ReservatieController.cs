@@ -1,21 +1,15 @@
 ﻿using AutoMapper;
 using MassageHuis.Entities;
 using MassageHuis.Models;
-using MassageHuis.Repositories;
-using MassageHuis.Services;
 using MassageHuis.Services.Interfaces;
 using MassageHuis.Util.Mail.Interfaces;
 using MassageHuis.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Formatters;
-using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
 using System.Data;
 using System.Globalization;
-using System.Linq;
 using System.Net.Mail;
-using System.Net.Sockets;
 using System.Text;
 
 namespace MassageHuis.Controllers
@@ -132,7 +126,7 @@ namespace MassageHuis.Controllers
                 {
                     var prijsMassages = await _kostprijsService.GetAllAsync();
                     prijsMassages = prijsMassages.Where(b => b.IdTypeMassage == reservatieData.IdTypeMassage && b.Startdatum <= DateOnly.FromDateTime((DateTime)geselecteerdSlot))
-                        .OrderByDescending(b=>b.Startdatum);
+                        .OrderByDescending(b => b.Startdatum);
                     var prijsMassage = prijsMassages.FirstOrDefault();
                     prijsMassageDetail = prijsMassage.Prijs;
                     Reservatie reservatie = new Reservatie()
@@ -210,7 +204,7 @@ namespace MassageHuis.Controllers
                 EmailTextBuilder.AppendLine("</body>");
                 EmailTextBuilder.AppendLine("</html>");
 
-                
+
                 //ICS file
                 string calendarContent = GenerateICSInviteBody
                     (
@@ -227,9 +221,9 @@ namespace MassageHuis.Controllers
 
                 // Bijlage genereren
                 Attachment calendarAttachment = new Attachment(new MemoryStream(calendarBytes), "Reservatie.ics", "text/calendar");
-                _emailSender.SendReservationEmailAsync(email.ToString(), $"Massagehuis: Uw reservatie op {geselecteerdSlot.Value.Date.ToString("dd-MM-yyyy")}" , EmailTextBuilder.ToString(),calendarAttachment);
+                _emailSender.SendReservationEmailAsync(email.ToString(), $"Massagehuis: Uw reservatie op {geselecteerdSlot.Value.Date.ToString("dd-MM-yyyy")}", EmailTextBuilder.ToString(), calendarAttachment);
 
-                var massages = await  _kostprijsService.GetAllAsync();
+                var massages = await _kostprijsService.GetAllAsync();
                 massages = massages.Where(b => b.IdTypeMassageNavigation.Actief == true);
                 massages = massages.OrderByDescending(b => b.Startdatum);
                 massages = massages.DistinctBy(b => b.IdTypeMassage);
@@ -247,7 +241,7 @@ namespace MassageHuis.Controllers
                 }
                 reservatieData.TypeMassages = typeMassages;
 
-                return View("../Home/Index",reservatieData); 
+                return View("../Home/Index", reservatieData);
             }
             else
             {
@@ -282,7 +276,7 @@ namespace MassageHuis.Controllers
 
             // Organizer and attendees
             str.AppendLine(string.Format("ORGANIZER;CN=\"{0}\":MAILTO:{1}", organizer, "test@123.com"));
-            str.AppendLine(string.Format("ATTENDEE;CN=\"{0}\";RSVP=TRUE:mailto:{1}", attendees,attendees));
+            str.AppendLine(string.Format("ATTENDEE;CN=\"{0}\";RSVP=TRUE:mailto:{1}", attendees, attendees));
 
             // Alarm
             str.AppendLine("BEGIN:VALARM");
@@ -298,7 +292,8 @@ namespace MassageHuis.Controllers
             return str.ToString();
         }
         [Authorize(Roles = "uitbater, administrator, klant, masseur")]
-        public async Task<IActionResult> KlantReservatieOverzicht(IEnumerable<ReservatieVM> reservatieData, int weekOffset) {
+        public async Task<IActionResult> KlantReservatieOverzicht(IEnumerable<ReservatieVM> reservatieData, int weekOffset)
+        {
             DateTime basisDatumVoorWeek = DateTime.Today.AddDays(weekOffset * 7);
             // Bepaal het begin en einde van de week op basis van de basisdatum
             DayOfWeek eersteDagVanDeWeek = CultureInfo.CurrentCulture.DateTimeFormat.FirstDayOfWeek;
@@ -311,7 +306,7 @@ namespace MassageHuis.Controllers
             if (await _userManager.IsInRoleAsync(user, "klant"))
             {
                 var klantReservaties = await _reservatieService.GetAllAsync();
-                var userReservaties = klantReservaties.Where(b => b.IdAspNetUsers == user.Id).OrderBy(b=> b.DatumReservatie).OrderByDescending(b=>b.DatumReservatie);
+                var userReservaties = klantReservaties.Where(b => b.IdAspNetUsers == user.Id).OrderBy(b => b.DatumReservatie).OrderByDescending(b => b.DatumReservatie);
 
                 foreach (var Res in userReservaties)
                 {
@@ -319,10 +314,10 @@ namespace MassageHuis.Controllers
                     reservatieVMs.Add(reservatieVM);
                 }
             }
-            if (await _userManager.IsInRoleAsync(user, "uitbater")) 
+            if (await _userManager.IsInRoleAsync(user, "uitbater"))
             {
                 var klantReservaties = await _reservatieService.GetAllAsync();
-                var userReservaties = klantReservaties.OrderBy(b => b.DatumReservatie).Where(b => b.DatumReservatie >= beginVanDeWeek && b.DatumReservatie<=eindeVanDeWeek).OrderByDescending(b => b.DatumReservatie);
+                var userReservaties = klantReservaties.OrderBy(b => b.DatumReservatie).Where(b => b.DatumReservatie >= beginVanDeWeek && b.DatumReservatie <= eindeVanDeWeek).OrderByDescending(b => b.DatumReservatie);
 
                 foreach (var Res in userReservaties)
                 {
@@ -348,16 +343,17 @@ namespace MassageHuis.Controllers
             ViewData["WeekOffset"] = weekOffset;
             ViewData["BeginVanDeWeek"] = beginVanDeWeek;
             ViewData["EindeVanDeWeek"] = eindeVanDeWeek;
-            return View("OverzichtReservaties",reservatieVMs);
+            return View("OverzichtReservaties", reservatieVMs);
         }
         [Authorize(Roles = "uitbater, administrator, klant, masseur")]
-        public async Task<IActionResult> AnnuleerReservatie(int id) {
+        public async Task<IActionResult> AnnuleerReservatie(int id)
+        {
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
             {
                 return Unauthorized();
             }
-            Reservatie teAnnuleren = new Reservatie { Id=id};
+            Reservatie teAnnuleren = new Reservatie { Id = id };
             var reservatie = await _reservatieService.FindByIdAsync(teAnnuleren);
             if (reservatie == null)
             {

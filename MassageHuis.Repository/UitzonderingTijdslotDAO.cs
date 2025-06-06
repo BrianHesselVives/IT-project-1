@@ -1,10 +1,7 @@
-﻿using MassageHuis.Repositories.Interfaces;
-using System.Diagnostics;
+﻿using MassageHuis.Data;
 using MassageHuis.Entities;
+using MassageHuis.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using MassageHuis.Data;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace MassageHuis.Repositories
 {
@@ -18,7 +15,7 @@ namespace MassageHuis.Repositories
 
         public async Task<IEnumerable<UitzonderingTijdslot>?> GetAllAsync()
         {
-            return await _dbContext.UitzonderingTijdslots.Include(b=>b.IdSchemaNavigation).ToListAsync();
+            return await _dbContext.UitzonderingTijdslots.Include(b => b.IdSchemaNavigation).ToListAsync();
         }
 
         public async Task<UitzonderingTijdslot?> FindByIdAsync(UitzonderingTijdslot entity)

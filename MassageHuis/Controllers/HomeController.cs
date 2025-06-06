@@ -1,11 +1,9 @@
-using Azure.Core;
 using MassageHuis.Entities;
 using MassageHuis.Models;
 using MassageHuis.Services.Interfaces;
 using MassageHuis.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.CodeAnalysis.Operations;
 using System.Diagnostics;
 
 namespace MassageHuis.Controllers;
@@ -24,10 +22,10 @@ public class HomeController : Controller
     [AllowAnonymous]
     async public Task<IActionResult> Index()
     {
-        
+
         if (User.Identity.IsAuthenticated)
         {
-            
+
             if (!User.IsInRole("klant"))
             {
                 if (User.IsInRole("uitbater"))
@@ -44,13 +42,13 @@ public class HomeController : Controller
                 }
                 else
                 {
-                    return Forbid(); 
+                    return Forbid();
                 }
             }
         }
-        
+
         var massages = await _kostprijsService.GetAllAsync();
-        massages = massages.Where(b=> b.IdTypeMassageNavigation.Actief == true);
+        massages = massages.Where(b => b.IdTypeMassageNavigation.Actief == true);
         massages = massages.OrderByDescending(b => b.Startdatum);
         massages = massages.DistinctBy(b => b.IdTypeMassage);
         var typeMassages = new List<TypeMassageVM>();

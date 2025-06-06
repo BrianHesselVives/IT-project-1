@@ -1,12 +1,7 @@
 ﻿using MassageHuis.Util.Mail.Interfaces;
 using Microsoft.Extensions.Options;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Mail;
 using System.Net;
-using System.Text;
-using System.Threading.Tasks;
+using System.Net.Mail;
 
 namespace MassageHuis.Util.Mail
 {
@@ -39,11 +34,11 @@ namespace MassageHuis.Util.Mail
                 }
             }
             catch (Exception ex)
-            { 
+            {
                 Console.Write(ex);
             }
         }
-        public async Task SendReservationEmailAsync(string email, string subject, string message,Attachment attachment)
+        public async Task SendReservationEmailAsync(string email, string subject, string message, Attachment attachment)
         {
             var mail = new MailMessage();  // aanmaken van een mail‐object
             mail.To.Add(new MailAddress(email));

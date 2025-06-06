@@ -1,8 +1,8 @@
-﻿using MassageHuis.Repositories.Interfaces;
-using System.Diagnostics;
+﻿using MassageHuis.Data;
 using MassageHuis.Entities;
+using MassageHuis.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using MassageHuis.Data;
+using System.Diagnostics;
 
 namespace MassageHuis.Repositories
 {
@@ -34,7 +34,7 @@ namespace MassageHuis.Repositories
             catch (Exception ex)
             { throw new Exception("error DAO Reservatie"); }
         }
-        
+
 
         async Task IDAO<Reservatie>.AddAsync(Reservatie entity)
         {
@@ -74,10 +74,10 @@ namespace MassageHuis.Repositories
             try
             {
                 return await _dbContext.Reservaties
-                    .Include(r => r.IdMasseurNavigation) 
+                    .Include(r => r.IdMasseurNavigation)
                     .ThenInclude(m => m.IdAspNetUsersNavigation)
-                    .Include(n=>n.IdTypeMassageNavigation)
-                    .Include(o=> o.IdAspNetUsersNavigation)
+                    .Include(n => n.IdTypeMassageNavigation)
+                    .Include(o => o.IdAspNetUsersNavigation)
                     .Include(o => o.IdRegulierTijdslotNavigation)
                     .ToListAsync();
             }

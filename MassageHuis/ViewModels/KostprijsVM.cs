@@ -1,5 +1,4 @@
 ﻿using MassageHuis.Entities;
-using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace MassageHuis.Models
@@ -12,7 +11,7 @@ namespace MassageHuis.Models
 
         [Required(ErrorMessage = "De prijs is verplicht.")]
         [Range(0.01, 10000.00, ErrorMessage = "Voer een geldige prijs in (minimaal 0.01).")]
-        public decimal Prijs { get; set; } 
+        public decimal Prijs { get; set; }
 
         [Required(ErrorMessage = "De startdatum is verplicht.")]
         [DataType(DataType.Date)]

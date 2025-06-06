@@ -1,17 +1,11 @@
 ﻿using AutoMapper;
 using MassageHuis.Entities;
 using MassageHuis.Models;
-using MassageHuis.Repositories;
-using MassageHuis.Services;
 using MassageHuis.Services.Interfaces;
-using MassageHuis.Util.Mail.Interfaces;
 using MassageHuis.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace MassageHuis.Controllers
 {
@@ -69,7 +63,7 @@ namespace MassageHuis.Controllers
                 masseurs = masseurs.Where(p => p.IdAspNetUsers == userId);
                 var actieveMasseur = masseurs.FirstOrDefault();
                 var schemas = await _schemaService.GetAllAsync();
-                Schema actiefSchema = null; 
+                Schema actiefSchema = null;
                 if (actieveMasseur != null)
                 {
                     actiefSchema = schemas
@@ -243,7 +237,7 @@ namespace MassageHuis.Controllers
                         {
                             if (nieuwVerlof.Datum == bestaandVerlof.Datum &&
                                 nieuwVerlof.Startijd < bestaandVerlof.Eindtijd &&
-                                nieuwVerlof.Eindtijd > bestaandVerlof.Startijd )
+                                nieuwVerlof.Eindtijd > bestaandVerlof.Startijd)
                             {
                                 overlappendVerlofGevonden = true;
                                 break;

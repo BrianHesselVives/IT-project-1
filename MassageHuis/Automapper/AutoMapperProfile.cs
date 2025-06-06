@@ -2,7 +2,6 @@
 using MassageHuis.Entities;
 using MassageHuis.Models;
 using MassageHuis.ViewModels;
-using NuGet.Protocol.Plugins;
 
 namespace MassageHuis.Automapper
 {
@@ -16,7 +15,7 @@ namespace MassageHuis.Automapper
             CreateMap<RegulierTijdslotVM, RegulierTijdslot>();
             CreateMap<Schema, SchemaVM>();
             CreateMap<SchemaVM, Schema>();
-            CreateMap<Masseur,MasseurVM >();
+            CreateMap<Masseur, MasseurVM>();
             CreateMap<MasseurVM, Masseur>();
             CreateMap<ReservatieVM, Reservatie>();
             CreateMap<Reservatie, ReservatieVM>()
@@ -66,7 +65,7 @@ namespace MassageHuis.Automapper
                     ))
                 .ForMember(dest => dest.MasseurNaam,
                     opts => opts.MapFrom(
-                        src => src.IdMasseurNavigation.IdAspNetUsersNavigation.Voornaam + " " +src.IdMasseurNavigation.IdAspNetUsersNavigation.Naam
+                        src => src.IdMasseurNavigation.IdAspNetUsersNavigation.Voornaam + " " + src.IdMasseurNavigation.IdAspNetUsersNavigation.Naam
                     )).ForMember(dest => dest.TypeMassage,
                         opts => opts.MapFrom(
                             src => src.IdTypeMassageNavigation.Type
@@ -75,6 +74,6 @@ namespace MassageHuis.Automapper
                     opts => opts.MapFrom(
                         src => src.IdAspNetUsersNavigation.Voornaam + " " + src.IdAspNetUsersNavigation.Naam
                     ));
-                    }
+        }
     }
 }

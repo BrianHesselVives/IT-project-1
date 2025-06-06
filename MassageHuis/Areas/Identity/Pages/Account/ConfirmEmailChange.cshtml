@@ -1,8 +1,39 @@
 ﻿@page
 @model ConfirmEmailChangeModel
 @{
-    ViewData["Title"] = "Bevestig email wijziging";
+    ViewData["Title"] = "E-mailwijziging bevestigen"; 
 }
 
-<h1>@ViewData["Title"]</h1>
-<partial name="_StatusMessage" model="Model.StatusMessage" />
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+            <div class="card shadow-sm p-4 text-center">
+                
+                <h1 class="mb-3">@ViewData["Title"]</h1>
+                <hr class="w-50 mx-auto mb-4" /> 
+
+                
+                <partial name="_StatusMessage" model="Model.StatusMessage" />
+
+                @if (!string.IsNullOrEmpty(Model.StatusMessage) && Model.StatusMessage.Contains("succesvol is bevestigd", StringComparison.OrdinalIgnoreCase))
+                {
+                    <p class="lead text-success mt-3">
+                        Uw e-mailadres is succesvol gewijzigd en bevestigd.
+                    </p>
+                    <div class="mt-4">
+                        <a asp-page="./Login" class="btn btn-primary">Log in</a>
+                    </div>
+                }
+                else
+                {
+                    <p class="lead text-muted mt-3">
+                        Er is een probleem opgetreden bij het bevestigen van uw e-mailadres. Controleer de melding hierboven.
+                    </p>
+                    <div class="mt-4">
+                        <a asp-page="./ResendEmailConfirmation" class="btn btn-outline-primary">E-mailbevestiging opnieuw verzenden</a>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

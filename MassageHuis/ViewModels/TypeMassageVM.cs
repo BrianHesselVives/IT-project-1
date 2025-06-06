@@ -1,8 +1,4 @@
-﻿using MassageHuis.Entities;
-using System;
-using System.ComponentModel.DataAnnotations;
-
-namespace MassageHuis.ViewModels
+﻿namespace MassageHuis.ViewModels
 {
     public class TypeMassageVM
     {

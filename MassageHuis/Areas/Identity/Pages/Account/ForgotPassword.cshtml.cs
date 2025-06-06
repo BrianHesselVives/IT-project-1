@@ -2,19 +2,15 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 #nullable disable
 
-using System;
-using System.ComponentModel.DataAnnotations;
-using System.Text;
-using System.Text.Encodings.Web;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
+using MassageHuis.Models;
+using MassageHuis.Util.Mail.Interfaces;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
-using MassageHuis.Util.Mail.Interfaces;
-using MassageHuis.Models;
+using System.ComponentModel.DataAnnotations;
+using System.Text;
+using System.Text.Encodings.Web;
 
 namespace MassageHuis.Areas.Identity.Pages.Account
 {
@@ -69,13 +65,14 @@ namespace MassageHuis.Areas.Identity.Pages.Account
                 var callbackUrl = Url.Page(
                     "/Account/ResetPassword",
                     pageHandler: null,
-                    values: new { area = "Identity", code },
-                    protocol: Request.Scheme);
+                    values: new { area = "Identity", code, email = Input.Email },
+                    protocol: Request.Scheme,
+                    host: "massagehuis.runasp.net");
 
                 await _emailSender.SendEmailAsync(
                     Input.Email,
-                    "Reset Password",
-                    $"Please reset your password by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+                    "Wachtwoord resetten", 
+                    $"Gelieve uw wachtwoord te resetten door <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>hier te klikken</a>."); 
 
                 return RedirectToPage("./ForgotPasswordConfirmation");
             }

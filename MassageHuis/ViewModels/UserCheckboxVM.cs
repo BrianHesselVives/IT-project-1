@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace MassageHuis.ViewModels
+﻿namespace MassageHuis.ViewModels
 {
     public class UserCheckboxVM
     {

@@ -1,23 +1,33 @@
 ﻿@page
 @model ResendEmailConfirmationModel
 @{
-    ViewData["Title"] = "Opnieuw versturen e-mail bevestiging";
+    ViewData["Title"] = "Bevestiging opnieuw verzenden";
 }
 
-<h1>@ViewData["Title"]</h1>
-<h2>Voer uw e-mailadres in.</h2>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form method="post">
-            <div asp-validation-summary="All" class="text-danger" role="alert"></div>
-            <div class="form-floating mb-3">
-                <input asp-for="Input.Email" class="form-control" aria-required="true" placeholder="naam@voorbeeld.com" />
-                <label asp-for="Input.Email" class="form-label"></label>
-                <span asp-validation-for="Input.Email" class="text-danger"></span>
+<div class="login-page-container d-flex align-items-start justify-content-center min-vh-100 py-5">
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+                <div class="login-form-card">
+                    <h1 class="text-center fw-bold mb-3 login-title">@ViewData["Title"]</h1>
+                    <p class="text-center text-muted mb-4 lead">
+                        Voer uw e-mailadres in om een nieuwe bevestigingslink te ontvangen.
+                    </p>
+
+                    <form method="post">
+                        <div asp-validation-summary="ModelOnly" class="text-danger text-center mb-4" role="alert"></div>
+                        <div class="form-floating mb-3">
+                            <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="naam@voorbeeld.com" />
+                            <label asp-for="Input.Email">E-mailadres</label>
+                            <span asp-validation-for="Input.Email" class="text-danger d-block mt-1"></span>
+                        </div>
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="w-100 btn btn-lg btn-primary mt-3 login-btn">Bevestigingslink verzenden</button>
+                        </div>
+                    </form>
+                </div>
             </div>
-            <button type="submit" class="w-100 btn btn-lg btn-primary">Opnieuw versturen</button>
-        </form>
+        </div>
     </div>
 </div>
 

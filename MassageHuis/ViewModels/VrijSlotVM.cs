@@ -1,5 +1,6 @@
 ﻿namespace MassageHuis.ViewModels
-{    public class VrijSlotVM
+{
+    public class VrijSlotVM
     {
         public int Id { get; set; }
         public int IdSchema { get; set; }

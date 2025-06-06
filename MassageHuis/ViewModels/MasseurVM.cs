@@ -1,7 +1,5 @@
 ﻿using MassageHuis.Entities;
 using MassageHuis.Models;
-using System; // Added for DateTime
-using System.Collections.Generic;
 
 namespace MassageHuis.ViewModels
 {
@@ -20,7 +18,7 @@ namespace MassageHuis.ViewModels
         public IEnumerable<RegulierTijdslot>? RegulierTijdsloten { get; set; }
         public IEnumerable<UitzonderingTijdslot>? UitzonderingTijdsloten { get; set; }
         public IEnumerable<Reservatie>? Reservaties { get; set; }
-        public List<DateTime>? vrijeSlots { get; set; } 
+        public List<DateTime>? vrijeSlots { get; set; }
         public int CalendarYear { get; set; }
         public int CalendarMonth { get; set; }
 

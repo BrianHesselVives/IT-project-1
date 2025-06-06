@@ -1,19 +1,29 @@
 ﻿@page
 @model AccessDeniedModel
 @{
-    ViewData["Title"] = "Toegang geweigerd"; 
-    Layout = "~/Views/Shared/_Layout.cshtml"; 
+    ViewData["Title"] = "Toegang geweigerd";
 }
 
-<div class="access-denied-container"> 
-    <div class="access-denied-card">
-        <h1 class="access-denied-title">@ViewData["Title"]</h1>
-        <p class="access-denied-message">
-            U heeft geen toegang tot deze pagina.
-        </p>
-        <p class="access-denied-details">
-            Dit kan komen doordat u niet de juiste rechten heeft, of omdat deze pagina alleen voor specifieke rollen beschikbaar is.
-            Neem contact op met de beheerder als u denkt dat dit een fout is.
-        </p>
+<header>
+    <div class="access-denied-container d-flex align-items-center justify-content-center min-vh-100 py-5">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+                    <div class="access-denied-card">
+                        <h1 class="access-denied-title mb-3">@ViewData["Title"]</h1>
+                        <p class="access-denied-message lead">
+                            U heeft geen toegang tot deze bron.
+                        </p>
+                        <p class="access-denied-details mt-4">
+                            Mogelijk heeft u niet de benodigde rechten, of is de pagina niet beschikbaar.
+                            Neem contact op met de beheerder als u denkt dat dit een fout is.
+                        </p>
+                        <div class="mt-4">
+                            <a asp-controller="Home" asp-action="Index" class="btn btn-primary">Terug naar home</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-</div>
+</header>

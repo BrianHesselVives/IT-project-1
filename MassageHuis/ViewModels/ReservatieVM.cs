@@ -1,14 +1,11 @@
-﻿using MassageHuis.Entities;
-using MassageHuis.Models;
-
-namespace MassageHuis.ViewModels
+﻿namespace MassageHuis.ViewModels
 {
     public class ReservatieVM
     {
         public int? MasseurId { get; set; }
         public int? IdPrijs { get; set; }
         public String? MasseurNaam { get; set; }
-        public int IdTijdSlot { get; set; } 
+        public int IdTijdSlot { get; set; }
         public DateTime? GeselecteerdSlot { get; set; }
         public string? TypeMassage { get; set; }
         public int? IdTypeMassage { get; set; }
@@ -27,7 +24,7 @@ namespace MassageHuis.ViewModels
 
         public float TeBetalenBedrag { get; set; }
 
-        public  List<TypeMassageVM> TypeMassages { get; set; }
-        public float Prijs { get;set; }
+        public List<TypeMassageVM> TypeMassages { get; set; }
+        public float Prijs { get; set; }
     }
 }

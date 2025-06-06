@@ -1,6 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
-using System.Collections.Generic;
-using MassageHuis.Models;
+﻿using MassageHuis.Models;
+using Microsoft.AspNetCore.Identity;
 namespace MassageHuis.ViewModels
 {
     public class RoleDetailsVM
